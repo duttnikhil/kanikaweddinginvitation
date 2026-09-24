@@ -1,0 +1,55 @@
+/* Design tokens: Royal (laal-sona) theme, SPEC §9 */
+@import "@fontsource/great-vibes/latin-400.css";
+@import "@fontsource/yatra-one/latin-400.css";
+@import "@fontsource/yatra-one/devanagari-400.css";
+@import "@fontsource/cinzel/latin-500.css";
+@import "@fontsource/cormorant-garamond/latin-500.css";
+@import "@fontsource/tiro-devanagari-hindi/devanagari-400.css";
+@import "@fontsource/mukta/latin-400.css";
+@import "@fontsource/mukta/latin-600.css";
+@import "@fontsource/mukta/devanagari-400.css";
+@import "@fontsource/mukta/devanagari-600.css";
+/* Dropped to stay near the font budget (NOTES.md): Cormorant 600 italic, Cinzel 700. */
+
+:root {
+  --paper: #FBF4E6;
+  --paper-2: #F4E7CC;
+  --ink: #2A1612;
+  --ink-soft: #6B4A3F;
+  --sindoor: #A3161A;
+  --maroon: #5A0E12;
+  --gold: #C9A043;
+  --gold-light: #E9D29A;
+  --gold-dark: #8A6A1F;
+  --haldi: #F2B705;
+  --mehendi: #7A3E12;
+  --peacock: #0F5E5A;
+  --line: #E3CFA6;
+
+  --f-script: "Great Vibes", "Yatra One", cursive;
+  --f-display: "Cinzel", "Yatra One", serif;
+  --f-prose: "Cormorant Garamond", "Tiro Devanagari Hindi", Georgia, serif;
+  --f-ui: "Mukta", system-ui, sans-serif;
+
+  --fs-names: clamp(44px, 9vw + 12px, 72px);
+  --fs-h2: clamp(28px, 3vw + 18px, 40px);
+  --fs-h3: clamp(20px, 1vw + 16px, 24px);
+  --fs-prose: clamp(19px, 0.5vw + 17px, 21px);
+  --fs-ui: clamp(15px, 0.2vw + 14px, 16px);
+  --fs-label: 12px;
+
+  --col: 560px;
+  --gutter: 20px;
+  --section-pad: clamp(64px, 12vw, 120px);
+  --radius: 16px;
+  --tap: 48px;
+
+  color-scheme: light;
+}
+
+/* Hindi: Devanagari families first (SPEC §9.2) */
+:root:lang(hi) {
+  --f-script: "Yatra One", "Great Vibes", serif;
+  --f-display: "Yatra One", "Cinzel", serif;
+  --f-prose: "Tiro Devanagari Hindi", "Cormorant Garamond", serif;
+}

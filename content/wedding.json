@@ -1,0 +1,913 @@
+{
+  "_readme": "SAMPLE CONTENT. Replace every name, date, venue, phone and UPI ID with the real ones. Keep the structure. All times are IST (+05:30). Text fields are {hi, en}. Delete this _readme field or leave it; the app ignores keys starting with _.",
+  "meta": {
+    "siteUrl": "https://arjit-weds-kanika.pages.dev",
+    "defaultLang": "hi",
+    "theme": "royal",
+    "mainEventId": "phere",
+    "rsvpDeadline": "2026-11-30T23:59:00+05:30",
+    "hostSide": "ladke",
+    "city": {
+      "hi": "जयपुर",
+      "en": "Jaipur"
+    },
+    "dateRange": {
+      "hi": "10–12 दिसम्बर 2026",
+      "en": "10–12 December 2026"
+    }
+  },
+  "invocation": {
+    "line": {
+      "hi": "॥ श्री गणेशाय नमः ॥",
+      "en": "॥ Shri Ganeshaya Namah ॥"
+    },
+    "shloka": {
+      "hi": "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।\nनिर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥",
+      "en": "Vakratunda Mahakaya Suryakoti Samaprabha,\nNirvighnam Kuru Me Deva Sarva-Karyeshu Sarvada."
+    },
+    "mangal": {
+      "hi": "मंगलम् भगवान विष्णुः, मंगलम् गरुड़ध्वजः।\nमंगलम् पुण्डरीकाक्षः, मंगलाय तनो हरिः॥",
+      "en": "Mangalam Bhagwan Vishnu, Mangalam Garudadhwajah,\nMangalam Pundarikakshah, Mangalaya Tano Harih."
+    }
+  },
+  "gate": {
+    "cta": {
+      "hi": "स्पर्श करें",
+      "en": "Tap to open"
+    },
+    "skip": {
+      "hi": "आगे बढ़ें",
+      "en": "Skip"
+    },
+    "hint": {
+      "hi": "ध्वनि के साथ देखें",
+      "en": "Best with sound on"
+    }
+  },
+  "hero": {
+    "greetingPrefix": {
+      "hi": "आदरणीय",
+      "en": "Dear"
+    },
+    "genericGreeting": {
+      "hi": "आप सपरिवार सादर आमंत्रित हैं",
+      "en": "You and your family are cordially invited"
+    },
+    "joiner": {
+      "hi": "संग",
+      "en": "weds"
+    },
+    "scrollHint": {
+      "hi": "निमंत्रण देखें",
+      "en": "Scroll to view"
+    }
+  },
+  "couple": {
+    "groom": {
+      "name": {
+        "hi": "अर्जित",
+        "en": "Arjit"
+      },
+      "fullName": {
+        "hi": "चि. अर्जित शर्मा",
+        "en": "Chi. Arjit Sharma"
+      },
+      "initial": "A",
+      "parents": {
+        "hi": "सुपुत्र श्री राजेश शर्मा एवं श्रीमती सुनीता शर्मा",
+        "en": "Son of Shri Rajesh Sharma & Smt. Sunita Sharma"
+      },
+      "grandparents": {
+        "hi": "सुपौत्र स्व. श्री रामकिशन शर्मा एवं श्रीमती कमला देवी",
+        "en": "Grandson of Late Shri Ramkishan Sharma & Smt. Kamla Devi"
+      },
+      "about": {
+        "hi": "सॉफ्टवेयर इंजीनियर, बेंगलुरु",
+        "en": "Software engineer, Bengaluru"
+      },
+      "photo": "groom.jpg"
+    },
+    "bride": {
+      "name": {
+        "hi": "कनिका",
+        "en": "Kanika"
+      },
+      "fullName": {
+        "hi": "सौ. कां. कनिका अग्रवाल",
+        "en": "Sau. Ka. Kanika Agarwal"
+      },
+      "initial": "K",
+      "parents": {
+        "hi": "सुपुत्री श्री विनोद अग्रवाल एवं श्रीमती मीना अग्रवाल",
+        "en": "Daughter of Shri Vinod Agarwal & Smt. Meena Agarwal"
+      },
+      "grandparents": {
+        "hi": "सुपौत्री श्री हरिप्रसाद अग्रवाल एवं श्रीमती शांति देवी",
+        "en": "Granddaughter of Shri Hariprasad Agarwal & Smt. Shanti Devi"
+      },
+      "about": {
+        "hi": "आर्किटेक्ट, जयपुर",
+        "en": "Architect, Jaipur"
+      },
+      "photo": "bride.jpg"
+    }
+  },
+  "amantran": {
+    "title": {
+      "hi": "सादर आमंत्रण",
+      "en": "The Invitation"
+    },
+    "body": {
+      "hi": "सविनय निवेदन है कि परमपिता परमेश्वर की असीम अनुकम्पा एवं बड़ों के आशीर्वाद से हमारे सुपुत्र\n{groomFull}\nका शुभ विवाह\n{brideFull}\n({brideParents})\nके साथ होना निश्चित हुआ है।\n\nइस मंगल अवसर पर आप सपरिवार सादर आमंत्रित हैं। आपकी गरिमामयी उपस्थिति एवं आशीर्वाद हमारे लिए प्रार्थनीय है।",
+      "en": "With the blessings of the Almighty and our elders, we joyfully invite you to celebrate the wedding of our son\n{groomFull}\nwith\n{brideFull}\n({brideParents})\n\nYour gracious presence and blessings are humbly requested."
+    },
+    "hosts": {
+      "hi": "विनीत\nश्री राजेश शर्मा – श्रीमती सुनीता शर्मा\nएवं समस्त शर्मा परिवार",
+      "en": "With warm regards,\nShri Rajesh Sharma & Smt. Sunita Sharma\nand the entire Sharma family"
+    },
+    "tithi": {
+      "hi": "मार्गशीर्ष शुक्ल पक्ष, विक्रम संवत् 2083",
+      "en": "Margashirsha Shukla Paksha, Vikram Samvat 2083"
+    }
+  },
+  "story": {
+    "enabled": true,
+    "title": {
+      "hi": "हमारी कहानी",
+      "en": "Our Story"
+    },
+    "items": [
+      {
+        "date": {
+          "hi": "मार्च 2024",
+          "en": "March 2024"
+        },
+        "title": {
+          "hi": "पहली मुलाकात",
+          "en": "First meeting"
+        },
+        "text": {
+          "hi": "परिवारों की एक शाम की चाय, और बातें जो ख़त्म ही नहीं हुईं।",
+          "en": "An evening chai between two families, and a conversation that never ended."
+        },
+        "photo": null
+      },
+      {
+        "date": {
+          "hi": "अगस्त 2025",
+          "en": "August 2025"
+        },
+        "title": {
+          "hi": "रोका",
+          "en": "Roka"
+        },
+        "text": {
+          "hi": "दोनों परिवारों ने आशीर्वाद दिया।",
+          "en": "Both families gave their blessings."
+        },
+        "photo": "roka.jpg"
+      },
+      {
+        "date": {
+          "hi": "जून 2026",
+          "en": "June 2026"
+        },
+        "title": {
+          "hi": "सगाई",
+          "en": "Engagement"
+        },
+        "text": {
+          "hi": "अंगूठियाँ बदलीं, वादे पक्के हुए।",
+          "en": "Rings exchanged, promises sealed."
+        },
+        "photo": "sagai.jpg"
+      }
+    ]
+  },
+  "countdown": {
+    "title": {
+      "hi": "शुभ घड़ी में",
+      "en": "Counting down"
+    },
+    "labels": {
+      "days": {
+        "hi": "दिन",
+        "en": "Days"
+      },
+      "hours": {
+        "hi": "घंटे",
+        "en": "Hours"
+      },
+      "minutes": {
+        "hi": "मिनट",
+        "en": "Minutes"
+      },
+      "seconds": {
+        "hi": "सेकंड",
+        "en": "Seconds"
+      }
+    },
+    "today": {
+      "hi": "आज शुभ दिन है",
+      "en": "The day is here"
+    }
+  },
+  "eventsTitle": {
+    "hi": "मांगलिक कार्यक्रम",
+    "en": "Celebrations"
+  },
+  "events": [
+    {
+      "id": "haldi",
+      "motif": "haldi",
+      "name": {
+        "hi": "हल्दी",
+        "en": "Haldi"
+      },
+      "start": "2026-12-10T10:00:00+05:30",
+      "end": "2026-12-10T13:00:00+05:30",
+      "muhurat": null,
+      "venue": {
+        "name": {
+          "hi": "शर्मा निवास",
+          "en": "Sharma Niwas"
+        },
+        "address": {
+          "hi": "सी-12, मालवीय नगर, जयपुर",
+          "en": "C-12, Malviya Nagar, Jaipur"
+        },
+        "lat": 26.8534,
+        "lng": 75.812,
+        "mapsUrl": null
+      },
+      "dressCode": {
+        "text": {
+          "hi": "पीला",
+          "en": "Shades of yellow"
+        },
+        "colors": [
+          "#F2B705",
+          "#FFF3B0"
+        ]
+      },
+      "note": {
+        "hi": "पुराने कपड़े पहनें, हल्दी लगेगी!",
+        "en": "Wear something you don't mind getting haldi on!"
+      }
+    },
+    {
+      "id": "mehendi",
+      "motif": "mehendi",
+      "name": {
+        "hi": "मेहंदी",
+        "en": "Mehendi"
+      },
+      "start": "2026-12-10T16:00:00+05:30",
+      "end": "2026-12-10T20:00:00+05:30",
+      "muhurat": null,
+      "venue": {
+        "name": {
+          "hi": "शर्मा निवास",
+          "en": "Sharma Niwas"
+        },
+        "address": {
+          "hi": "सी-12, मालवीय नगर, जयपुर",
+          "en": "C-12, Malviya Nagar, Jaipur"
+        },
+        "lat": 26.8534,
+        "lng": 75.812,
+        "mapsUrl": null
+      },
+      "dressCode": {
+        "text": {
+          "hi": "हरा",
+          "en": "Greens"
+        },
+        "colors": [
+          "#2E7D32",
+          "#A5D6A7"
+        ]
+      },
+      "note": null
+    },
+    {
+      "id": "sangeet",
+      "motif": "standard",
+      "name": {
+        "hi": "संगीत संध्या",
+        "en": "Sangeet"
+      },
+      "start": "2026-12-11T19:00:00+05:30",
+      "end": "2026-12-11T23:30:00+05:30",
+      "muhurat": null,
+      "venue": {
+        "name": {
+          "hi": "राजमहल गार्डन",
+          "en": "Rajmahal Garden"
+        },
+        "address": {
+          "hi": "टोंक रोड, जयपुर",
+          "en": "Tonk Road, Jaipur"
+        },
+        "lat": 26.8467,
+        "lng": 75.805,
+        "mapsUrl": null
+      },
+      "dressCode": {
+        "text": {
+          "hi": "इंडो-वेस्टर्न, चमकीले रंग",
+          "en": "Indo-western, bright colours"
+        },
+        "colors": [
+          "#7B1FA2",
+          "#C9A043"
+        ]
+      },
+      "note": null
+    },
+    {
+      "id": "baraat",
+      "motif": "standard",
+      "name": {
+        "hi": "बारात प्रस्थान",
+        "en": "Baraat"
+      },
+      "start": "2026-12-12T18:30:00+05:30",
+      "end": "2026-12-12T20:30:00+05:30",
+      "muhurat": null,
+      "venue": {
+        "name": {
+          "hi": "शर्मा निवास से",
+          "en": "From Sharma Niwas"
+        },
+        "address": {
+          "hi": "सी-12, मालवीय नगर, जयपुर",
+          "en": "C-12, Malviya Nagar, Jaipur"
+        },
+        "lat": 26.8534,
+        "lng": 75.812,
+        "mapsUrl": null
+      },
+      "dressCode": {
+        "text": {
+          "hi": "साफ़ा व शेरवानी",
+          "en": "Safa & sherwani"
+        },
+        "colors": [
+          "#A3161A",
+          "#F2B705"
+        ]
+      },
+      "note": {
+        "hi": "साफ़े की व्यवस्था घर पर रहेगी।",
+        "en": "Safas will be tied at the house."
+      }
+    },
+    {
+      "id": "phere",
+      "motif": "standard",
+      "name": {
+        "hi": "पाणिग्रहण संस्कार (फेरे)",
+        "en": "Pheras"
+      },
+      "start": "2026-12-12T21:00:00+05:30",
+      "end": "2026-12-13T01:00:00+05:30",
+      "muhurat": {
+        "hi": "शुभ लग्न: रात्रि 10:42 बजे",
+        "en": "Shubh lagna: 10:42 PM"
+      },
+      "venue": {
+        "name": {
+          "hi": "होटल रॉयल ऑर्किड",
+          "en": "Hotel Royal Orchid"
+        },
+        "address": {
+          "hi": "जेएलएन मार्ग, जयपुर",
+          "en": "JLN Marg, Jaipur"
+        },
+        "lat": 26.88,
+        "lng": 75.812,
+        "mapsUrl": null
+      },
+      "dressCode": {
+        "text": {
+          "hi": "पारंपरिक",
+          "en": "Traditional"
+        },
+        "colors": [
+          "#A3161A",
+          "#C9A043"
+        ]
+      },
+      "note": null
+    },
+    {
+      "id": "reception",
+      "motif": "standard",
+      "name": {
+        "hi": "आशीर्वाद समारोह",
+        "en": "Reception"
+      },
+      "start": "2026-12-13T19:30:00+05:30",
+      "end": "2026-12-13T23:00:00+05:30",
+      "muhurat": null,
+      "venue": {
+        "name": {
+          "hi": "होटल रॉयल ऑर्किड",
+          "en": "Hotel Royal Orchid"
+        },
+        "address": {
+          "hi": "जेएलएन मार्ग, जयपुर",
+          "en": "JLN Marg, Jaipur"
+        },
+        "lat": 26.88,
+        "lng": 75.812,
+        "mapsUrl": null
+      },
+      "dressCode": {
+        "text": {
+          "hi": "फॉर्मल",
+          "en": "Formal / festive"
+        },
+        "colors": [
+          "#1F2A44",
+          "#C9A043"
+        ]
+      },
+      "note": null
+    }
+  ],
+  "phere": {
+    "title": {
+      "hi": "सात फेरे, सात वचन",
+      "en": "Seven Pheras, Seven Vows"
+    },
+    "intro": {
+      "hi": "अग्नि को साक्षी मानकर…",
+      "en": "With the sacred fire as witness…"
+    },
+    "counter": {
+      "hi": "फेरा {n} / 7",
+      "en": "Phera {n} / 7"
+    },
+    "vachans": [
+      {
+        "hi": "हम मिलकर अपने घर-परिवार का पोषण करेंगे।",
+        "en": "Together we will nourish our home and family."
+      },
+      {
+        "hi": "हम एक-दूसरे की शक्ति और साहस बनेंगे।",
+        "en": "We will be each other's strength and courage."
+      },
+      {
+        "hi": "हम धर्म और ईमानदारी से जीवन चलाएँगे।",
+        "en": "We will live with honesty and dharma."
+      },
+      {
+        "hi": "हम एक-दूसरे के परिवार का आदर करेंगे।",
+        "en": "We will honour each other's families."
+      },
+      {
+        "hi": "हम आने वाली पीढ़ी को प्रेम से सँवारेंगे।",
+        "en": "We will raise the next generation with love."
+      },
+      {
+        "hi": "हर ऋतु में, सुख-दुख में साथ रहेंगे।",
+        "en": "Through every season, in joy and sorrow, together."
+      },
+      {
+        "hi": "हम जीवन भर एक-दूसरे के मित्र रहेंगे।",
+        "en": "We will remain friends for life."
+      }
+    ],
+    "outro": {
+      "hi": "सात जन्मों का बंधन",
+      "en": "A bond for seven lifetimes"
+    }
+  },
+  "varmala": {
+    "title": {
+      "hi": "जयमाला",
+      "en": "Varmala"
+    },
+    "cta": {
+      "hi": "जयमाला पहनाएँ",
+      "en": "Exchange the garlands"
+    },
+    "replay": {
+      "hi": "फिर से",
+      "en": "Again"
+    },
+    "after": {
+      "hi": "शुभ मंगल सावधान",
+      "en": "Shubh Mangal Saavdhan"
+    }
+  },
+  "gallery": {
+    "enabled": true,
+    "title": {
+      "hi": "यादें",
+      "en": "Moments"
+    },
+    "photos": [
+      {
+        "file": "pw-01.jpg",
+        "alt": {
+          "hi": "अर्जित और कनिका, आमेर किला",
+          "en": "Arjit and Kanika at Amer Fort"
+        }
+      },
+      {
+        "file": "pw-02.jpg",
+        "alt": {
+          "hi": "हवा महल के सामने",
+          "en": "In front of Hawa Mahal"
+        }
+      },
+      {
+        "file": "pw-03.jpg",
+        "alt": {
+          "hi": "सगाई की रस्म",
+          "en": "The engagement ceremony"
+        }
+      }
+    ]
+  },
+  "rsvp": {
+    "title": {
+      "hi": "कृपया सूचित करें",
+      "en": "Kindly RSVP"
+    },
+    "subtitle": {
+      "hi": "{date} तक बताएँ ताकि हम आपकी अच्छी व्यवस्था कर सकें",
+      "en": "Please reply by {date} so we can arrange everything for you"
+    },
+    "status": {
+      "yes": {
+        "hi": "हाँ, आएँगे",
+        "en": "Yes"
+      },
+      "maybe": {
+        "hi": "शायद",
+        "en": "Maybe"
+      },
+      "no": {
+        "hi": "नहीं आ पाएँगे",
+        "en": "Can't make it"
+      }
+    },
+    "pax": {
+      "hi": "कितने सदस्य",
+      "en": "How many people"
+    },
+    "food": {
+      "veg": {
+        "hi": "शाकाहारी",
+        "en": "Veg"
+      },
+      "jain": {
+        "hi": "जैन",
+        "en": "Jain"
+      },
+      "nonveg": {
+        "hi": "मांसाहारी",
+        "en": "Non-veg"
+      }
+    },
+    "sameForAll": {
+      "hi": "सभी कार्यक्रमों के लिए यही",
+      "en": "Same for all functions"
+    },
+    "arrival": {
+      "hi": "कैसे पहुँचेंगे",
+      "en": "How will you arrive"
+    },
+    "arrivalModes": {
+      "car": {
+        "hi": "कार",
+        "en": "Car"
+      },
+      "train": {
+        "hi": "ट्रेन",
+        "en": "Train"
+      },
+      "flight": {
+        "hi": "फ़्लाइट",
+        "en": "Flight"
+      },
+      "local": {
+        "hi": "स्थानीय",
+        "en": "Local"
+      }
+    },
+    "arrivalAt": {
+      "hi": "पहुँचने का समय (वैकल्पिक)",
+      "en": "Arrival time (optional)"
+    },
+    "message": {
+      "hi": "कोई संदेश (वैकल्पिक)",
+      "en": "Message (optional)"
+    },
+    "submit": {
+      "hi": "भेजें",
+      "en": "Send RSVP"
+    },
+    "success": {
+      "hi": "धन्यवाद! हम आपका इंतज़ार करेंगे।",
+      "en": "Thank you! We can't wait to see you."
+    },
+    "updated": {
+      "hi": "आपका जवाब {date} को मिला था, बदलना हो तो फिर भेजें",
+      "en": "We received your reply on {date}. You can update it anytime."
+    },
+    "error": {
+      "hi": "जवाब नहीं भेजा जा सका। इंटरनेट जाँचें और फिर कोशिश करें।",
+      "en": "Couldn't send your reply. Check your internet and try again."
+    },
+    "retry": {
+      "hi": "फिर से भेजें",
+      "en": "Try again"
+    },
+    "noGuest": {
+      "hi": "RSVP के लिए कृपया WhatsApp पर भेजा गया अपना निजी लिंक खोलें।",
+      "en": "To RSVP, please open the personal link we sent you on WhatsApp."
+    },
+    "closed": {
+      "hi": "RSVP {date} को बंद हो गया। कृपया {contact} को फ़ोन करें।",
+      "en": "RSVP closed on {date}. Please call {contact}."
+    },
+    "paxMismatch": {
+      "hi": "कुल {n} होना चाहिए",
+      "en": "Total must be {n}"
+    }
+  },
+  "shagun": {
+    "enabled": true,
+    "title": {
+      "hi": "शगुन",
+      "en": "Shagun"
+    },
+    "line": {
+      "hi": "आपका आशीर्वाद ही सबसे बड़ा शगुन है। फिर भी यदि आप कुछ भेजना चाहें:",
+      "en": "Your blessings are the greatest gift. Should you still wish to send shagun:"
+    },
+    "vpa": "rajeshsharma@okhdfcbank",
+    "payeeName": "Rajesh Sharma",
+    "note": "Shagun Arjit Kanika",
+    "payButton": {
+      "hi": "UPI ऐप से भेजें",
+      "en": "Pay with a UPI app"
+    },
+    "copy": {
+      "hi": "UPI ID कॉपी करें",
+      "en": "Copy UPI ID"
+    }
+  },
+  "wishes": {
+    "title": {
+      "hi": "आशीर्वाद",
+      "en": "Blessings"
+    },
+    "namePlaceholder": {
+      "hi": "आपका नाम",
+      "en": "Your name"
+    },
+    "messagePlaceholder": {
+      "hi": "नवदंपति के लिए आशीर्वाद…",
+      "en": "Your blessing for the couple…"
+    },
+    "submit": {
+      "hi": "आशीर्वाद भेजें",
+      "en": "Send blessing"
+    },
+    "pending": {
+      "hi": "धन्यवाद! आपका संदेश जल्द दिखेगा।",
+      "en": "Thank you! Your message will appear soon."
+    },
+    "empty": {
+      "hi": "सबसे पहला आशीर्वाद आप दें",
+      "en": "Be the first to bless the couple"
+    }
+  },
+  "travel": {
+    "enabled": true,
+    "title": {
+      "hi": "कैसे पहुँचें",
+      "en": "Getting there"
+    },
+    "items": [
+      {
+        "icon": "train",
+        "title": {
+          "hi": "जयपुर जंक्शन",
+          "en": "Jaipur Junction"
+        },
+        "text": {
+          "hi": "कार्यक्रम स्थल से लगभग 20 मिनट",
+          "en": "About 20 minutes from the venue"
+        }
+      },
+      {
+        "icon": "plane",
+        "title": {
+          "hi": "जयपुर एयरपोर्ट (JAI)",
+          "en": "Jaipur Airport (JAI)"
+        },
+        "text": {
+          "hi": "लगभग 15 मिनट",
+          "en": "About 15 minutes"
+        }
+      }
+    ],
+    "stayTitle": {
+      "hi": "ठहरने की व्यवस्था",
+      "en": "Stay"
+    },
+    "stay": [
+      {
+        "name": {
+          "hi": "होटल रॉयल ऑर्किड",
+          "en": "Hotel Royal Orchid"
+        },
+        "text": {
+          "hi": "बाहर से आने वाले मेहमानों के लिए कमरे बुक हैं",
+          "en": "Rooms reserved for outstation guests"
+        },
+        "url": null
+      }
+    ],
+    "pickup": {
+      "hi": "स्टेशन/एयरपोर्ट से पिकअप के लिए RSVP में पहुँचने का समय ज़रूर भरें।",
+      "en": "For station/airport pickup, add your arrival time in the RSVP."
+    }
+  },
+  "contacts": {
+    "title": {
+      "hi": "संपर्क",
+      "en": "Contact"
+    },
+    "people": [
+      {
+        "name": {
+          "hi": "रोहित शर्मा",
+          "en": "Rohit Sharma"
+        },
+        "relation": {
+          "hi": "दूल्हे के भाई",
+          "en": "Groom's brother"
+        },
+        "phone": "919800000001"
+      },
+      {
+        "name": {
+          "hi": "नेहा अग्रवाल",
+          "en": "Neha Agarwal"
+        },
+        "relation": {
+          "hi": "दुल्हन की बहन",
+          "en": "Bride's sister"
+        },
+        "phone": "919800000002"
+      }
+    ]
+  },
+  "closing": {
+    "line": {
+      "hi": "आपकी उपस्थिति प्रार्थनीय है",
+      "en": "Your presence is our joy"
+    },
+    "darshanTitle": {
+      "hi": "दर्शनाभिलाषी",
+      "en": "Eagerly awaiting you"
+    },
+    "darshan": {
+      "hi": "रोहित, प्रिया, कार्तिक, इशिता एवं समस्त शर्मा परिवार",
+      "en": "Rohit, Priya, Kartik, Ishita and the entire Sharma family"
+    },
+    "kidsLine": {
+      "hi": "मेरे चाचू की शादी में ज़रूर आना!",
+      "en": "Do come to my chachu's wedding!"
+    }
+  },
+  "livestream": {
+    "enabled": false,
+    "url": null,
+    "label": {
+      "hi": "लाइव देखें",
+      "en": "Watch live"
+    }
+  },
+  "live": {
+    "now": {
+      "hi": "अभी चल रहा है",
+      "en": "Happening now"
+    },
+    "next": {
+      "hi": "आगे",
+      "en": "Up next"
+    }
+  },
+  "postWedding": {
+    "title": {
+      "hi": "हृदय से धन्यवाद",
+      "en": "Thank you"
+    },
+    "text": {
+      "hi": "आपके आशीर्वाद और प्रेम के लिए आभार। शादी की तस्वीरें यहाँ देखें।",
+      "en": "Thank you for your love and blessings. See the wedding photos here."
+    },
+    "albumUrl": null,
+    "albumButton": {
+      "hi": "तस्वीरें देखें",
+      "en": "View photos"
+    }
+  },
+  "share": {
+    "ogTitleKnown": {
+      "hi": "{salutation} {name}, आपको सादर आमंत्रण",
+      "en": "{name}, you are cordially invited"
+    },
+    "ogTitleGeneric": {
+      "hi": "अर्जित संग कनिका · शुभ विवाह",
+      "en": "Arjit weds Kanika"
+    },
+    "ogDescription": {
+      "hi": "10–12 दिसम्बर 2026 · जयपुर",
+      "en": "10–12 December 2026 · Jaipur"
+    },
+    "whatsappTemplate": {
+      "hi": "🙏 {name},\n\nअर्जित और कनिका के शुभ विवाह में आप सपरिवार सादर आमंत्रित हैं।\n\nनिमंत्रण पत्र यहाँ खोलें 👇\n{link}\n\n— राजेश एवं सुनीता शर्मा",
+      "en": "🙏 {name},\n\nYou and your family are warmly invited to the wedding of Arjit and Kanika.\n\nOpen your invitation 👇\n{link}\n\n— Rajesh & Sunita Sharma"
+    }
+  },
+  "ui": {
+    "maps": {
+      "hi": "नक्शा",
+      "en": "Map"
+    },
+    "directions": {
+      "hi": "रास्ता",
+      "en": "Directions"
+    },
+    "addToCalendar": {
+      "hi": "कैलेंडर में जोड़ें",
+      "en": "Add to calendar"
+    },
+    "googleCalendar": {
+      "hi": "गूगल कैलेंडर",
+      "en": "Google Calendar"
+    },
+    "otherCalendar": {
+      "hi": "एप्पल / अन्य (.ics)",
+      "en": "Apple / Other (.ics)"
+    },
+    "dressCode": {
+      "hi": "परिधान",
+      "en": "Dress code"
+    },
+    "copy": {
+      "hi": "कॉपी करें",
+      "en": "Copy"
+    },
+    "copied": {
+      "hi": "कॉपी हो गया",
+      "en": "Copied"
+    },
+    "call": {
+      "hi": "कॉल करें",
+      "en": "Call"
+    },
+    "whatsapp": {
+      "hi": "व्हाट्सऐप",
+      "en": "WhatsApp"
+    },
+    "musicOn": {
+      "hi": "संगीत चालू",
+      "en": "Music on"
+    },
+    "musicOff": {
+      "hi": "संगीत बंद",
+      "en": "Music off"
+    },
+    "langToggle": {
+      "hi": "English",
+      "en": "हिन्दी"
+    },
+    "rsvpPill": {
+      "hi": "RSVP करें",
+      "en": "RSVP"
+    },
+    "close": {
+      "hi": "बंद करें",
+      "en": "Close"
+    },
+    "prev": {
+      "hi": "पिछला",
+      "en": "Previous"
+    },
+    "next": {
+      "hi": "अगला",
+      "en": "Next"
+    }
+  }
+}
