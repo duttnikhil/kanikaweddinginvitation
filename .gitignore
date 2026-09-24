@@ -3,7 +3,6 @@ dist
 .env
 .env.local
 functions/_data/guests.js
-functions/_data/share.js
 public/img
 content/images.json
 .wrangler

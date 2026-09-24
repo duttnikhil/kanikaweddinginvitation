@@ -238,3 +238,38 @@ Checked (Playwright):
       state with a static flower, everything visible.
 
 Check on your phone: smoothness on a 4 GB Android, especially the pinned pheras (scrub).
+
+## Phase 6: Personalised WhatsApp previews and deployment
+
+Built:
+- `index.html` head order per SPEC §6 (charset, viewport, title, og/twitter, robots, 2 font
+  preloads, rest). Title/description/`og:image` (absolute, from `SITE_URL` at build time, else
+  `meta.siteUrl`) are filled from wedding.json by a tiny Vite plugin, so no copy is hard-coded.
+- `functions/_middleware.js` (HTMLRewriter): per-guest `<title>`, `og:title`, `twitter:title`,
+  `og:description`, `og:url` (canonical `/?g=id`, drops `&v=2`), `<html lang>`, and the
+  `#guest-data` JSON (escaped `<`). Unknown/missing `g` → generic title, no guest data, no
+  error that confirms or denies an ID. `Cache-Control: no-cache`, `X-Robots-Tag`.
+  It imports `content/wedding.json` directly (wrangler bundles JSON), so no generated share file.
+- `public/_routes.json` limits the function to `/` and `/index.html` (assets and /admin never
+  invoke it → free-tier requests are only spent on page opens).
+- `scripts/sync-guests.mjs`: export → `functions/_data/guests.js`, keeping only public fields.
+  Missing env → empty map + warning. A failed fetch with env set **fails the build** on purpose
+  (Cloudflare then keeps the previous deployment live instead of publishing a site where every
+  guest gets the generic preview). `--dev` writes the mock guests for local testing.
+- `public/_headers` (noindex, referrer, permissions, nosniff, long cache for hashed assets),
+  `public/robots.txt`.
+- `scripts/make-og.mjs` (`npm run og`): renders `public/og/og-default.jpg` 1200×630 with the
+  site's fonts + mandala via Playwright (64 KB). Committed.
+- `DEPLOY.md`: GitHub, Cloudflare build settings, env vars, deploy hook, testing.
+
+Checked (wrangler pages dev on the production build, mock guests via `sync-guests --dev`):
+- [x] `curl -A "WhatsApp/2.23.20.0 A" /?g=devAll001` → `Verma Parivar, you are cordially invited`;
+      `?g=devHindi3` → `श्री एवं श्रीमती गुप्ता परिवार, आपको सादर आमंत्रण`; unknown / no `g` → generic
+      `अर्जित संग कनिका · शुभ विवाह`.
+- [x] The page served by wrangler reads the injected guest (Hindi greeting, only that guest's 3 functions).
+- [x] `/og/og-default.jpg` served 200 image/jpeg, no redirect, 64 KB.
+- [x] No guest phone numbers in `dist/` (the family contacts in wedding.json are public by design).
+- [x] `/admin/` never gets guest data injected.
+
+Your part: MANUAL-STEPS §3 (GitHub + Cloudflare) and §4 (deploy hook), then send yourself
+`https://arjit-weds-kanika.pages.dev/?g=<real id>` on WhatsApp and check the preview.

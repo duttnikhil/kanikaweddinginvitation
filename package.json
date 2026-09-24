@@ -9,7 +9,8 @@
     "sync-guests": "node scripts/sync-guests.mjs",
     "images": "node scripts/optimize-images.mjs",
     "budget": "node scripts/check-budget.mjs",
-    "test": "node backend/test.mjs"
+    "test": "node backend/test.mjs",
+    "og": "node scripts/make-og.mjs"
   },
   "type": "module",
   "dependencies": {
