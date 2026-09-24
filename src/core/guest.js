@@ -34,7 +34,10 @@ export async function resolveGuest() {
   if (import.meta.env.DEV) {
     const id = params.get("g");
     if (!id) return null;
-    const { default: map } = await import("../../content/dev-guests.json");
+    // Mock guests + the real synced map if `npm run sync-guests` has been run.
+    const { default: mock } = await import("../../content/dev-guests.json");
+    const synced = Object.values(import.meta.glob("/functions/_data/guests.js", { eager: true, import: "default" }))[0];
+    const map = { ...mock, ...synced };
     if (!Object.prototype.hasOwnProperty.call(map, id) || id.startsWith("_")) {
       warn("unknown dev guest", id);
       return null;

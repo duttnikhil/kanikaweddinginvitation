@@ -99,3 +99,55 @@ Check on your phone:
 - UPI button opens a UPI app on Android; QR scans in GPay/PhonePe/Paytm. Some UPI apps
   block web deep links for payments to personal VPAs; the QR scan is the reliable fallback.
 - Lightbox swipe with a real finger.
+
+## Phase 3: Backend (Google Sheets + Apps Script) and RSVP
+
+Built:
+- `backend/Code.gs` (routing, guest actions, helpers) + `backend/Admin.gs` (admin actions,
+  Sheet menu). Split into two files to stay near the ~300-line rule; both are pasted into the
+  same Apps Script project. `backend/appsscript.json` (IST, web app as deployer, anonymous
+  access; OAuth scopes are left to auto-detection because the menu needs the UI scope).
+  Includes LockService on every write, validation (guest, allowed event, integer pax
+  0..max_pax, food sum = pax for yes), formula-injection guard, 60 s CacheService for
+  wishes (cleared on approve), constant-time password compare + 1 s delay on a wrong
+  password, IST timestamps, menu: Generate missing guest IDs / Publish guest list / Copy all
+  invite links.
+- `backend/SETUP-SHEET.md`: tab names, tab-separated header rows, Script Properties, deploy steps.
+- `backend/test.mjs` (`npm test`): runs both .gs files in Node against a fake Sheet and asserts
+  the whole contract (validation errors, upsert without duplicates + updated_count, formula
+  guard, rsvp_closed by flag and by deadline, wish moderation/limits/cache, open counter,
+  export without phone numbers, admin auth/summary/guests/markSent, ID generation).
+- `src/core/api.js` per SPEC §5.1: text/plain POST, redirect follow, 12 s timeout, one retry
+  after 1.5 s on network errors only, sendBeacon for `open` (fetch keepalive fallback).
+- Mock API (`src/core/api-mock.js`) used whenever `VITE_API_URL` is empty (dev and builds):
+  800 ms delay, same validation, state in sessionStorage, behaves like a network failure
+  when the browser is offline. It's a lazy chunk, so it's never downloaded once the real URL is set.
+- RSVP form per SPEC §7.10; wishes form + wall; open ping on load unless `?preview=1`.
+
+API contract additions (both api.js and Code.gs updated):
+- `GET rsvp` also returns `updated_at` (for "We received your reply on …").
+- `admin.guests` also returns `wishes` (all, incl. unapproved) for the moderation tab.
+- `admin.summary` accepts optional `events: [...]` (ids from wedding.json) so "ALL" guests
+  are counted as invited to every event.
+- Extra error codes: `bad_input` (malformed), `busy` (lock timeout), `unknown_wish`.
+
+Decisions:
+- Submit stays disabled until at least one function has an answer and no "yes" block has
+  a food mismatch. Unanswered functions are simply not sent.
+- Changing pax re-balances the food split (veg absorbs the difference), so the total only
+  mismatches when the guest edits the food steppers.
+- Wishes form shows only for known guests (the API needs a guest id). The wall is visible to all.
+- Wish errors reuse `rsvp.error` copy (no separate string in wedding.json).
+
+Checked (Playwright + mock API, and `npm test` for the real Code.gs logic):
+- [x] RSVP saves one row per function; resubmitting updates the same rows, updated_count +1 (npm test).
+- [x] pax can't exceed max_pax in the UI (stepper stops at 4); food mismatch shows
+      "Total must be 4" and blocks submit; the API rejects both with `bad_pax` (npm test).
+- [x] Open ping counted on `/?g=…`, not with `&preview=1`.
+- [x] Wish → pending message; approved wishes appear on the wall (npm test covers approval + cache clear).
+- [x] `=HYPERLINK(...)` stored as `'=HYPERLINK(...)` (npm test).
+- [x] Offline → optimistic success is replaced by the friendly error with Retry; form values
+      kept; Retry after coming back online succeeds. Reload prefills the previous answer.
+
+Your part (needs your Google account): MANUAL-STEPS §2 / `backend/SETUP-SHEET.md`, then put the
+URL in `.env` and check that an RSVP from the dev site lands in the RSVP tab within a few seconds.

@@ -7,6 +7,7 @@ import { resolveGuest, params } from "./core/guest.js";
 import { initLang, onLang } from "./core/i18n.js";
 import { resolvePhase } from "./core/time.js";
 import { icon } from "./core/dom.js";
+import { sendOpen } from "./core/api.js";
 import * as hero from "./scenes/hero.js";
 import * as amantran from "./scenes/amantran.js";
 import * as couple from "./scenes/couple.js";
@@ -58,6 +59,9 @@ async function boot() {
     }
   }
   toneSections(ctx.main);
+
+  // Open ping (skipped for admin previews).
+  if (guest && params.get("preview") !== "1") sendOpen(guest.id);
   return ctx;
 }
 
