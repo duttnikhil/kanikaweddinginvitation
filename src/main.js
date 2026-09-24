@@ -2,12 +2,17 @@
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/sections.css";
+import "./styles/gate.css";
 import { content, events, warn } from "./core/content.js";
 import { resolveGuest, params } from "./core/guest.js";
-import { initLang, onLang } from "./core/i18n.js";
+import { initLang, onLang, tr } from "./core/i18n.js";
 import { resolvePhase } from "./core/time.js";
 import { icon } from "./core/dom.js";
 import { sendOpen } from "./core/api.js";
+import * as motion from "./core/motion.js";
+import * as audio from "./core/audio.js";
+import * as petals from "./fx/petals.js";
+import * as opening from "./scenes/opening.js";
 import * as hero from "./scenes/hero.js";
 import * as amantran from "./scenes/amantran.js";
 import * as couple from "./scenes/couple.js";
@@ -38,6 +43,32 @@ function toneSections(main) {
   }
 }
 
+// Music toggle (top-right): shown only when a shehnai file exists.
+function setupMusic(ctx) {
+  const f = ctx.floating;
+  if (!f || !audio.hasMusic) return;
+  const ui = content.ui;
+  const render = () => {
+    const m = audio.isMuted();
+    f.musicIcon.replaceChildren(icon(m ? "volume-x" : "volume-2"));
+    f.musicLabel.textContent = tr(m ? ui.musicOff : ui.musicOn);
+    f.musicBtn.setAttribute("aria-pressed", String(!m));
+  };
+  f.musicBtn.hidden = false;
+  f.musicBtn.addEventListener("click", () => audio.setMuted(!audio.isMuted()));
+  audio.onMute(render);
+  onLang(render);
+  render();
+}
+
+// After the gate: floating UI fades in; petals fall only while the hero is on screen.
+function afterGate(ctx) {
+  document.documentElement.classList.add("gate-open");
+  const hero = document.getElementById("hero");
+  if (!hero || ctx.phase === "post") return;
+  new IntersectionObserver(([e]) => (e.isIntersecting ? petals.start() : petals.stop()), { threshold: 0.2 }).observe(hero);
+}
+
 async function boot() {
   const guest = await resolveGuest();
   const lang = initLang(guest);
@@ -48,6 +79,10 @@ async function boot() {
     content, guest, lang, phase, params, warn, icon, onLang,
     main: document.getElementById("main"),
     phaseForced: params.has("phase"),
+    lenis: motion.lenis,
+    motion,
+    petals,
+    gateDone: () => afterGate(ctx),
   };
 
   // Error boundary: one broken scene must not blank the page.
@@ -59,6 +94,13 @@ async function boot() {
     }
   }
   toneSections(ctx.main);
+  setupMusic(ctx);
+  try {
+    opening.mount(ctx);
+  } catch (err) {
+    console.error("[scene opening]", err);
+    afterGate(ctx);
+  }
 
   // Open ping (skipped for admin previews).
   if (guest && params.get("preview") !== "1") sendOpen(guest.id);

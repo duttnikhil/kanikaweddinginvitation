@@ -151,3 +151,46 @@ Checked (Playwright + mock API, and `npm test` for the real Code.gs logic):
 
 Your part (needs your Google account): MANUAL-STEPS §2 / `backend/SETUP-SHEET.md`, then put the
 URL in `.env` and check that an RSVP from the dev site lands in the RSVP tab within a few seconds.
+
+## Phase 4: Opening gate, audio, petals
+
+Built:
+- `core/motion.js`: plugin registration (ScrollTrigger, SplitText, DrawSVG, MotionPath), Lenis
+  synced with ScrollTrigger and stopped until the gate opens, motion tokens, a single
+  `gsap.matchMedia` that all scenes register into (`scene(fn)`, `build()`, `rebuild()`).
+  Lenis is not created at all under reduced motion (native scrolling).
+- `core/device.js`: hardware hints (≤ 4 cores or ≤ 3 GB) + a 2 s FPS probe.
+- `core/audio.js`: Howler; sounds are created inside the gate tap (iOS unlock), shankh one-shot,
+  shehnai loop (`html5: true`) fading 0 → 0.35 over 3 s, mute toggle remembered for the session
+  (sessionStorage), pause on `visibilitychange` hidden, resume when visible unless muted.
+  If an audio file is missing it is simply skipped (music button and "Best with sound on"
+  hint are hidden when there is no shehnai file).
+- Opening gate per the SPEC §7.4 timeline: doors, gold light, Ganesh draw (or mask reveal if the
+  owner SVG is filled), fill layer, petals, greeting chars, couple names, gate removed at
+  5.0 s, Lenis starts, floating UI fades in. Skip jumps the timeline to the end (before the tap:
+  no sound at all). Scroll locked before opening (`overflow: hidden` + `lenis.stop()`).
+  Reduced motion: tap fades the overlay in 0.4 s, no doors, no petals.
+- `fx/petals.js`: DPR ≤ 2 canvas, 3 marigold + 2 rose sprites (owner `petal-*.svg` if present,
+  procedural otherwise), 36 petals or 16 on low-end hardware, halved again if the first 2 s run
+  below 45 fps, `start/stop/burst`, pauses when the tab is hidden. Petals fall while the hero is
+  on screen and stop when it scrolls away.
+
+Decisions:
+- Petals canvas sits above the content (pointer-events: none) instead of behind it, because
+  every section has an opaque paper background.
+- Ganesh draw stagger: 0.02 s per path, capped at 1 s total (the fallback mandala has ~130 paths).
+- Text splitting: English = words + chars (so lines never break mid-word), Hindi = words
+  (splitting Devanagari into characters breaks conjuncts on older Android WebViews).
+
+Checked (Playwright; audio tested with temporary generated tones, not committed):
+- [x] Before the tap: page can't scroll (scrollY stays 0), floating UI hidden.
+- [x] Tap → doors open, light, Ganesh draws, petals, greeting, names; gate gone at ~5 s, then
+      the page scrolls (Lenis).
+- [x] Shehnai playing after the doors; mute toggles and is stored for the session.
+- [x] Hidden tab → music paused; visible again → resumes.
+- [x] Skip before tapping → final hero, no sound created at all.
+- [x] Reduced motion → gate just fades, no petals canvas.
+
+Check on your phone (can't be verified here): the whole gate inside WhatsApp's in-app browser
+on Android and iPhone, that the shankh actually sounds on iPhone, and the smoothness of the
+door animation on a low-end Android.
