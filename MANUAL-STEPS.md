@@ -11,9 +11,8 @@ hain. Wo sab yahan hain, kab karna hai woh bhi likha hai. Sab free hai.
 2. **Git** install karo: git-scm.com.
 3. **Claude Code** install aur login.
 4. Accounts bana lo (sab free): **GitHub**, **Cloudflare**, **Google** (Gmail wala chalega).
-5. Ek folder banao `shubh-vivah/` aur usme ye files daalo:
-   `CLAUDE.md`, `SPEC.md`, `PHASES.md`, `ASSETS-AND-CONTENT.md`, `MANUAL-STEPS.md`,
-   `content/wedding.json`.
+5. ~~Folder banao aur files daalo~~: ho gaya, sab files project root mein hain aur code ban chuka hai.
+   Ek baar `npm install` chala lo.
 6. `content/wedding.json` mein asli naam, dates, venue, UPI ID, contacts bhar do (sample data
    hata ke). Muhurat pandit ji se confirm karo.
 7. Assets jutana shuru karo (`ASSETS-AND-CONTENT.md`). Phase 4 tak chahiye honge, Phase 1 ke
@@ -24,10 +23,11 @@ hain. Wo sab yahan hain, kab karna hai woh bhi likha hai. Sab free hai.
 ## §2. Google Sheet + Apps Script (Phase 3 ke baad, ~20 min)
 
 1. sheets.google.com → naya blank sheet → naam: `Shubh Vivah – RSVP`.
-2. Claude Code ne `backend/SETUP-SHEET.md` banayi hogi. Usme se 4 tabs banao:
+2. `backend/SETUP-SHEET.md` mein har step detail mein hai. Usme se 4 tabs banao:
    **Guests, RSVP, Wishes, Settings**, aur har tab ki pehli row mein headers paste karo.
 3. Sheet mein: **Extensions ▸ Apps Script**.
    - `Code.gs` ka saara code hata ke `backend/Code.gs` paste karo.
+   - **+ ▸ Script** se nayi file `Admin` banao, usme `backend/Admin.gs` paste karo.
    - Left mein ⚙️ **Project Settings** → "Show appsscript.json" tick → uski jagah
      `backend/appsscript.json` paste karo.
    - **Project Settings ▸ Script Properties** mein ye 3 add karo:
@@ -36,12 +36,13 @@ hain. Wo sab yahan hain, kab karna hai woh bhi likha hai. Sab free hai.
      | `ADMIN_PASSWORD` | koi strong password (family admins ko hi batana) |
      | `EXPORT_KEY` | 32 random characters (koi password generator se) |
      | `DEPLOY_HOOK_URL` | abhi khali, §4 mein bharenge |
+     | `SITE_URL` | `https://arjit-weds-kanika.pages.dev` ("Copy all invite links" ke liye) |
 4. **Deploy ▸ New deployment** → type **Web app**
    - Execute as: **Me**
    - Who has access: **Anyone**
    - Deploy → Google permission maangega → apna account → "Advanced" → "Go to … (unsafe)" →
      Allow. (Ye tumhari apni script hai, isliye Google "unverified" bolta hai.)
-5. Jo **Web app URL** mile (`https://script.google.com/macros/s/…/exec`), use project ki `.env`
+5. Jo **Web app URL** mile (project folder mein `.env.example` ko copy karke `.env` banao) (`https://script.google.com/macros/s/…/exec`), use project ki `.env`
    file mein daalo:
    ```
    VITE_API_URL=https://script.google.com/macros/s/XXXX/exec
@@ -50,6 +51,8 @@ hain. Wo sab yahan hain, kab karna hai woh bhi likha hai. Sab free hai.
    SITE_URL=http://localhost:5173
    ```
 6. Sheet ko reload karo → upar **Shubh Vivah** menu aayega.
+7. Test: `npm run dev` → `http://localhost:5173/?g=<koi asli guest_id>` → RSVP bhejo → Sheet ke
+   RSVP tab mein row aani chahiye. (Pehle `npm run sync-guests` chala lo taaki naam dikhe.)
 
 **Yaad rakhna:** jab bhi `Code.gs` badlo, **Deploy ▸ Manage deployments ▸ ✏️ Edit ▸ Version: New
 version ▸ Deploy** karna. "New deployment" mat karna, warna URL badal jayega.
@@ -71,6 +74,7 @@ version ▸ Deploy** karna. "New deployment" mat karna, warna URL badal jayega.
 4. **Environment variables** (Production): `APPS_SCRIPT_URL`, `VITE_API_URL`, `EXPORT_KEY`,
    `SITE_URL` (= `https://<project-name>.pages.dev`).
 5. Save and Deploy. 1–2 minute mein site live: `https://<project-name>.pages.dev`.
+   Poori detail (env vars, testing): `DEPLOY.md`.
    Project name soch ke rakhna (jaise `arjit-weds-kanika`), yahi link guests ko jayega.
 
 ---
@@ -132,3 +136,6 @@ Isse Sheet se naye guests daalte hi site apne aap update hogi.
 | Cloudflare function (preview mein naam) | 1 lakh requests/din | ✓ 1,000 guests ke liye bhi bahut |
 | Apps Script | Pehli call 1–2 s slow ho sakti hai | Site pe fark nahi padega (optimistic UI) |
 | Custom domain (`.in`) | Paid (~₹500–900/saal) | Optional, `.pages.dev` free hai |
+
+Note: Cloudflare function sirf page kholne par chalta hai (assets par nahi), isliye 1 lakh/din
+ki limit tak pahunchna mushkil hai.

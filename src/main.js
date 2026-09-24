@@ -1,8 +1,4 @@
-// Boot sequence (SPEC §7.2)
-import "./styles/tokens.css";
-import "./styles/base.css";
-import "./styles/sections.css";
-import "./styles/gate.css";
+// Boot sequence (SPEC §7.2). Loaded by boot.js right after the static gate has painted.
 import { content, events, warn } from "./core/content.js";
 import { resolveGuest, params } from "./core/guest.js";
 import { initLang, onLang, onBeforeLang, tr } from "./core/i18n.js";
@@ -70,12 +66,23 @@ function afterGate(ctx) {
   new IntersectionObserver(([e]) => (e.isIntersecting ? petals.start() : petals.stop()), { threshold: 0.2 }).observe(hero);
 }
 
+// Error boundary: one broken scene must not blank the page.
+function mountScene(name, scene, ctx) {
+  try {
+    scene.mount(ctx);
+  } catch (err) {
+    console.error(`[scene ${name}]`, err);
+  }
+}
+
 async function boot() {
   const guest = await resolveGuest();
   const lang = initLang(guest);
   const phase = resolvePhase(events, params);
   document.documentElement.dataset.phase = phase;
 
+  let gateOpened;
+  const gateDone = new Promise((r) => (gateOpened = r));
   const ctx = {
     content, guest, lang, phase, params, warn, icon, onLang,
     main: document.getElementById("main"),
@@ -83,7 +90,10 @@ async function boot() {
     lenis: motion.lenis,
     motion,
     petals,
-    gateDone: () => afterGate(ctx),
+    gateDone: () => {
+      afterGate(ctx);
+      gateOpened();
+    },
     // RSVP success: petals burst from the diya.
     celebrate: (el) => {
       const r = (el.querySelector(".diya") || el).getBoundingClientRect();
@@ -91,37 +101,37 @@ async function boot() {
     },
   };
 
-  // Error boundary: one broken scene must not blank the page.
-  for (const [name, scene] of Object.entries(SCENES)) {
-    try {
-      scene.mount(ctx);
-    } catch (err) {
-      console.error(`[scene ${name}]`, err);
-    }
-  }
-  toneSections(ctx.main);
-  setupMusic(ctx);
+  // Hero first (it's what the doors open onto), then the gate, then every other scene in its
+  // own task so no single long task blocks the main thread on slow phones.
+  mountScene("hero", hero, ctx);
   try {
     opening.mount(ctx);
   } catch (err) {
     console.error("[scene opening]", err);
-    afterGate(ctx);
+    opening.dropGate();
+    ctx.gateDone();
   }
-
-  // Animations are created after fonts load (stable text metrics), rebuilt on language switch.
-  document.fonts.ready.then(() => {
-    motion.scene(({ full }) => {
-      if (full) motion.revealOnScroll(ctx.main.querySelectorAll("[data-reveal]"));
-    });
-    motion.build();
-    motion.refreshOnImages(ctx.main);
-    onBeforeLang(() => motion.revert());
-    onLang(() => motion.build());
-  });
+  for (const [name, scene] of Object.entries(SCENES)) {
+    if (scene === hero) continue;
+    await motion.yieldToMain();
+    mountScene(name, scene, ctx);
+  }
+  toneSections(ctx.main);
+  setupMusic(ctx);
 
   // Open ping (skipped for admin previews).
   if (guest && params.get("preview") !== "1") sendOpen(guest.id);
-  return ctx;
+
+  // Scroll animations: built after fonts load (stable text metrics) and after the gate is gone
+  // (nothing below the hero can be seen before that). Rebuilt around a language switch.
+  await Promise.all([document.fonts.ready, gateDone]);
+  motion.scene(({ full }) => {
+    if (full) motion.revealOnScroll(ctx.main.querySelectorAll("[data-reveal]"));
+  });
+  onBeforeLang(() => motion.revert());
+  onLang(() => motion.build());
+  await motion.build();
+  motion.refreshOnImages(ctx.main);
 }
 
 boot();

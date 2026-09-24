@@ -1,27 +1,44 @@
 // Opening gate: temple doors, shankh, Ganesh draws itself, petals, names (SPEC §7.4).
-import { h } from "../core/dom.js";
 import { ownerSvg } from "../core/assets.js";
 import { gsap, dur, ease, stagger, split, lenis, prefersReduced } from "../core/motion.js";
 import * as audio from "../core/audio.js";
 import * as petals from "../fx/petals.js";
-import { door, toran } from "../fx/ornaments.js";
+import { gateMarkup } from "../fx/ornaments.js";
+import { bind, tr } from "../core/i18n.js";
 import { drawTargets } from "../fx/draw.js";
+
+// Removes the pre-rendered gate and shows the page (post phase, errors).
+export function dropGate() {
+  document.getElementById("gate")?.remove();
+  document.documentElement.classList.remove("gate-closed");
+  document.body.classList.remove("is-locked");
+}
 
 export function mount(ctx) {
   const done = () => ctx.gateDone?.();
-  if (ctx.phase === "post") return done();
+  if (ctx.phase === "post") {
+    dropGate();
+    return done();
+  }
   const g = ctx.content.gate;
-  const hasSound = audio.hasMusic;
-  const openBtn = h("button", { type: "button", id: "gate-open", class: "gate-btn" }, h("span", { text: g.cta }));
-  const skipBtn = h("button", { type: "button", id: "gate-skip", class: "gate-skip", text: g.skip });
-  const left = h("div", { class: "door door-left", "aria-hidden": "true", html: ownerSvg("door-left") || door("left") });
-  const right = h("div", { class: "door door-right", "aria-hidden": "true", html: ownerSvg("door-right") || door("right") });
-  const light = h("div", { class: "gate-light", "aria-hidden": "true" });
-  const center = h("div", { class: "gate-center" }, openBtn, hasSound ? h("p", { class: "gate-hint", text: g.hint }) : null);
-  const tor = h("div", { class: "gate-toran", "aria-hidden": "true", html: ownerSvg("toran") || toran() });
-  const gate = h("div", { id: "gate", role: "dialog", "aria-modal": "true", "aria-labelledby": "gate-open" },
-    left, right, light, tor, center, skipBtn);
-  document.body.append(gate);
+  // The gate is pre-rendered into index.html (fast first paint); build it only if missing.
+  if (!document.getElementById("gate")) {
+    document.body.insertAdjacentHTML("afterbegin", gateMarkup({ cta: tr(g.cta), skip: tr(g.skip), hint: audio.hasMusic ? tr(g.hint) : "" },
+      { doorLeft: ownerSvg("door-left"), doorRight: ownerSvg("door-right"), toranSvg: ownerSvg("toran") }));
+  }
+  const gate = document.getElementById("gate");
+  const openBtn = gate.querySelector("#gate-open");
+  const skipBtn = gate.querySelector("#gate-skip");
+  const left = gate.querySelector(".door-left");
+  const right = gate.querySelector(".door-right");
+  const light = gate.querySelector(".gate-light");
+  const center = gate.querySelector(".gate-center");
+  const tor = gate.querySelector(".gate-toran");
+  // Static text is in the default language: bind it so the guest's language applies.
+  bind(openBtn.firstElementChild, g.cta);
+  bind(skipBtn, g.skip);
+  const hint = gate.querySelector(".gate-hint");
+  if (hint) bind(hint, g.hint);
   document.body.classList.add("is-locked");
   openBtn.focus({ preventScroll: true });
 
@@ -32,10 +49,12 @@ export function mount(ctx) {
 
   let finished = false;
   let tl = null;
+  const reveal = () => document.documentElement.classList.remove("gate-closed");
   function finish() {
     if (finished) return;
     finished = true;
     idle?.kill();
+    reveal();
     gate.remove();
     document.body.classList.remove("is-locked");
     lenis?.start();
@@ -48,6 +67,7 @@ export function mount(ctx) {
     audio.unlock();
     audio.playShankh();
     navigator.vibrate?.(40);
+    reveal();
     if (reduced) {
       audio.startShehnai();
       tl = gsap.to(gate, { opacity: 0, duration: 0.4, onComplete: finish });

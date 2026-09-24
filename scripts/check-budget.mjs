@@ -1,6 +1,6 @@
 // Performance budget (SPEC §10). Fails the build when a limit is exceeded; prints a table.
-// Initial assets = what dist/index.html loads directly (entry script, modulepreloads, CSS).
-import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+// Initial CSS = the <link rel=stylesheet> tags in dist/index.html.
+import { readFileSync, existsSync, readdirSync, statSync, rmSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 
 const KB = 1024;
@@ -10,7 +10,20 @@ const refs = (re) => [...html.matchAll(re)].map((m) => m[1]);
 const gz = (f) => gzipSync(readFileSync(`${dist}${f}`)).length;
 const raw = (f) => statSync(`${dist}${f}`).size;
 
-const js = [...new Set([...refs(/<script[^>]+src="([^"]+)"/g), ...refs(/<link rel="modulepreload"[^>]*href="([^"]+)"/g)])];
+// Initial JS = the entry + the app chunk it loads right after first paint (src/main.js),
+// plus everything those import statically. Lazy chunks (QR code, mock API) are excluded.
+const manifest = JSON.parse(readFileSync(`${dist}/.vite/manifest.json`, "utf8"));
+rmSync(`${dist}/.vite`, { recursive: true }); // don't publish the build manifest
+const initial = new Set();
+const walk = (key) => {
+  const m = manifest[key];
+  if (!m || initial.has(`/${m.file}`)) return;
+  initial.add(`/${m.file}`);
+  (m.imports || []).forEach(walk);
+};
+walk("index.html");
+walk("src/main.js");
+const js = [...initial].filter((f) => f.endsWith(".js"));
 const css = refs(/<link rel="stylesheet"[^>]*href="([^"]+)"/g);
 const woff2 = readdirSync(`${dist}/assets`).filter((f) => f.endsWith(".woff2"));
 const fontSet = (patterns) => woff2.filter((f) => patterns.some((p) => f.startsWith(p))).reduce((s, f) => s + raw(`/assets/${f}`), 0);

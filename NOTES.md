@@ -308,3 +308,74 @@ Checked (Playwright with the mock API, after a real RSVP + wish from the guest p
 
 Check on your phone: with the real Sheet connected, log in on a phone, tap WhatsApp for a test
 guest and scan the downloaded site QR.
+
+## Phase 8: Performance, QA, launch
+
+Built / changed:
+- `scripts/check-budget.mjs`: gzip sizes from the Vite manifest (entry + the app chunk loaded
+  right after first paint + their static imports; lazy chunks like QR code and the mock API
+  excluded), prints a table, fails the build over any hard limit, then deletes
+  `dist/.vite` so the manifest isn't published.
+- First paint no longer waits for JavaScript:
+  - The opening gate is pre-rendered into `index.html` at build time (`gateMarkup()` in
+    `fx/ornaments.js`, Vite plugin), and the middleware switches its text to the guest's language.
+  - Critical CSS (tokens + gate + Yatra One @font-face) is inlined; the main stylesheet
+    loads without blocking render; `#main` stays `visibility: hidden` until the gate is tapped
+    (it's behind the doors anyway).
+  - `src/boot.js` starts the app on the browser's first-contentful-paint event.
+  - Scenes mount one per task; scroll animations are built after the gate opens, one builder
+    per task (no long tasks).
+  - Howler's AudioContext is created on the tap, not at import (it was the biggest script cost).
+  - The Great Vibes preload was dropped: the hero names are behind the doors, so only Yatra One
+    (gate text) is above the fold. Deviation from SPEC §9.2 "preload 2 fonts", measured to help.
+  - One stylesheet for both pages (`cssCodeSplit: false`, admin rules add ~2 KB).
+- Error boundaries: every scene mount and every animation builder is wrapped; if the gate
+  fails it is removed and the page is shown.
+- `README.md` for the owner; `MANUAL-STEPS.md` updated (Admin.gs, SITE_URL property, `npm install`).
+
+Lighthouse 12, mobile (simulated slow 4G, 4× CPU), production build on `wrangler pages dev`,
+no photos/audio (like today's repo):
+
+| URL | Performance | Accessibility | Best Practices | FCP | LCP | TBT | CLS |
+|---|---|---|---|---|---|---|---|
+| `/?g=devAll001` (English guest) | 96 | 100 | 100 | 2.0 s | 2.3 s | 40 ms | 0 |
+| `/?g=devHindi3` (Hindi guest) | 98 | 100 | 100 | 1.7 s | 2.0 s | 20 ms | 0 |
+| `/` (no guest) | 98 | 100 | 100 | 1.7 s | 2.0 s | 10 ms | 0 |
+
+(Before the Phase 8 work: Performance 57, FCP 3.6 s, LCP 4.7 s, TBT 670 ms.)
+
+Budget (`npm run build`): initial JS 105.3 KB gz / 150, CSS 6.6 KB / 40, HTML 11.1 KB / 30,
+og image 64 KB / 300, English fonts 135 KB / 250, Hindi fonts 420 KB / 250 (owner-approved
+exception, see top), first load (Hindi) 543 KB / 1.5 MB.
+
+Audit (Playwright on the production build, 360 px and 280 px ≈ 130% text on a 360 px phone):
+- [x] No horizontal scroll at 280 / 360 / 1280.
+- [x] Every `<img>` has width, height and alt (the lightbox image gets them when opened).
+- [x] Every SVG is `aria-hidden` or labelled; every form control has a label.
+- [x] All buttons / links / segments ≥ 44 × 44 px (inline text links excluded).
+- [x] `innerHTML` only for our own static SVG strings and trusted wedding.json copy;
+      everything from the Sheet / URL / guest goes through `textContent`.
+- [x] No `will-change` left on any element after animations.
+- [x] All earlier phase test scripts re-run green on both the dev server and the production build.
+
+Compatibility test matrix (SPEC §10). Only Chromium could be tested here:
+
+| Target | Status |
+|---|---|
+| Chromium desktop (Playwright, 360/390/1280 px) | PASS |
+| Reduced motion (emulated) | PASS |
+| Offline / flaky network during RSVP (emulated) | PASS |
+| WhatsApp in-app browser, Android | NOT TESTED: needs a phone |
+| WhatsApp in-app browser, iOS | NOT TESTED: needs a phone |
+| Chrome Android (mid/low-end, 4 GB) | NOT TESTED: needs a phone |
+| Samsung Internet | NOT TESTED |
+| Safari iOS 16+ (audio after tap, .ics, 100dvh) | NOT TESTED |
+| Instagram in-app browser | NOT TESTED |
+| System font size "Large" | Approximated with a 280 px viewport: PASS; real phone NOT TESTED |
+
+Still open / needs the owner:
+- Real assets (Ganesh, doors, toran, agni kund, varmala couple, mehendi hand, audio, photos):
+  procedural fallbacks are in place; drop files into `assets/` and rebuild.
+- Real content in `content/wedding.json` (currently sample data with the new couple names).
+- Google Sheet + Apps Script, GitHub, Cloudflare (MANUAL-STEPS §2–§4).
+- Phone testing and the soft launch (MANUAL-STEPS §6).

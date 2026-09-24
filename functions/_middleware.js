@@ -43,7 +43,11 @@ export async function onRequest(ctx) {
     .on('meta[name="twitter:title"]', new SetAttr("content", title))
     .on('meta[property="og:description"]', new SetAttr("content", desc))
     .on('meta[name="description"]', new SetAttr("content", desc))
-    .on('meta[property="og:url"]', new SetAttr("content", ogUrl));
+    .on('meta[property="og:url"]', new SetAttr("content", ogUrl))
+    // The pre-rendered gate is in the default language; switch it to the guest's.
+    .on("#gate-open span", { element: (el) => el.setInnerContent(wedding.gate.cta[l]) })
+    .on("#gate-skip", { element: (el) => el.setInnerContent(wedding.gate.skip[l]) })
+    .on(".gate-hint", { element: (el) => el.setInnerContent(wedding.gate.hint[l]) });
   if (guest) {
     const json = JSON.stringify({ id, ...guest }).replace(/</g, "\\u003c");
     rewriter = rewriter.on("head", {

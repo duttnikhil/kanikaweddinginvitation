@@ -11,11 +11,12 @@ let shehnai = null;
 let started = false;
 let muted = false;
 try { muted = sessionStorage.getItem("muted") === "1"; } catch { /* ignore */ }
-Howler.mute(muted);
+// Note: no Howler call at load time; the first one creates the AudioContext (slow on phones).
 const listeners = new Set();
 
 // Called inside the gate tap (user gesture): creates the sounds so iOS allows playback.
 export function unlock() {
+  Howler.mute(muted);
   if (SHANKH && !shankh) shankh = new Howl({ src: [SHANKH], volume: 0.9 });
   if (SHEHNAI && !shehnai) shehnai = new Howl({ src: [SHEHNAI], html5: true, loop: true, volume: 0 });
 }

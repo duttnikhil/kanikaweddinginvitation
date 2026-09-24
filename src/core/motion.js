@@ -1,5 +1,5 @@
 // GSAP + plugins + Lenis (SPEC §7.1). Scenes register animation builders with scene();
-// they all live inside one gsap.matchMedia so a language switch can rebuild them cleanly.
+// each runs in its own gsap.matchMedia so a language switch can revert and rebuild them cleanly.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -35,33 +35,42 @@ export function split(el, type = "chars") {
 }
 
 const builders = [];
-let mm = null;
+let contexts = [];
+let generation = 0;
+
+// Give the browser a chance to paint / handle input between chunks of work.
+export const yieldToMain = () =>
+  globalThis.scheduler?.yield ? globalThis.scheduler.yield() : new Promise((r) => setTimeout(r, 0));
 
 export function scene(fn) {
   builders.push(fn);
 }
 
-// Builders may return a cleanup function (e.g. to remove a class they added).
-export function build() {
-  mm = gsap.matchMedia();
-  mm.add(CONDITIONS, (c) => {
-    const cleanups = [];
-    for (const fn of builders) {
+// One matchMedia per builder, one task per builder (no long task). Builders may return a
+// cleanup function (e.g. to remove a class they added). A revert() mid-build cancels it.
+export async function build() {
+  const gen = ++generation;
+  for (const fn of builders) {
+    const mm = gsap.matchMedia();
+    mm.add(CONDITIONS, (c) => {
       try {
-        const undo = fn(c.conditions);
-        if (typeof undo === "function") cleanups.push(undo);
+        return fn(c.conditions);
       } catch (err) {
         console.error("[motion]", err);
       }
-    }
-    return () => cleanups.forEach((f) => f());
-  });
+    });
+    contexts.push(mm);
+    await yieldToMain();
+    if (gen !== generation) return;
+  }
+  ScrollTrigger.sort();
   ScrollTrigger.refresh();
 }
 
 export function revert() {
-  mm?.revert();
-  mm = null;
+  generation++;
+  contexts.forEach((mm) => mm.revert());
+  contexts = [];
 }
 
 // Fade/slide elements up when they scroll into view (SPEC §7.1 default reveal).

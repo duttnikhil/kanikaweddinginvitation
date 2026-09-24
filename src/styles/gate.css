@@ -98,3 +98,5 @@ html:not(.gate-open) .floating { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
+/* Until the gate is tapped the page behind the doors is not painted (it can't be seen anyway). */
+.gate-closed #main { visibility: hidden; }

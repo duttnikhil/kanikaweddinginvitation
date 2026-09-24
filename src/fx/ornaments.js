@@ -85,6 +85,19 @@ export function door(side) {
 <circle cx="${knobX}" cy="312" r="5" fill="#E9D29A"/></svg>`;
 }
 
+// Opening gate markup (SPEC §7.4). Rendered into index.html at build time so the first paint
+// doesn't wait for JS; opening.js adopts it. Text is trusted copy from wedding.json.
+export function gateMarkup({ cta, skip, hint }, { doorLeft, doorRight, toranSvg } = {}) {
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  return `<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-open">
+<div class="door door-left" aria-hidden="true">${doorLeft || door("left")}</div>
+<div class="door door-right" aria-hidden="true">${doorRight || door("right")}</div>
+<div class="gate-light" aria-hidden="true"></div>
+<div class="gate-toran" aria-hidden="true">${toranSvg || toran()}</div>
+<div class="gate-center"><button type="button" id="gate-open" class="gate-btn"><span>${esc(cta)}</span></button>${hint ? `<p class="gate-hint">${esc(hint)}</p>` : ""}</div>
+<button type="button" id="gate-skip" class="gate-skip">${esc(skip)}</button></div>`;
+}
+
 // Fire altar with three flame groups #flame-1..3 (fallback for agni-kund.svg)
 export function agniKund() {
   const g = gid("ak");
