@@ -273,3 +273,38 @@ Checked (wrangler pages dev on the production build, mock guests via `sync-guest
 
 Your part: MANUAL-STEPS §3 (GitHub + Cloudflare) and §4 (deploy hook), then send yourself
 `https://arjit-weds-kanika.pages.dev/?g=<real id>` on WhatsApp and check the preview.
+
+## Phase 7: Admin dashboard
+
+Built (`admin/index.html`, `src/admin/admin.js` + `views.js`, `src/styles/admin.css`,
+labels in `content/admin.json`):
+- Login → `admin.summary`; the password is kept in sessionStorage (tab only), re-sent with
+  every call; any `forbidden` logs out. Wrong password → message (the API waits 1 s).
+- Summary: invited / sent / opened % / replied %, per-function table (invited, yes families,
+  yes people, maybe people, no, not replied, veg / jain / non-veg), arrivals grouped by date
+  and mode with people counts (for pickups).
+- Guests: search (name, Hindi name, phone, notes), filters All / Not sent / Not opened /
+  Not replied / Ladke wale / Ladki wale; per row WhatsApp (`wa.me/<phone>?text=` built from
+  `share.whatsappTemplate` in the guest's language with `{name}` and `{link}`), Copy link,
+  Preview (`/?g=id&preview=1`, so no open ping), Mark sent. Actions are the second column so
+  they're visible on a phone without scrolling the table sideways.
+- Wishes: approve / hide toggles.
+- Tools: site QR PNG (512 px) and UPI QR downloads, RSVP CSV export (UTF-8 BOM for Excel,
+  formula-guarded cells).
+- Loading + error states with Retry for every call.
+
+Decisions:
+- Admin labels are English only and live in `content/admin.json` (internal family tool, not
+  guest-facing). Invite links use `meta.siteUrl` from wedding.json, so keep that correct.
+
+Checked (Playwright with the mock API, after a real RSVP + wish from the guest page):
+- [x] Counts match a manual count: Pheras yes 1 family / 3 people, veg 2 / jain 1 / non-veg 0;
+      the arrival shows "Fri, 11 Dec / train (3): Gupta Parivar 14:30 ×3".
+- [x] WhatsApp link opens `wa.me/<phone>` with the personalised message + link.
+- [x] "Not replied" lists exactly the guests with no RSVP rows.
+- [x] Mark sent removes the guest from "Not sent"; search works inside a filter.
+- [x] Wish toggle works; site QR PNG and RSVP CSV download.
+- [x] Real-API auth (wrong password → forbidden) covered by `npm test`.
+
+Check on your phone: with the real Sheet connected, log in on a phone, tap WhatsApp for a test
+guest and scan the downloaded site QR.
