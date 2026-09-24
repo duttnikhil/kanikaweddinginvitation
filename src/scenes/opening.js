@@ -82,6 +82,15 @@ export function mount(ctx) {
     if (tl) tl.progress(1);
     else finish();
   });
+
+  // Replay a tap that happened before the app loaded (no sound: not a user gesture any more).
+  const root = document.documentElement;
+  root.dataset.appReady = "1";
+  const early = root.dataset.earlyTap;
+  if (early) {
+    delete root.dataset.earlyTap;
+    document.getElementById(early)?.click();
+  }
 }
 
 function introTimeline(ctx, { center, skipBtn, left, right, light, idle, finish }) {

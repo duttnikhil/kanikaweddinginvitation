@@ -155,7 +155,7 @@ function menuPublish() {
 function menuLinks() {
   var site = String(PropertiesService.getScriptProperties().getProperty('SITE_URL') || '').replace(/\/$/, '');
   var ui = SpreadsheetApp.getUi();
-  if (!site) return ui.alert('Set SITE_URL in Script Properties (e.g. https://arjit-weds-kanika.pages.dev).');
+  if (!site) return ui.alert('Set SITE_URL in Script Properties (e.g. https://kanika-weds-arjit.pages.dev).');
   var ss = SpreadsheetApp.getActive();
   var sh = ss.getSheetByName(TAB.links) || ss.insertSheet(TAB.links);
   var rows = [['guest_id', 'name_en', 'phone', 'link']];

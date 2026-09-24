@@ -1,6 +1,6 @@
 // Saat phere (SPEC §7.8). Static render = agni kund + numbered vachan list.
 // Phase 5 motion switches to the pinned stage (diya circling, one vachan at a time).
-import { h, svg } from "../core/dom.js";
+import { h, svg, append } from "../core/dom.js";
 import { fill } from "../core/i18n.js";
 import { ownerSvg } from "../core/assets.js";
 import { agniKund, diya } from "../fx/ornaments.js";
@@ -23,7 +23,7 @@ export function mount(ctx) {
   if (!p?.vachans?.length) return;
   const sec = section("phere", { title: p.title, tone: "dark" });
   const dots = h("div", { class: "phere-dots", "aria-hidden": "true" }, p.vachans.map(() => h("span", { class: "phere-dot" })));
-  sec.append(
+  append(sec, 
     h("p", { class: "phere-intro prose", text: p.intro }),
     h("div", { class: "phere-pin" },
       h("div", { class: "phere-stage", "aria-hidden": "true" }, stage()),

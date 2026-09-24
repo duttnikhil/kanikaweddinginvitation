@@ -1,5 +1,5 @@
 // Couple portrait cards in jharokha arches (SPEC §7.3 #3).
-import { h, svg } from "../core/dom.js";
+import { h, svg, append } from "../core/dom.js";
 import { photo, picture } from "../core/assets.js";
 import { jharokha, archClipDefs } from "../fx/ornaments.js";
 import { mandala } from "../fx/mandala.js";
@@ -24,8 +24,8 @@ export function mount(ctx) {
   const sec = section("couple", {
     title: (l) => `${groom.name[l]} ${ctx.content.hero.joiner[l]} ${bride.name[l]}`,
   });
-  sec.append(h("div", { class: "couple-grid" }, card(ctx, groom, 21), card(ctx, bride, 34)));
-  sec.append(svg(archClipDefs()));
+  append(sec, h("div", { class: "couple-grid" }, card(ctx, groom, 21), card(ctx, bride, 34)));
+  append(sec, svg(archClipDefs()));
   ctx.main.append(sec);
 
   // Arch reveal (clip-path wipe up) + name characters.

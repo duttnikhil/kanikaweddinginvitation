@@ -1,5 +1,5 @@
 // Shagun via UPI: deep link, QR, VPA copy (SPEC §7.15). Hidden if disabled or in post phase.
-import { h } from "../core/dom.js";
+import { h, append } from "../core/dom.js";
 import { enabled } from "../core/content.js";
 import { section, copyButton } from "./common.js";
 
@@ -16,7 +16,7 @@ export function mount(ctx) {
   if (!enabled(s) || !s.vpa || ctx.phase === "post") return;
   const sec = section("shagun", { title: s.title });
   const canvas = h("canvas", { class: "upi-qr", width: 220, height: 220, role: "img", "aria-label": s.vpa });
-  sec.append(
+  append(sec, 
     h("p", { class: "prose shagun-line", text: s.line, "data-reveal": "" }),
     h("div", { class: "qr-frame" }, canvas),
     h("a", { class: "btn", href: upiLink(s) }, ctx.icon("gift"), h("span", { text: s.payButton })),

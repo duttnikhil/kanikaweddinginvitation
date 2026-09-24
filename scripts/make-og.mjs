@@ -9,12 +9,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { writeFileSync } from "node:fs";
 import { mandala } from "../src/fx/mandala.js";
-import { divider } from "../src/fx/ornaments.js";
+import { divider, floralSpray } from "../src/fx/ornaments.js";
 
 const w = JSON.parse(readFileSync("content/wedding.json", "utf8"));
 const font = (pkg, file) => pathToFileURL(`node_modules/@fontsource/${pkg}/files/${file}`).href;
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
-const { groom, bride } = w.couple;
+const { groom, bride } = w.couple; // bride first (client request)
 
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face { font-family: "Yatra One"; src: url(${font("yatra-one", "yatra-one-devanagari-400-normal.woff2")}); unicode-range: U+0900-097F, U+200C-200D, U+25CC, U+A8E0-A8FF; }
@@ -23,19 +23,23 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face { font-family: "Cinzel"; src: url(${font("cinzel", "cinzel-latin-500-normal.woff2")}); }
 * { margin: 0; box-sizing: border-box; }
 body { width: 1200px; height: 630px; overflow: hidden; display: grid; place-items: center;
-  background: radial-gradient(circle at 50% 45%, #7a1418 0, #5A0E12 55%, #3d080b 100%); color: #E9D29A; text-align: center; }
-.frame { position: absolute; inset: 22px; border: 2px solid #C9A043; border-radius: 12px; box-shadow: inset 0 0 0 8px #5A0E12, inset 0 0 0 9px #8A6A1F; }
-.m { position: absolute; width: 560px; height: 560px; left: 320px; top: 35px; opacity: .28; }
+  background: radial-gradient(circle at 50% 40%, #fff 0, #EEF3FA 55%, #DCE7F5 100%); color: #26324A; text-align: center; }
+.frame { position: absolute; inset: 22px; border: 2px solid #C5A165; box-shadow: inset 0 0 0 8px #F8FAFD, inset 0 0 0 9px #C5A165; }
+.m { position: absolute; width: 560px; height: 560px; left: 320px; top: 35px; opacity: .22; }
+.fl { position: absolute; width: 260px; }
+.fl1 { left: 10px; top: 10px; transform: rotate(-90deg) scaleX(-1); }
+.fl2 { right: 10px; bottom: 10px; transform: rotate(90deg) scaleX(-1); }
 .c { position: relative; display: grid; gap: 14px; justify-items: center; }
-.inv { font: 30px "Yatra One"; color: #C9A043; }
-.hi { font: 96px/1.15 "Yatra One"; color: #F4E7CC; }
-.en { font: 64px/1 "Great Vibes"; color: #E9D29A; }
-.d { font: 500 30px "Cinzel"; letter-spacing: .08em; color: #E9D29A; }
+.inv { font: 30px "Yatra One"; color: #8A6630; }
+.en { font: 120px/1.05 "Great Vibes"; color: #8A6630; }
+.caps { font: 500 26px "Cinzel"; letter-spacing: .3em; color: #26324A; }
+.d { font: 500 30px "Cinzel"; letter-spacing: .08em; color: #26324A; }
 .dv { width: 360px; }
 </style></head><body><div class="frame"></div><div class="m">${mandala(108, { width: 1.2 })}</div>
+<div class="fl fl1">${floralSpray("left")}</div><div class="fl fl2">${floralSpray("right")}</div>
 <div class="c"><p class="inv">${esc(w.invocation.line.hi)}</p>
-<p class="hi">${esc(groom.name.hi)} ${esc(w.hero.joiner.hi)} ${esc(bride.name.hi)}</p>
-<p class="en">${esc(groom.name.en)} ${esc(w.hero.joiner.en)} ${esc(bride.name.en)}</p>
+<p class="caps">${esc(w.cover?.vertical?.en || "")}</p>
+<p class="en">${esc(bride.name.en)} ${esc(w.hero.joiner.en)} ${esc(groom.name.en)}</p>
 <div class="dv">${divider()}</div>
 <p class="d">${esc(w.meta.dateRange.en)} · ${esc(w.meta.city.en)}</p></div></body></html>`;
 

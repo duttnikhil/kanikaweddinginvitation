@@ -43,11 +43,12 @@ export function h(tag, props, ...children) {
     else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
     else el.setAttribute(k, v === true ? "" : String(v));
   }
-  append(el, children);
+  append(el, ...children);
   return el;
 }
 
-function append(el, children) {
+// Like Element.append, but skips null/false (native append would insert the text "null").
+export function append(el, ...children) {
   for (const c of children.flat(Infinity)) {
     if (c == null || c === false) continue;
     el.append(c instanceof Node ? c : document.createTextNode(String(c)));

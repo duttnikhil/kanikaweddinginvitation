@@ -1,5 +1,5 @@
 // Travel & stay (SPEC §7.3 #13). Optional block.
-import { h } from "../core/dom.js";
+import { h, append } from "../core/dom.js";
 import { enabled } from "../core/content.js";
 import { section } from "./common.js";
 
@@ -7,7 +7,7 @@ export function mount(ctx) {
   const t = ctx.content.travel;
   if (!enabled(t)) return;
   const sec = section("travel", { title: t.title });
-  sec.append(
+  append(sec, 
     h("ul", { class: "travel-list" }, (t.items || []).map((it) =>
       h("li", { class: "travel-item", "data-reveal": "" },
         ctx.icon(it.icon === "plane" ? "plane" : it.icon === "train" ? "train" : "map-pin", "ic travel-ic"),

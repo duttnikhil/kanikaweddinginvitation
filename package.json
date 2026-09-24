@@ -1,7 +1,7 @@
 {
   "name": "shubh-vivah",
   "version": "1.0.0",
-  "description": "Arjit weds Kanika - wedding invite website",
+  "description": "Kanika weds Arjit - wedding invite website",
   "scripts": {
     "dev": "vite",
     "build": "npm run images && vite build && npm run budget",

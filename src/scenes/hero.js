@@ -1,9 +1,9 @@
-// Hero: invocation, Ganesh art, guest greeting, couple names, date (SPEC §7.3 #1).
+// Hero / cover page (SPEC §7.3 #1, restyled to the client's page-1 sample).
 // In the post phase this becomes the thank-you hero (SPEC §7.16).
 import { h, svg } from "../core/dom.js";
 import { ownerSvg, photo, picture } from "../core/assets.js";
 import { mandala } from "../fx/mandala.js";
-import { toran } from "../fx/ornaments.js";
+import { toran, monogram, floralSpray, divider } from "../fx/ornaments.js";
 
 export function ganeshArt() {
   const line = ownerSvg("ganesh-line");
@@ -35,23 +35,32 @@ function greeting(c, guest) {
     h("p", { class: "greeting-sub", text: c.hero.genericGreeting }));
 }
 
+// Page 1 (client sample): arch monogram, guest greeting, cover art, names, vertical label.
+// Bride's name comes first everywhere (client request).
 export function mount(ctx) {
   const { content: c, guest } = ctx;
   if (ctx.phase === "post") return postHero(ctx);
-  const { groom, bride } = c.couple;
-  const sec = h("section", { id: "hero", class: "section hero", "aria-labelledby": "hero-names" },
-    h("div", { class: "hero-toran", "aria-hidden": "true", html: ownerSvg("toran") || toran() }),
-    h("p", { class: "invocation", text: c.invocation.line }),
-    ganeshArt(),
+  const { bride, groom } = c.couple;
+  const cv = c.cover;
+  const names = (l) => `${bride.name[l]} ${c.hero.joiner[l]} ${groom.name[l]}`;
+  const mono = svg(monogram({ first: bride.initial, second: groom.initial, namesText: names("en").toUpperCase(), date: cv.monogramDate }));
+  mono.classList.add("ganesh-line", "is-fallback"); // drawn by the gate intro
+  const coverPhoto = photo("cover.jpg");
+  const art = coverPhoto
+    ? picture(coverPhoto, names, { eager: true, cls: "cover-photo" })
+    : h("div", { class: "cover-florals", "aria-hidden": "true" }, svg(floralSpray("right")), svg(floralSpray("left")));
+  const sec = h("section", { id: "hero", class: "section hero cover", "aria-labelledby": "hero-names" },
+    h("p", { class: "cover-vertical", "aria-hidden": "true", text: cv.vertical }),
+    h("div", { class: "ganesh cover-mono", "aria-hidden": "true" }, mono),
     greeting(c, guest),
-    h("h1", { id: "hero-names", class: "couple-names script" },
-      h("span", { class: "name", text: groom.name }),
+    art,
+    h("h1", { id: "hero-names", class: "couple-names cover-names" },
+      h("span", { class: "name", text: bride.name }),
       h("span", { class: "joiner", text: c.hero.joiner }),
-      h("span", { class: "name", text: bride.name })),
-    h("p", { class: "hero-date" },
-      h("span", { text: c.meta.dateRange }), h("span", { class: "dot", "aria-hidden": "true" }, "·"), h("span", { text: c.meta.city })),
-    h("a", { href: "#amantran", class: "scroll-hint" },
-      h("span", { text: c.hero.scrollHint }), ctx.icon("chevron-down")));
+      h("span", { class: "name", text: groom.name })),
+    svg(divider()),
+    h("p", { class: "hero-date" }, h("span", { text: c.meta.dateRange }), h("span", { class: "dot", "aria-hidden": "true" }, "·"), h("span", { text: c.meta.city })),
+    h("a", { href: "#welcome", class: "scroll-hint" }, h("span", { text: c.hero.scrollHint }), ctx.icon("chevron-down")));
   ctx.main.append(sec);
   return sec;
 }

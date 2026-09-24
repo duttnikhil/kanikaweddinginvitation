@@ -42,11 +42,11 @@ the JSON date; the API enforces the Sheet value. Format the `value` column as **
 ### Filling guests
 One row per family: `name_en`, `name_hi`, optional salutations, `side` (`ladke` / `ladki` /
 `common`), `phone` (91 + 10 digits, no `+`/spaces), `allowed_events` (`ALL` or ids from
-wedding.json, e.g. `sangeet,phere,reception`), `max_pax`, `lang` (`hi` / `en`).
+wedding.json, e.g. `phoolon-haldi,phere`), `max_pax`, `lang` (`hi` / `en`).
 **Leave `guest_id` empty**; menu *Shubh Vivah ▸ Generate missing guest IDs* fills it.
 Leave the other columns empty; the website fills them.
 
-Event ids in this wedding.json: `haldi`, `mehendi`, `sangeet`, `baraat`, `phere`, `reception`.
+Event ids in this wedding.json: `haldi` (Mandap & Haldi), `mehendi`, `phoolon-haldi`, `phere` (Wedding Ceremony), `vidaai`.
 
 ## 2. Apps Script code
 
@@ -66,7 +66,7 @@ Event ids in this wedding.json: `haldi`, `mehendi`, `sangeet`, `baraat`, `phere`
 | `ADMIN_PASSWORD` | a strong password; only the family admins get it |
 | `EXPORT_KEY` | 32 random characters (password generator); same value goes in `.env` / Cloudflare |
 | `DEPLOY_HOOK_URL` | empty for now; Cloudflare deploy hook URL later (MANUAL-STEPS §4) |
-| `SITE_URL` | `https://arjit-weds-kanika.pages.dev` (used by "Copy all invite links") |
+| `SITE_URL` | `https://kanika-weds-arjit.pages.dev` (used by "Copy all invite links") |
 
 ## 4. Deploy
 

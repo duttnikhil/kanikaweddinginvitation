@@ -36,7 +36,7 @@ hain. Wo sab yahan hain, kab karna hai woh bhi likha hai. Sab free hai.
      | `ADMIN_PASSWORD` | koi strong password (family admins ko hi batana) |
      | `EXPORT_KEY` | 32 random characters (koi password generator se) |
      | `DEPLOY_HOOK_URL` | abhi khali, §4 mein bharenge |
-     | `SITE_URL` | `https://arjit-weds-kanika.pages.dev` ("Copy all invite links" ke liye) |
+     | `SITE_URL` | `https://kanika-weds-arjit.pages.dev` ("Copy all invite links" ke liye) |
 4. **Deploy ▸ New deployment** → type **Web app**
    - Execute as: **Me**
    - Who has access: **Anyone**
@@ -75,7 +75,7 @@ version ▸ Deploy** karna. "New deployment" mat karna, warna URL badal jayega.
    `SITE_URL` (= `https://<project-name>.pages.dev`).
 5. Save and Deploy. 1–2 minute mein site live: `https://<project-name>.pages.dev`.
    Poori detail (env vars, testing): `DEPLOY.md`.
-   Project name soch ke rakhna (jaise `arjit-weds-kanika`), yahi link guests ko jayega.
+   Project name soch ke rakhna (jaise `kanika-weds-arjit`), yahi link guests ko jayega.
 
 ---
 
@@ -94,7 +94,7 @@ Isse Sheet se naye guests daalte hi site apne aap update hogi.
 
 1. **Guests** tab mein har parivaar ki ek row: `name_en`, `name_hi`, `salutation`, `side`,
    `phone` (91 + 10 digit, bina + ya space), `allowed_events` (`ALL` ya
-   `sangeet,phere,reception`), `max_pax`, `lang`.
+   `phoolon-haldi,phere`), `max_pax`, `lang`.
 2. Menu **Shubh Vivah ▸ Generate missing guest IDs** (khud se ID mat likhna).
 3. Menu **Shubh Vivah ▸ Publish guest list** → 2 minute ruko.
 4. Pehle apne aap ko ek test guest bana ke WhatsApp par link bhejo, preview check karo.

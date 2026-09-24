@@ -16,7 +16,7 @@
   width: 50.5%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background: linear-gradient(90deg, #4a0b0f, #6d1418 50%, #4a0b0f);
+  background: linear-gradient(90deg, #e3eaf5, #f8fafd 50%, #e3eaf5);
   box-shadow: inset 0 0 0 1px rgb(201 160 67 / 0.4);
 }
 .door > svg { width: 100%; height: 100%; }
@@ -54,17 +54,17 @@
   height: 128px;
   border: 2px solid var(--gold);
   border-radius: 50%;
-  background: radial-gradient(circle, #7a1216 0, var(--maroon) 70%);
-  color: var(--gold-light);
+  background: radial-gradient(circle, #fff 0, var(--paper-2) 75%);
+  color: var(--sindoor);
   font: 400 20px/1.2 var(--f-display);
-  box-shadow: 0 0 0 6px rgb(90 14 18 / 0.6), 0 0 0 7px var(--gold-dark), 0 10px 40px rgb(0 0 0 / 0.5);
+  box-shadow: 0 0 0 6px rgb(255 255 255 / 0.7), 0 0 0 7px var(--gold), 0 10px 40px rgb(38 50 74 / 0.25);
 }
 :lang(hi) .gate-btn { font-family: "Yatra One", serif; font-size: 22px; }
 .gate-hint {
   padding: 4px 12px;
   border-radius: 999px;
-  background: rgb(42 8 10 / 0.55);
-  color: var(--gold-light);
+  background: rgb(255 255 255 / 0.8);
+  color: var(--ink-soft);
   font: 400 13px/1.4 var(--f-ui);
 }
 .gate-skip {
@@ -74,10 +74,10 @@
   z-index: 3;
   min-height: 44px;
   padding: 8px 16px;
-  border: 1px solid rgb(233 210 154 / 0.5);
+  border: 1px solid var(--gold);
   border-radius: 999px;
-  background: rgb(42 8 10 / 0.5);
-  color: var(--gold-light);
+  background: rgb(255 255 255 / 0.8);
+  color: var(--ink);
   font: 600 14px/1 var(--f-ui);
 }
 

@@ -1,5 +1,5 @@
 // Family contact people (public by design): phone as text + Copy + WhatsApp + Call (SPEC §7.3 #14)
-import { h } from "../core/dom.js";
+import { h, append } from "../core/dom.js";
 import { section, copyButton, waLink } from "./common.js";
 
 const pretty = (p) => {
@@ -12,7 +12,7 @@ export function mount(ctx) {
   if (!c?.people?.length) return;
   const ui = ctx.content.ui;
   const sec = section("contacts", { title: c.title });
-  sec.append(h("ul", { class: "contact-list" }, c.people.map((p) =>
+  append(sec, h("ul", { class: "contact-list" }, c.people.map((p) =>
     h("li", { class: "contact", "data-reveal": "" },
       h("h3", { text: p.name }),
       h("p", { class: "label", text: p.relation }),

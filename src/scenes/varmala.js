@@ -1,6 +1,6 @@
 // Varmala (SPEC §7.9): tap to exchange garlands along arcs, petals burst, "Shubh Mangal".
 // Optional markers #neck-groom / #neck-bride in the SVG give exact targets.
-import { h, svg } from "../core/dom.js";
+import { h, svg, append } from "../core/dom.js";
 import { ownerSvg } from "../core/assets.js";
 import { tr } from "../core/i18n.js";
 import { varmalaCouple } from "../fx/ornaments.js";
@@ -27,7 +27,7 @@ export function mount(ctx) {
   const btn = h("button", { type: "button", class: "btn varmala-btn" }, label);
   const after = h("p", { class: "varmala-after script", text: v.after, hidden: true });
   const stage = h("div", { class: "varmala-stage", "aria-hidden": "true" }, art);
-  sec.append(stage, after, btn);
+  append(sec, stage, after, btn);
   ctx.main.append(sec);
 
   const bride = art.querySelector("#garland-bride");

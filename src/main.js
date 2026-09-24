@@ -10,13 +10,10 @@ import * as audio from "./core/audio.js";
 import * as petals from "./fx/petals.js";
 import * as opening from "./scenes/opening.js";
 import * as hero from "./scenes/hero.js";
+import * as welcome from "./scenes/welcome.js";
 import * as amantran from "./scenes/amantran.js";
-import * as couple from "./scenes/couple.js";
-import * as story from "./scenes/story.js";
 import * as countdown from "./scenes/countdown.js";
 import * as eventsScene from "./scenes/events.js";
-import * as pheras from "./scenes/pheras.js";
-import * as varmala from "./scenes/varmala.js";
 import * as gallery from "./scenes/gallery.js";
 import * as rsvp from "./scenes/rsvp.js";
 import * as shagun from "./scenes/shagun.js";
@@ -27,13 +24,16 @@ import * as closing from "./scenes/closing.js";
 import * as live from "./scenes/live.js";
 import * as floatingUi from "./scenes/floating-ui.js";
 
-const SCENES = { hero, amantran, couple, story, countdown, events: eventsScene, pheras, varmala, gallery, rsvp, shagun, wishes, travel, contacts, closing, live, floatingUi };
+// Client sequence (Kanika & Arjit): cover → welcome → invitation card → save the date →
+// celebrations + venues → RSVP → blessings → closing. couple/story/pheras/varmala modules
+// still exist and can be added back here.
+const SCENES = { hero, welcome, amantran, countdown, events: eventsScene, gallery, rsvp, shagun, wishes, travel, contacts, closing, live, floatingUi };
 
 // Alternate paper / paper-2 on the visible light sections (dark ones keep maroon).
 function toneSections(main) {
   let alt = false;
   for (const s of main.querySelectorAll(":scope > .section:not(.hero)")) {
-    if (s.classList.contains("section--dark")) { alt = false; continue; }
+    if (s.matches(".section--dark, .section--soft")) { alt = false; continue; }
     s.classList.toggle("section--alt", alt);
     alt = !alt;
   }

@@ -1,5 +1,5 @@
 // Event cards for the guest's allowed events, in date order (SPEC §7.3 #6, §7.13, §7.14).
-import { h, svg } from "../core/dom.js";
+import { h, svg, append } from "../core/dom.js";
 import { events } from "../core/content.js";
 import { getLang } from "../core/i18n.js";
 import { fmtDate, fmtTime } from "../core/time.js";
@@ -10,8 +10,19 @@ import { ownerSvg } from "../core/assets.js";
 import { section } from "./common.js";
 import { drawTargets } from "../fx/draw.js";
 
-const mapsUrl = (v) => v.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${v.lat},${v.lng}`;
-const dirUrl = (v) => `https://www.google.com/maps/dir/?api=1&destination=${v.lat},${v.lng}`;
+// Venue location: lat/lng when known, else the address text (`query`) for Google Maps search.
+const where = (v) => (v.lat != null && v.lng != null ? `${v.lat},${v.lng}` : v.query || "");
+const mapsUrl = (v) => v.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(where(v))}`;
+const dirUrl = (v) => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(where(v))}`;
+const hasPlace = (v) => !!(v && (v.mapsUrl || where(v)));
+
+// "4:00 PM onwards" / "11:00 AM – 1:00 PM"
+function timeText(ev, ui, l) {
+  const t = fmtTime(ev.start, l);
+  if (ev.showEnd && ev.end) return `${t} – ${fmtTime(ev.end, l)}`;
+  if (ev.onwards) return l === "hi" ? `${t} ${ui.onwards.hi}` : `${t} ${ui.onwards.en}`;
+  return t;
+}
 
 export function visibleEvents(guest) {
   return guest ? events.filter((e) => guest.allows(e.id)) : events;
@@ -19,7 +30,8 @@ export function visibleEvents(guest) {
 
 function motifArt(ev) {
   if (ev.motif === "haldi") return svg(`<svg viewBox="0 0 60 60"><circle cx="30" cy="32" r="18" fill="#F2B705"/><circle cx="30" cy="32" r="9" fill="#E0861B"/><path d="M30 4c4 6 6 9 6 11a6 6 0 0 1-12 0c0-2 2-5 6-11Z" fill="#F2B705"/></svg>`);
-  if (ev.motif === "mehendi") return svg(mandala(ev.id.length * 13, { stroke: "#7A3E12", width: 3 }));
+  if (ev.motif === "mehendi") return svg(mandala(ev.id.length * 13, { stroke: "#7A5A2E", width: 3 }));
+  if (ev.motif === "flowers") return svg(`<svg viewBox="0 0 60 60"><g fill="#E8B4BC">${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="30" cy="17" rx="7" ry="12" transform="rotate(${a} 30 30)"/>`).join("")}</g><circle cx="30" cy="30" r="6" fill="#F2C94C"/></svg>`);
   return svg(ev.id === "phere" ? diya() : kalash());
 }
 
@@ -71,13 +83,13 @@ function card(ctx, ev) {
   const ui = ctx.content.ui;
   const v = ev.venue;
   const dc = ev.dressCode;
-  const hasGeo = v && (v.mapsUrl || (v.lat != null && v.lng != null));
+  const hasGeo = hasPlace(v);
   return h("article", { class: `event-card event--${ev.motif}`, id: `event-${ev.id}`, "data-motif": ev.motif },
     h("div", { class: "event-arch", "aria-hidden": "true" }, motifArt(ev)),
     h("h3", { class: "event-name", text: ev.name }),
     h("p", { class: "event-when num" },
       h("span", { text: (l) => fmtDate(ev.start, l) }),
-      h("span", { class: "event-time", text: (l) => fmtTime(ev.start, l) })),
+      h("span", { class: "event-time", text: (l) => timeText(ev, ui, l) })),
     ev.muhurat ? h("p", { class: "event-muhurat", text: ev.muhurat }) : null,
     v ? h("div", { class: "event-venue" },
       h("p", { class: "venue-name", text: v.name }),
@@ -90,7 +102,7 @@ function card(ctx, ev) {
     ev.motif === "mehendi" ? mehendiArt(ctx) : null,
     h("div", { class: "event-actions" },
       hasGeo ? h("a", { class: "btn btn--ghost btn--sm", href: mapsUrl(v), target: "_blank", rel: "noopener" }, ctx.icon("map-pin"), h("span", { text: ui.maps })) : null,
-      hasGeo && v.lat != null ? h("a", { class: "btn btn--ghost btn--sm", href: dirUrl(v), target: "_blank", rel: "noopener" }, ctx.icon("navigation"), h("span", { text: ui.directions })) : null,
+      hasGeo ? h("a", { class: "btn btn--ghost btn--sm", href: dirUrl(v), target: "_blank", rel: "noopener" }, ctx.icon("navigation"), h("span", { text: ui.directions })) : null,
       calendarMenu(ctx, ev)),
     ev.motif === "haldi" ? h("div", { class: "haldi-layer", "aria-hidden": "true", html: haldiDrops() }) : null);
 }
@@ -99,9 +111,28 @@ export function mount(ctx) {
   const list = visibleEvents(ctx.guest);
   if (!list.length) return;
   const sec = section("utsav", { title: ctx.content.eventsTitle });
-  sec.append(h("div", { class: "event-list" }, list.map((ev) => card(ctx, ev))));
+  append(sec, h("div", { class: "event-list" }, list.map((ev) => card(ctx, ev))), venues(ctx, list));
   ctx.main.append(sec);
   ctx.motion.scene(({ full }) => full && animate(ctx, sec));
+}
+
+// All distinct venues of the guest's functions, each with Map + Directions (client asked for
+// both the Chhatarpur and the Jhansi location).
+function venues(ctx, list) {
+  const ui = ctx.content.ui;
+  const seen = new Map();
+  for (const ev of list) if (hasPlace(ev.venue)) seen.set(mapsUrl(ev.venue), ev.venue);
+  if (seen.size < 2 || !ctx.content.venuesTitle) return null;
+  return h("div", { class: "venues", "data-reveal": "" },
+    h("h3", { class: "venues-title", text: ctx.content.venuesTitle }),
+    [...seen.values()].map((v) => h("div", { class: "venue" },
+      ctx.icon("map-pin", "ic venue-ic"),
+      h("div", { class: "venue-body" },
+        h("p", { class: "venue-name", text: v.name }),
+        h("p", { class: "soft", text: v.address }),
+        h("div", { class: "event-actions" },
+          h("a", { class: "btn btn--sm", href: mapsUrl(v), target: "_blank", rel: "noopener" }, ctx.icon("map-pin"), h("span", { text: ui.maps })),
+          h("a", { class: "btn btn--ghost btn--sm", href: dirUrl(v), target: "_blank", rel: "noopener" }, ctx.icon("navigation"), h("span", { text: ui.directions })))))));
 }
 
 function animate(ctx, sec) {

@@ -44,8 +44,8 @@ body::before {
 @media (min-width: 1024px) {
   body {
     background:
-      radial-gradient(circle at 50% 0, #6d1418 0, var(--maroon) 60%),
-      var(--maroon);
+      radial-gradient(circle at 20% 0, #fff 0, var(--sky) 45%, #c9d8ec 100%),
+      var(--sky);
     background-attachment: fixed;
     padding-block: 48px;
   }
@@ -53,9 +53,9 @@ body::before {
   #main {
     box-shadow:
       0 0 0 1px var(--gold),
-      0 0 0 10px var(--maroon),
+      0 0 0 10px var(--paper-2),
       0 0 0 11px var(--gold-dark),
-      0 30px 80px rgb(0 0 0 / 0.45);
+      0 30px 80px rgb(38 50 74 / 0.25);
   }
   /* Ornate side borders: repeating gold motif strips */
   #main::before, #main::after {
@@ -148,7 +148,7 @@ h3 { font: 500 var(--fs-h3)/1.25 var(--f-display); color: var(--sindoor); }
 }
 .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
 
-:focus-visible { outline: 3px solid var(--peacock); outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 3px solid var(--peacock); outline-offset: 2px; }
 .section--dark :focus-visible { outline-color: var(--gold-light); }
 
 .sr-only {

@@ -7,7 +7,7 @@ import { ownerSvg } from "../core/assets.js";
 import { prefersReduced } from "../core/motion.js";
 
 const SPRITE = 48;
-const COLORS = [["#F2B705", "#E0861B"], ["#E0861B", "#C2410C"], ["#F5C518", "#F2B705"], ["#A3161A", "#6d0f13"], ["#C2185B", "#8E1040"]];
+const COLORS = [["#F6D5DA", "#E3A5AE"], ["#FFFFFF", "#F2D0D5"], ["#F3EAD6", "#D9BE8A"], ["#E8B4BC", "#C98B96"], ["#FFFFFF", "#E3EAF5"]];
 const OWNER = ["petal-marigold-1", "petal-marigold-2", "petal-marigold-3", "petal-rose-1", "petal-rose-2"];
 
 let canvas, g, sprites = [], petals = [], sparks = [];

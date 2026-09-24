@@ -1,5 +1,5 @@
 // Shared bits for section modules.
-import { h, svg } from "../core/dom.js";
+import { h, svg, append } from "../core/dom.js";
 import { tr } from "../core/i18n.js";
 import { divider } from "../fx/ornaments.js";
 
@@ -8,7 +8,7 @@ export function section(id, { title, tone } = {}) {
   const sec = h("section", { id, class: `section${tone ? ` section--${tone}` : ""}` });
   if (title) {
     sec.setAttribute("aria-labelledby", `${id}-title`);
-    sec.append(
+    append(sec, 
       h("header", { class: "sec-head" },
         svg(divider()),
         h("h2", { id: `${id}-title`, text: title, "data-reveal": "" })));

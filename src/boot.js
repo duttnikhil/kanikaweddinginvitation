@@ -5,6 +5,12 @@ import "./styles/base.css";
 import "./styles/sections.css";
 // gate.css is inlined into index.html as critical CSS (vite.config.js)
 
+// A tap on the static gate before the app has loaded is remembered and replayed by opening.js.
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest?.("#gate-open, #gate-skip");
+  if (btn && !document.documentElement.dataset.appReady) document.documentElement.dataset.earlyTap = btn.id;
+}, true);
+
 let started = false;
 const start = () => {
   if (started) return;

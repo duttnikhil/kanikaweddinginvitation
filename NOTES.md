@@ -379,3 +379,61 @@ Still open / needs the owner:
 - Real content in `content/wedding.json` (currently sample data with the new couple names).
 - Google Sheet + Apps Script, GitHub, Cloudflare (MANUAL-STEPS §2–§4).
 - Phone testing and the soft launch (MANUAL-STEPS §6).
+
+---
+
+# Branch `client-kanika`: client's content and design
+
+Source: the client's WhatsApp messages (23 Sep 2026) + two sample images (page 1: hands +
+arch monogram + vertical "WEDDING INVITATION"; page 2: "Shree Ganeshay Namah" card with Ganesh
+line art and floral corners). The two Instagram reels couldn't be viewed (Instagram needs a
+login); their captions list RSVP, countdown, venue maps and story, so those features stay.
+`main` still has the royal (laal-sona) version.
+
+Client rules followed:
+- **Bride's name first everywhere** (Kanika & Arjit): cover, monogram (K then A), card, welcome,
+  closing, OG image, WhatsApp message, page title, site URL → `kanika-weds-arjit.pages.dev`.
+  Exception: the hashtag `#ArjitWedsKanika` is kept exactly as the client wrote it. Ask her.
+- Page order: 1 cover (monogram, greeting, art, names, vertical label) → welcome (her "page 1"
+  text: Om, blessing, WE WELCOME YOU, names, tagline) → 2 invitation card (sample layout, bride
+  then groom with families, date + venue) → 3 Save the Date (date, "A new chapter begins…",
+  live countdown, hashtag) → celebrations (5 events) + Venues block with Map/Directions for
+  Chhatarpur and Jhansi → RSVP → blessings → closing "With blessings of our Khare family".
+- The client asked us to decide the page-2/page-3 split: parents and grandparents are shown once,
+  on the card (page 2); Save the Date carries date + countdown.
+
+Content decisions (all in `content/wedding.json`, `_readme` lists them):
+- English is the default language now (client's text is English). Hindi versions were written by
+  us: the family must check spellings (राजेय, प्रीति, जनार्दन, सुधा, अरविंद, मीना, श्रीवास्तव).
+- "Lt shri Arvind Shrivastava" is written as "(Late) Shri Arvind Shrivastava" / "स्व. श्री".
+- Not invented, so hidden until the client sends them: groom's grandparents, Vidaai venue
+  (card shows date/time only, no Map button), dress codes, contact people, UPI (shagun off),
+  photos (gallery off), story.
+- Venues have no coordinates: Map/Directions use the address text in Google Maps search.
+  Check that both pins land on the right place; for an exact pin put `lat`/`lng` or a
+  `mapsUrl` copied from Google Maps in wedding.json.
+- "4:00 pm onwards" → `onwards: true` ("4:00 PM onwards" / "शाम 4 बजे से"); Phoolon ki Haldi
+  shows the range 11:00 AM – 1:00 PM (`showEnd`). End times needed for the live phase are
+  assumed (+4 h; wedding until 2 AM).
+- **`meta.rsvpDeadline` = 15 Nov 2026 is a placeholder** (the old sample date was after the
+  wedding). Confirm with the family; the Sheet's `Settings ▸ rsvp_deadline` must match.
+- Event ids for the Sheet: `haldi`, `mehendi`, `phoolon-haldi`, `phere`, `vidaai`.
+
+Design (pastel, from the samples): ice-blue paper, antique gold, blush flowers. Token names are
+unchanged (`--sindoor` is now antique gold-brown `#8A6630`, AA contrast on paper and with white
+button text). New procedural art: arch monogram with names on the arch, minimal line Ganesh,
+floral sprays, pastel doors/toran/petals. Optional `assets/photos/cover.jpg` replaces the cover
+florals (for a "hands" photo like the sample; the sample's own artwork can't be reused).
+Couple cards, story, saat phere and varmala are left out of the page order (not in the client's
+flow); the modules still exist.
+
+Fixes found while doing this (also valid for main):
+- `:focus-visible` set `border-radius: 6px`, which turned the round focused gate button square.
+- Native `Element.append(null)` printed "null" (closing showed "nullnull"): scenes now use the
+  null-safe `append()` from dom.js.
+- Venue-less events crashed the calendar link (now guarded).
+- A tap on the pre-rendered gate before the app JS loaded was lost; it's now replayed.
+
+Checked (Playwright, 360 px, English + Hindi): all pages render, no console errors, no horizontal
+scroll; gate intro, RSVP (incl. offline/retry, prefill), admin counts, early-tap replay;
+`npm test` green; budget: JS 101.7 KB gz, CSS 7.5 KB, HTML 11 KB, OG image 66 KB.

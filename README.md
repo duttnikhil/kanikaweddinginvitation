@@ -1,4 +1,4 @@
-# Arjit weds Kanika: shaadi ka invite website
+# Kanika weds Arjit: shaadi ka invite website
 
 Animated Hindu wedding invite (Royal laal–sona theme) jo guests WhatsApp link se phone par
 kholte hain. Har parivaar ka apna link (`/?g=<id>`), apna naam, sirf unke functions, RSVP,
@@ -19,7 +19,7 @@ shagun, aashirwad, aur family ke liye `/admin/` dashboard. Kharcha ₹0.
 npm install                 # pehli baar
 npm run dev                 # http://localhost:5173
 ```
-- Test guests: `/?g=devAll001` (sab functions, English), `/?g=devRecp02` (sirf reception),
+- Test guests: `/?g=devAll001` (sab functions, English), `/?g=devRecp02` (sirf Jhansi wale functions),
   `/?g=devHindi3` (Hindi). Bina `g` ke: generic invite.
 - Phases dekhne ke liye: `/?phase=live` ya `/?phase=post` (sirf dev / `&preview=1` mein).
 - Admin: `http://localhost:5173/admin/`. Jab tak `.env` mein `VITE_API_URL` khali hai, sab
@@ -41,6 +41,7 @@ curl -s -A "WhatsApp/2.23.20.0 A" "http://localhost:8788/?g=devAll001" | grep og
 
 - **Saara text, naam, dates, venue, UPI, contacts:** `content/wedding.json` (Hindi + English
   dono). Code mein kahin aur text nahi hai. Admin page ke labels: `content/admin.json`.
+- **Cover photo (page 1, jaise client ka haathon wala sample):** `assets/photos/cover.jpg` daalo, apni photo ya AI se bani image. Na ho to phoolon wala design dikhta hai.
 - **Photos:** `assets/photos/` mein daalo (`groom.jpg`, `bride.jpg`, `roka.jpg`, `sagai.jpg`,
   `pw-01.jpg`…, jo naam wedding.json mein hain). `npm run build` khud chhote size banata hai.
 - **Artwork / music:** `assets/svg/*.svg` aur `assets/audio/*.mp3` (naam `ASSETS-AND-CONTENT.md` §10
@@ -54,7 +55,7 @@ curl -s -A "WhatsApp/2.23.20.0 A" "http://localhost:8788/?g=devAll001" | grep og
 1. Google Sheet ke **Guests** tab mein row (guest_id khali chhodo).
 2. Menu **Shubh Vivah ▸ Generate missing guest IDs**.
 3. Menu **Shubh Vivah ▸ Publish guest list** → ~2 min baad naye link par naam dikhega.
-4. `https://arjit-weds-kanika.pages.dev/admin/` → Guests → **WhatsApp** → bhejo → **Mark sent**.
+4. `https://kanika-weds-arjit.pages.dev/admin/` → Guests → **WhatsApp** → bhejo → **Mark sent**.
    Ek baar mein 30–40 se zyada nahi.
 
 ## Preview dobara test karna

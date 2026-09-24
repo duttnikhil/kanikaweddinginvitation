@@ -21,7 +21,7 @@ export function mount(ctx) {
     banner.hidden = !hit && !stream;
     if (!hit) return;
     label.textContent = tr(hit.now ? c.live.now : c.live.next);
-    text.textContent = `${tr(hit.event.name)} · ${tr(hit.event.venue?.name)}`;
+    text.textContent = [tr(hit.event.name), tr(hit.event.venue?.name)].filter(Boolean).join(" · ");
   };
   render();
   ctx.onLang(render);

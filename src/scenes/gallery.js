@@ -1,5 +1,5 @@
 // Gallery: 2/3-column masonry + lightbox with swipe and keyboard (SPEC §7.3 #9). Optional block.
-import { h } from "../core/dom.js";
+import { h, append } from "../core/dom.js";
 import { enabled } from "../core/content.js";
 import { tr } from "../core/i18n.js";
 import { photo, picture } from "../core/assets.js";
@@ -19,7 +19,7 @@ export function mount(ctx) {
     items.map((it, i) =>
       h("button", { type: "button", class: "gallery-item", i18n: { "aria-label": it.alt }, onclick: () => open(i) },
         picture(it.p, it.alt, { sizes: "(min-width: 768px) 180px, 50vw" }))));
-  sec.append(grid);
+  append(sec, grid);
   ctx.main.append(sec);
   ctx.motion.scene(({ full }) => {
     if (full) ctx.motion.revealOnScroll(grid.children, { y: 30, opacity: 0 }, { each: 0.06 });

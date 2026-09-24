@@ -1,5 +1,5 @@
 // Blessings: form (known guests only; the API needs the guest id) + wall of approved wishes.
-import { h } from "../core/dom.js";
+import { h, append } from "../core/dom.js";
 import { tr } from "../core/i18n.js";
 import { getWishes, sendWish } from "../core/api.js";
 import { section } from "./common.js";
@@ -40,9 +40,9 @@ export function mount(ctx) {
         btn.disabled = false;
       }
     });
-    sec.append(form);
+    append(sec, form);
   }
-  sec.append(empty, track);
+  append(sec, empty, track);
 
   function load() {
     getWishes().then((list) => {

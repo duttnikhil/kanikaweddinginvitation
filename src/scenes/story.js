@@ -1,5 +1,5 @@
 // Story timeline with a vine line (SPEC §7.3 #4). Optional block.
-import { h, svg } from "../core/dom.js";
+import { h, svg, append } from "../core/dom.js";
 import { enabled } from "../core/content.js";
 import { photo, picture } from "../core/assets.js";
 import { section } from "./common.js";
@@ -22,7 +22,7 @@ export function mount(ctx) {
         p ? picture(p, it.title, { sizes: "(min-width: 600px) 440px, 80vw", cls: "milestone-photo" }) : null);
     }));
   const wrap = h("div", { class: "story" }, svg(VINE), list);
-  sec.append(wrap);
+  append(sec, wrap);
   ctx.main.append(sec);
 
   // Vine draws with scroll; each dot pops when the line reaches it.

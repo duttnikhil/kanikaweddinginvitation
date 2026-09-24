@@ -1,6 +1,51 @@
 {
-  "_readme": "Mock guest map for `npm run dev` and local wrangler tests. Same shape as functions/_data/guests.js (SPEC §4.3). Try /?g=devAll001, /?g=devRecp02, /?g=devHindi3",
-  "devAll001": { "n": { "en": "Verma Parivar", "hi": "वर्मा परिवार" }, "s": { "en": "Shri & Smt.", "hi": "श्री एवं श्रीमती" }, "e": ["ALL"], "p": 4, "l": "en" },
-  "devRecp02": { "n": { "en": "Mehta Family", "hi": "मेहता परिवार" }, "s": { "en": "", "hi": "" }, "e": ["reception"], "p": 2, "l": "en" },
-  "devHindi3": { "n": { "en": "Gupta Parivar", "hi": "गुप्ता परिवार" }, "s": { "en": "Shri & Smt.", "hi": "श्री एवं श्रीमती" }, "e": ["sangeet", "phere", "reception"], "p": 6, "l": "hi" }
+  "_readme": "Mock guest map for `npm run dev` and local wrangler tests. Same shape as functions/_data/guests.js (SPEC §4.3). Try /?g=devAll001 (all, English), /?g=devRecp02 (Jhansi only), /?g=devHindi3 (Hindi)",
+  "devAll001": {
+    "n": {
+      "en": "Verma Parivar",
+      "hi": "वर्मा परिवार"
+    },
+    "s": {
+      "en": "Shri & Smt.",
+      "hi": "श्री एवं श्रीमती"
+    },
+    "e": [
+      "ALL"
+    ],
+    "p": 4,
+    "l": "en"
+  },
+  "devRecp02": {
+    "n": {
+      "en": "Mehta Family",
+      "hi": "मेहता परिवार"
+    },
+    "s": {
+      "en": "",
+      "hi": ""
+    },
+    "e": [
+      "phoolon-haldi",
+      "phere"
+    ],
+    "p": 2,
+    "l": "en"
+  },
+  "devHindi3": {
+    "n": {
+      "en": "Gupta Parivar",
+      "hi": "गुप्ता परिवार"
+    },
+    "s": {
+      "en": "Shri & Smt.",
+      "hi": "श्री एवं श्रीमती"
+    },
+    "e": [
+      "haldi",
+      "mehendi",
+      "phere"
+    ],
+    "p": 6,
+    "l": "hi"
+  }
 }

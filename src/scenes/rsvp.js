@@ -1,6 +1,6 @@
 // RSVP form (SPEC §7.10): one block per allowed event, pax + food steppers that must sum,
 // "same for all", shared arrival + message, prefill, optimistic success, error + retry.
-import { h, svg } from "../core/dom.js";
+import { h, svg, append } from "../core/dom.js";
 import { bind, fill, tr } from "../core/i18n.js";
 import { fmtDay, fmtDateTime } from "../core/time.js";
 import { getRsvp, sendRsvp } from "../core/api.js";
@@ -97,17 +97,17 @@ export function mount(ctx) {
   const r = c.rsvp;
   const deadline = c.meta.rsvpDeadline;
   const sec = section("rsvp", { title: r.title });
-  sec.append(h("p", { class: "prose rsvp-sub", text: (l) => fill(r.subtitle, { date: fmtDay(deadline, l) }, l) }));
+  append(sec, h("p", { class: "prose rsvp-sub", text: (l) => fill(r.subtitle, { date: fmtDay(deadline, l) }, l) }));
   ctx.main.append(sec);
 
   if (!ctx.guest) {
-    sec.append(h("p", { class: "rsvp-note prose", text: r.noGuest }),
+    append(sec, h("p", { class: "rsvp-note prose", text: r.noGuest }),
       h("a", { class: "btn btn--ghost", href: "#contacts", text: c.contacts.title }));
     return;
   }
   if (deadline && Date.now() > Date.parse(deadline)) {
     const p = c.contacts?.people?.[0];
-    sec.append(h("p", { class: "rsvp-note prose", text: (l) => fill(r.closed, { date: fmtDay(deadline, l), contact: p ? `${tr(p.name, l)} (+${p.phone})` : "" }, l) }));
+    append(sec, h("p", { class: "rsvp-note prose", text: (l) => fill(r.closed, { date: fmtDay(deadline, l), contact: p ? `${tr(p.name, l)} (+${p.phone})` : "" }, l) }));
     return;
   }
 
@@ -143,7 +143,7 @@ export function mount(ctx) {
       h("label", { class: "field", for: "rsvp-arrival-at" }, h("span", { class: "label", text: r.arrivalAt }), arrivalAt),
       h("label", { class: "field", for: "rsvp-message" }, h("span", { class: "label", text: r.message }), message)),
     error, submit);
-  sec.append(updated, success, form);
+  append(sec, updated, success, form);
 
   const showUpdated = (iso) => {
     if (!iso) return;

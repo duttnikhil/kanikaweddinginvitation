@@ -20,9 +20,15 @@ export function mount(ctx) {
   document.body.append(bar);
 
   if (pill) {
-    // Hide the pill while the RSVP section is on screen.
-    new IntersectionObserver(([e]) => pill.classList.toggle("is-hidden", e.isIntersecting), { threshold: 0.05 })
-      .observe(rsvpSec);
+    // Hide the pill while the cover or the RSVP section is on screen.
+    const onScreen = new Set();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target)));
+      pill.classList.toggle("is-hidden", onScreen.size > 0);
+    }, { threshold: 0.05 });
+    io.observe(rsvpSec);
+    const hero = document.getElementById("hero");
+    if (hero) io.observe(hero);
     pill.addEventListener("click", (e) => {
       if (!ctx.lenis) return;
       e.preventDefault();

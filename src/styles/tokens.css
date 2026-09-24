@@ -12,19 +12,23 @@
 /* Dropped to stay near the font budget (NOTES.md): Cormorant 600 italic, Cinzel 700. */
 
 :root {
-  --paper: #FBF4E6;
-  --paper-2: #F4E7CC;
-  --ink: #2A1612;
-  --ink-soft: #6B4A3F;
-  --sindoor: #A3161A;
-  --maroon: #5A0E12;
-  --gold: #C9A043;
-  --gold-light: #E9D29A;
-  --gold-dark: #8A6A1F;
-  --haldi: #F2B705;
-  --mehendi: #7A3E12;
-  --peacock: #0F5E5A;
-  --line: #E3CFA6;
+  /* Pastel theme (client samples): ice-blue paper, antique gold, blush florals.
+     Variable names kept from the royal theme so all components follow automatically. */
+  --paper: #F8FAFD;
+  --paper-2: #EEF3FA;
+  --ink: #26324A;
+  --ink-soft: #5B6780;
+  --sindoor: #8A6630;      /* primary accent: headings, buttons (AA on paper and with white text) */
+  --maroon: #3A4A6B;       /* deep dusty blue: dark surfaces */
+  --gold: #C5A165;
+  --gold-light: #F3EAD6;
+  --gold-dark: #8C6A2F;
+  --blush: #E3A5AE;
+  --sky: #DCE7F5;
+  --haldi: #F2C94C;
+  --mehendi: #7A5A2E;
+  --peacock: #3E6A8A;
+  --line: #DCE3EE;
 
   --f-script: "Great Vibes", "Yatra One", cursive;
   --f-display: "Cinzel", "Yatra One", serif;

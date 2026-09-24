@@ -13,7 +13,7 @@ function describe(ev, l) {
   const { groom, bride } = content.couple;
   return {
     title: `${tr(ev.name, l)} · ${tr(groom.name, l)} ${tr(content.hero.joiner, l)} ${tr(bride.name, l)}`,
-    location: `${tr(ev.venue.name, l)}, ${tr(ev.venue.address, l)}`,
+    location: ev.venue ? `${tr(ev.venue.name, l)}, ${tr(ev.venue.address, l)}` : "",
     details: [tr(ev.muhurat, l), tr(ev.note, l), content.meta.siteUrl].filter(Boolean).join("\n"),
   };
 }
