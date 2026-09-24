@@ -3,6 +3,24 @@ import { h } from "../core/dom.js";
 import { mainEvent } from "../core/content.js";
 import { countdownParts } from "../core/time.js";
 import { section } from "./common.js";
+import { gsap, dur, prefersReduced } from "../core/motion.js";
+
+// Digit change: old digit slides up out, new one slides in from below (SPEC §7.3 #5).
+function roll(el, prev, next) {
+  if (!prev || prev.length !== next.length || prefersReduced() || document.hidden) {
+    el.replaceChildren(...[...next].map((d) => h("span", { class: "cd-digit" }, h("span", { class: "cd-d" }, d))));
+    return;
+  }
+  [...next].forEach((d, i) => {
+    if (d === prev[i]) return;
+    const slot = el.children[i];
+    const old = slot.lastElementChild;
+    const neu = h("span", { class: "cd-d cd-d--in" }, d);
+    slot.append(neu);
+    gsap.to(old, { yPercent: -100, duration: dur.xs, ease: "power2.in", onComplete: () => old.remove() });
+    gsap.fromTo(neu, { yPercent: 100 }, { yPercent: 0, duration: dur.xs, ease: "power2.out" });
+  });
+}
 
 const UNITS = ["days", "hours", "minutes", "seconds"];
 
@@ -34,7 +52,7 @@ export function mount(ctx) {
       if (el.dataset.value === str) continue;
       const prev = el.dataset.value || "";
       el.dataset.value = str;
-      if (!ctx.rollDigits?.(el, prev, str)) el.textContent = str;
+      roll(el, prev, str);
     }
   };
   render();

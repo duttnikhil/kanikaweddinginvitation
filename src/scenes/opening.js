@@ -5,55 +5,7 @@ import { gsap, dur, ease, stagger, split, lenis, prefersReduced } from "../core/
 import * as audio from "../core/audio.js";
 import * as petals from "../fx/petals.js";
 import { door, toran } from "../fx/ornaments.js";
-
-const DRAWABLE = "path, line, polyline, polygon, circle, ellipse, rect";
-
-// Filled artwork (e.g. auto-traced) can't be stroke-drawn: reveal it through a mask whose
-// thick zig-zag stroke is drawn instead (SPEC §9.5 mask reveal). Returns the mask path.
-function maskReveal(svgEl) {
-  const [x, y, w, hgt] = (svgEl.getAttribute("viewBox") || "0 0 100 100").split(/[\s,]+/).map(Number);
-  const NS = "http://www.w3.org/2000/svg";
-  const rows = 6;
-  const step = hgt / rows;
-  let d = `M${x} ${y + step / 2}`;
-  for (let i = 0; i < rows; i++) {
-    const yy = y + step / 2 + i * step;
-    d += i % 2 ? ` L${x} ${yy}` : ` L${x + w} ${yy}`;
-    if (i < rows - 1) d += i % 2 ? ` L${x} ${yy + step}` : ` L${x + w} ${yy + step}`;
-  }
-  const id = `reveal-${Math.random().toString(36).slice(2, 8)}`;
-  const mask = document.createElementNS(NS, "mask");
-  mask.setAttribute("id", id);
-  mask.setAttribute("maskUnits", "userSpaceOnUse");
-  const p = document.createElementNS(NS, "path");
-  p.setAttribute("d", d);
-  p.setAttribute("fill", "none");
-  p.setAttribute("stroke", "#fff");
-  p.setAttribute("stroke-width", String(step * 1.25));
-  mask.append(p);
-  const group = document.createElementNS(NS, "g");
-  group.setAttribute("mask", `url(#${id})`);
-  group.append(...[...svgEl.childNodes].filter((n) => n.nodeName !== "defs"));
-  svgEl.append(mask, group);
-  return [p];
-}
-
-function isFilled(svgEl) {
-  const shapes = [...svgEl.querySelectorAll(DRAWABLE)];
-  const stroked = shapes.filter((s) => {
-    const st = s.getAttribute("stroke") || s.closest("[stroke]")?.getAttribute("stroke");
-    return st && st !== "none";
-  });
-  return shapes.length > 0 && stroked.length < shapes.length / 3;
-}
-
-// Elements the hero timeline draws: stroke paths, or the mask path for filled art.
-export function ganeshTargets(root) {
-  const line = root.querySelector(".ganesh-line");
-  if (!line) return [];
-  if (!line.classList.contains("is-fallback") && isFilled(line)) return line.__mask ||= maskReveal(line);
-  return [...line.querySelectorAll(DRAWABLE)];
-}
+import { drawTargets } from "../fx/draw.js";
 
 export function mount(ctx) {
   const done = () => ctx.gateDone?.();
@@ -114,7 +66,8 @@ export function mount(ctx) {
 
 function introTimeline(ctx, { center, skipBtn, left, right, light, idle, finish }) {
   const hero = document.getElementById("hero");
-  const paths = ganeshTargets(hero);
+  const line = hero.querySelector(".ganesh-line");
+  const paths = line ? drawTargets(line) : [];
   const fillLayer = hero.querySelector(".ganesh-fill");
   const greet = hero.querySelector(".greeting-name") || hero.querySelector(".greeting");
   const names = [...hero.querySelectorAll(".couple-names .name")];

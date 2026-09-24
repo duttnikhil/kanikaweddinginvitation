@@ -194,3 +194,47 @@ Checked (Playwright; audio tested with temporary generated tones, not committed)
 Check on your phone (can't be verified here): the whole gate inside WhatsApp's in-app browser
 on Android and iPhone, that the shankh actually sounds on iPhone, and the smoothness of the
 door animation on a low-end Android.
+
+## Phase 5: Scroll storytelling and rituals
+
+Built:
+- Default reveal (`motion.revealOnScroll`) for `[data-reveal]`: visible by default in CSS;
+  the from-state is set only inside matchMedia "full", and only for elements still below the
+  fold (so rebuilding on a language switch never hides content that was already seen).
+- Amantran line-by-line fade-up (stagger 0.12), couple arch clip-path wipe + photo settle +
+  name chars, story vine DrawSVG scrubbed with milestone dot pops (`back.out(2)`), countdown
+  digit roll (old digit up, new from below, 0.25 s), event cards stagger.
+- Haldi splash (§7.6), mehendi scrubbed draw with the groom's initial last (§7.7; mask reveal
+  if an owner SVG is filled), saat phere pinned scene (§7.8), varmala tap (§7.9), fireworks
+  once on the closing section (§7.11, skipped on low-end and reduced motion), slowly rotating
+  closing mandala (paused off screen).
+- RSVP success: diya lights up + `petals.burst()` from the diya.
+- Wishes: cards float in; with more than 6 wishes a duplicated-list marquee scrolls slowly and
+  pauses while touched.
+- All ScrollTriggers are created after `document.fonts.ready` and refreshed when images load.
+  Language switch: `onBeforeLang` reverts the whole matchMedia (restoring SplitText HTML)
+  *before* text changes, then everything is rebuilt.
+
+Saat phere loop (asked to verify): GSAP's `sliceRawPath` handles `end > 1` on closed paths
+(`loops = ~~(end - start)`), and in the browser the diya passes left → back → right and is back
+on the start point at every whole-number time for all 7 rounds. So `end: 7` is used; no
+chain of 7 tweens needed. The diya is moved behind the kund on the back half of the ring.
+
+Decisions:
+- Amantran lines are animated per patrika line (each line is already its own block) instead of
+  SplitText "lines": same visual, no Devanagari splitting.
+- Haldi card is yellow in its static final state (reduced motion / no JS); the animation
+  starts it from a closed circle.
+
+Checked (Playwright):
+- [x] Saat phere: counter goes 1/7 … 7/7, one vachan at a time, dots fill, outro at the end;
+      after unpinning the page scrolls normally (outro moves exactly with scroll, no jump).
+- [x] Varmala: exchange plays, petals burst, "Shubh Mangal Saavdhan" appears, button says "Again".
+- [x] Haldi splashes yellow once; mehendi drawn and initial visible when centred.
+- [x] Switching language while pinned in the phere section: still pinned, counter in Hindi,
+      one pin-spacer (no duplicates), no errors.
+- [x] After scrolling the whole page nothing is left hidden.
+- [x] Reduced motion: no pin (pheras as a numbered list), no Lenis, varmala jumps to the end
+      state with a static flower, everything visible.
+
+Check on your phone: smoothness on a 4 GB Android, especially the pinned pheras (scrub).

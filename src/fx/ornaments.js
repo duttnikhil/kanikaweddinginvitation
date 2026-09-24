@@ -124,6 +124,7 @@ export function varmalaCouple() {
 <path d="M208 70c0-32 18-44 40-44 26 0 38 20 36 48l14 226H192l6-150c2-40 4-60 10-80Z" opacity=".95"/>
 <path d="M208 70c0-32 18-44 40-44 26 0 38 20 36 48" fill="none" stroke="url(#${g})" stroke-width="3"/>
 <path d="M196 230c30 8 70 8 100 0" stroke="url(#${g})" stroke-width="2" fill="none"/></g>
+<circle id="neck-groom" cx="114" cy="94" r="0"/><circle id="neck-bride" cx="246" cy="96" r="0"/>
 ${garland("garland-groom", 150, 118)}${garland("garland-bride", 208, 122)}</svg>`;
 }
 

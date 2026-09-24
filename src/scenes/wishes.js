@@ -52,9 +52,31 @@ export function mount(ctx) {
           h("p", { class: "wish-msg prose", text: x.message }),
           h("p", { class: "wish-name label", text: x.name }))));
       sec.classList.toggle("has-marquee", list.length > 6);
-      ctx.onWishes?.(sec);
+      animateWall();
     }).catch(() => {});
   }
+  // Cards float in; more than 6 -> slow horizontal marquee that pauses while touched.
+  let marquee = null;
+  function animateWall() {
+    marquee?.kill();
+    wall.querySelectorAll("[data-clone]").forEach((n) => n.remove());
+    const { gsap, prefersReduced } = ctx.motion;
+    if (prefersReduced()) return;
+    gsap.from(wall.children, { opacity: 0, y: 20, duration: 0.6, stagger: 0.06, ease: "power3.out" });
+    if (!sec.classList.contains("has-marquee")) return;
+    [...wall.children].forEach((c) => {
+      const clone = c.cloneNode(true);
+      clone.dataset.clone = "";
+      clone.setAttribute("aria-hidden", "true");
+      wall.append(clone);
+    });
+    sec.classList.add("is-marquee");
+    marquee = gsap.to(wall, { xPercent: -50, duration: wall.children.length * 3, ease: "none", repeat: -1 });
+  }
+  let resume = 0;
+  track.addEventListener("pointerdown", () => { clearTimeout(resume); marquee?.pause(); });
+  track.addEventListener("pointerup", () => { resume = setTimeout(() => marquee?.play(), 1500); });
+
   // Load when the section gets close (saves an Apps Script call for guests who never scroll).
   const io = new IntersectionObserver((es) => {
     if (es.some((e) => e.isIntersecting)) { io.disconnect(); load(); }

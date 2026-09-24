@@ -21,6 +21,22 @@ export function mount(ctx) {
         h("p", { class: "prose", text: it.text }),
         p ? picture(p, it.title, { sizes: "(min-width: 600px) 440px, 80vw", cls: "milestone-photo" }) : null);
     }));
-  sec.append(h("div", { class: "story" }, svg(VINE), list));
+  const wrap = h("div", { class: "story" }, svg(VINE), list);
+  sec.append(wrap);
   ctx.main.append(sec);
+
+  // Vine draws with scroll; each dot pops when the line reaches it.
+  ctx.motion.scene(({ full }) => {
+    if (!full) return;
+    const { gsap, dur, ease } = ctx.motion;
+    gsap.fromTo(wrap.querySelector(".vine-path"), { drawSVG: "0%" }, {
+      drawSVG: "100%", ease: "none",
+      scrollTrigger: { trigger: wrap, start: "top 70%", end: "bottom 70%", scrub: true },
+    });
+    for (const m of wrap.querySelectorAll(".milestone")) {
+      gsap.timeline({ scrollTrigger: { trigger: m, start: "top 70%", toggleActions: "play none none reverse" } })
+        .from(m.querySelector(".milestone-dot"), { scale: 0, duration: 0.5, ease: "back.out(2)" })
+        .from([...m.children].filter((c) => !c.matches(".milestone-dot")), { opacity: 0, x: 16, duration: dur.m, ease: ease.enter, stagger: 0.08 }, 0.1);
+    }
+  });
 }

@@ -4,6 +4,7 @@ import { content } from "./content.js";
 let lang = content.meta.defaultLang || "hi";
 const bound = []; // [el, value, attr|null]
 const listeners = new Set();
+const beforeListeners = new Set();
 
 export const getLang = () => lang;
 export const otherLang = () => (lang === "hi" ? "en" : "hi");
@@ -39,8 +40,14 @@ export function onLang(fn) {
   return () => listeners.delete(fn);
 }
 
+// Runs before any text changes (animations revert SplitText here, which restores old HTML).
+export function onBeforeLang(fn) {
+  beforeListeners.add(fn);
+}
+
 export function setLang(l, { persist = true } = {}) {
   if (l !== "hi" && l !== "en") return;
+  beforeListeners.forEach((fn) => fn(l));
   lang = l;
   document.documentElement.lang = l;
   // ponytail: bound list never shrinks; fine for a one-page invite (a few hundred nodes)

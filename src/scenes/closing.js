@@ -2,6 +2,8 @@
 import { h, svg } from "../core/dom.js";
 import { mandala } from "../fx/mandala.js";
 import { section } from "./common.js";
+import { fireworks } from "../fx/fireworks.js";
+import { lowEndHint } from "../core/device.js";
 
 export function mount(ctx) {
   const c = ctx.content.closing;
@@ -19,4 +21,17 @@ export function mount(ctx) {
       h("p", { class: "prose", text: c.darshan })) : null,
     c.kidsLine ? h("p", { class: "kids-line prose", text: c.kidsLine, "data-reveal": "" }) : null);
   ctx.main.append(sec);
+
+  // Fireworks once when the section is 60% visible; skipped on reduced motion and low-end.
+  let fired = false;
+  ctx.motion.scene(({ full }) => {
+    if (!full || lowEndHint || fired) return;
+    const { gsap, ScrollTrigger } = ctx.motion;
+    ScrollTrigger.create({
+      trigger: sec, start: "top 40%", once: true,
+      onEnter: () => { fired = true; fireworks(sec.querySelector(".fireworks")); },
+    });
+    gsap.to(sec.querySelector(".monogram svg"), { rotation: 360, duration: 120, ease: "none", repeat: -1,
+      scrollTrigger: { trigger: sec, toggleActions: "play pause resume pause" } });
+  });
 }

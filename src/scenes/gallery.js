@@ -21,6 +21,9 @@ export function mount(ctx) {
         picture(it.p, it.alt, { sizes: "(min-width: 768px) 180px, 50vw" }))));
   sec.append(grid);
   ctx.main.append(sec);
+  ctx.motion.scene(({ full }) => {
+    if (full) ctx.motion.revealOnScroll(grid.children, { y: 30, opacity: 0 }, { each: 0.06 });
+  });
 
   // Lightbox
   const img = h("img", { class: "lb-img", alt: "", decoding: "async", draggable: "false" });

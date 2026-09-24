@@ -41,24 +41,44 @@ export function scene(fn) {
   builders.push(fn);
 }
 
+// Builders may return a cleanup function (e.g. to remove a class they added).
 export function build() {
   mm = gsap.matchMedia();
   mm.add(CONDITIONS, (c) => {
+    const cleanups = [];
     for (const fn of builders) {
       try {
-        fn(c.conditions);
+        const undo = fn(c.conditions);
+        if (typeof undo === "function") cleanups.push(undo);
       } catch (err) {
         console.error("[motion]", err);
       }
     }
+    return () => cleanups.forEach((f) => f());
   });
   ScrollTrigger.refresh();
 }
 
-export function rebuild() {
+export function revert() {
   mm?.revert();
-  build();
+  mm = null;
 }
+
+// Fade/slide elements up when they scroll into view (SPEC §7.1 default reveal).
+// Elements already on screen when this runs stay as they are (no flash on rebuild).
+export function revealOnScroll(targets, from = { y: 24, opacity: 0 }, { each = 0, start = "top 85%" } = {}) {
+  const els = gsap.utils.toArray(targets).filter((el) => el.getClientRects().length && el.getBoundingClientRect().top > innerHeight * 0.85);
+  if (!els.length) return;
+  gsap.set(els, from);
+  ScrollTrigger.batch(els, {
+    start,
+    once: true,
+    onEnter: (batch) => gsap.to(batch, { x: 0, y: 0, opacity: 1, scale: 1, rotation: 0, duration: dur.m, ease: ease.enter, stagger: each || stagger.items, overwrite: true }),
+  });
+}
+
+// True if el's top is still below the given viewport fraction (i.e. not yet revealed).
+export const below = (el, frac = 0.85) => el.getBoundingClientRect().top > innerHeight * frac;
 
 // Refresh trigger positions once images in a container load (layout shifts).
 export function refreshOnImages(root) {

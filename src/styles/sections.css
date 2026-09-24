@@ -207,13 +207,12 @@
 .haldi-layer {
   position: absolute; inset: 0; z-index: -1;
   background: var(--haldi);
-  clip-path: circle(0% at 20% 30%);
   pointer-events: none;
 }
-.haldi-layer.is-done { clip-path: circle(150% at 20% 30%); }
-.haldi-drop { position: absolute; transform: scale(0); }
-.haldi-layer.is-done .haldi-drop { transform: none; }
-.event--haldi:has(.haldi-layer.is-done) { border-color: #e0a800; }
+.haldi-drop { position: absolute; }
+.event--haldi { border-color: #e0a800; }
+.event--haldi .soft, .event--haldi .event-note { color: var(--ink); }
+.event--haldi .btn--ghost { background: rgb(251 244 230 / 0.6); }
 .mehendi-art { width: min(200px, 60vw); margin-block: 4px; }
 .mehendi-initial { font-family: var(--f-script); fill: var(--mehendi); }
 
@@ -230,13 +229,13 @@
 .phere-num { color: var(--gold); white-space: nowrap; }
 .phere-outro { margin-top: 28px; color: var(--gold-light); font-size: clamp(32px, 4vw + 20px, 44px); }
 /* Pinned mode (set by JS in full motion) */
-.phere.is-staged .phere-list { display: none; }
-.phere.is-staged .phere-now { display: grid; gap: 8px; min-height: 7.5em; }
-.phere.is-staged .phere-pin { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+#phere.is-staged .phere-list { display: none; }
+#phere.is-staged .phere-now { display: grid; gap: 8px; min-height: 7.5em; }
+#phere.is-staged .phere-pin { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
 .phere-vachans { display: grid; }
 .phere-vachan { grid-area: 1 / 1; opacity: 0; font-size: 20px; }
 .phere-counter { color: var(--gold); }
-.phere .label { color: var(--gold); }
+#phere .label { color: var(--gold); }
 
 /* Varmala */
 .varmala-stage { width: min(360px, 100%); margin: 0 auto 20px; }
@@ -457,3 +456,7 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 .has-marquee .wish-track { overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
 .has-marquee .wish-wall { display: flex; width: max-content; }
 .has-marquee .wish-card { width: 260px; flex: none; }
+.cd-digit { overflow: hidden; height: 1.1em; }
+.cd-d { display: block; }
+.cd-d--in { position: absolute; inset: 0; }
+.is-marquee .wish-track { overflow: hidden; touch-action: pan-y; }

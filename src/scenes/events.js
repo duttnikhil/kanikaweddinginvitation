@@ -8,6 +8,7 @@ import { kalash, diya, haldiDrops } from "../fx/ornaments.js";
 import { mandala } from "../fx/mandala.js";
 import { ownerSvg } from "../core/assets.js";
 import { section } from "./common.js";
+import { drawTargets } from "../fx/draw.js";
 
 const mapsUrl = (v) => v.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${v.lat},${v.lng}`;
 const dirUrl = (v) => `https://www.google.com/maps/dir/?api=1&destination=${v.lat},${v.lng}`;
@@ -100,4 +101,30 @@ export function mount(ctx) {
   const sec = section("utsav", { title: ctx.content.eventsTitle });
   sec.append(h("div", { class: "event-list" }, list.map((ev) => card(ctx, ev))));
   ctx.main.append(sec);
+  ctx.motion.scene(({ full }) => full && animate(ctx, sec));
+}
+
+function animate(ctx, sec) {
+  const { gsap, dur, ease, below, revealOnScroll } = ctx.motion;
+  revealOnScroll(sec.querySelectorAll(".event-card:not(.event--haldi)"), { y: 40, opacity: 0 });
+
+  // Haldi splash (SPEC §7.6): yellow circle wipe, then content, then drops pop.
+  const haldi = sec.querySelector(".event--haldi");
+  if (haldi && below(haldi, 0.7)) {
+    const layer = haldi.querySelector(".haldi-layer");
+    const content = [...haldi.children].filter((c) => c !== layer);
+    gsap.timeline({ scrollTrigger: { trigger: haldi, start: "top 70%", once: true } })
+      .fromTo(layer, { clipPath: "circle(0% at 20% 30%)" }, { clipPath: "circle(150% at 20% 30%)", duration: 0.9, ease: "power2.out", immediateRender: true })
+      .from(content, { opacity: 0, y: 10, duration: dur.s, ease: ease.enter, stagger: 0.04, immediateRender: true }, "-=0.35")
+      .from(layer.querySelectorAll(".haldi-drop"), { scale: 0, duration: 0.5, ease: "back.out(3)", stagger: 0.06, immediateRender: true }, "-=0.3");
+  }
+
+  // Mehendi (SPEC §7.7): strokes draw with scroll, groom's initial appears last.
+  const art = sec.querySelector(".mehendi-art svg");
+  if (art) {
+    const initial = art.querySelector(".mehendi-initial");
+    gsap.timeline({ scrollTrigger: { trigger: art, start: "top 80%", end: "center center", scrub: true } })
+      .fromTo(drawTargets(art), { drawSVG: "0%" }, { drawSVG: "100%", duration: 1, stagger: 0.015, ease: "none" })
+      .fromTo(initial, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+  }
 }

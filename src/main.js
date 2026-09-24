@@ -5,7 +5,7 @@ import "./styles/sections.css";
 import "./styles/gate.css";
 import { content, events, warn } from "./core/content.js";
 import { resolveGuest, params } from "./core/guest.js";
-import { initLang, onLang, tr } from "./core/i18n.js";
+import { initLang, onLang, onBeforeLang, tr } from "./core/i18n.js";
 import { resolvePhase } from "./core/time.js";
 import { icon } from "./core/dom.js";
 import { sendOpen } from "./core/api.js";
@@ -64,6 +64,7 @@ function setupMusic(ctx) {
 // After the gate: floating UI fades in; petals fall only while the hero is on screen.
 function afterGate(ctx) {
   document.documentElement.classList.add("gate-open");
+  motion.ScrollTrigger.refresh(); // scrollbar may appear once the body is unlocked
   const hero = document.getElementById("hero");
   if (!hero || ctx.phase === "post") return;
   new IntersectionObserver(([e]) => (e.isIntersecting ? petals.start() : petals.stop()), { threshold: 0.2 }).observe(hero);
@@ -83,6 +84,11 @@ async function boot() {
     motion,
     petals,
     gateDone: () => afterGate(ctx),
+    // RSVP success: petals burst from the diya.
+    celebrate: (el) => {
+      const r = (el.querySelector(".diya") || el).getBoundingClientRect();
+      petals.burst(r.left + r.width / 2, r.top + r.height / 2, 30);
+    },
   };
 
   // Error boundary: one broken scene must not blank the page.
@@ -101,6 +107,17 @@ async function boot() {
     console.error("[scene opening]", err);
     afterGate(ctx);
   }
+
+  // Animations are created after fonts load (stable text metrics), rebuilt on language switch.
+  document.fonts.ready.then(() => {
+    motion.scene(({ full }) => {
+      if (full) motion.revealOnScroll(ctx.main.querySelectorAll("[data-reveal]"));
+    });
+    motion.build();
+    motion.refreshOnImages(ctx.main);
+    onBeforeLang(() => motion.revert());
+    onLang(() => motion.build());
+  });
 
   // Open ping (skipped for admin previews).
   if (guest && params.get("preview") !== "1") sendOpen(guest.id);
