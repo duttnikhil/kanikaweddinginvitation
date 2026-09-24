@@ -23,7 +23,7 @@ export function mount(ctx) {
   ctx.main.append(sec);
 
   // Lightbox
-  const img = h("img", { class: "lb-img", alt: "", decoding: "async" });
+  const img = h("img", { class: "lb-img", alt: "", decoding: "async", draggable: "false" });
   const caption = h("p", { class: "lb-caption" });
   const count = h("p", { class: "lb-count num" });
   const dlg = h("dialog", { class: "lightbox" },

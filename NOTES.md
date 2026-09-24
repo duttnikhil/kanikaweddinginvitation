@@ -60,3 +60,42 @@ Checked (Playwright, Chromium):
 - [x] Hindi (`?g=devHindi3`) renders in Yatra One / Tiro Devanagari; English in Cinzel / Cormorant / Great Vibes.
 
 Check on your phone: text at system font size "Large" (can't be emulated reliably here).
+
+## Phase 2: Core features (no backend, no animation)
+
+Built:
+- Floating UI (`scenes/floating-ui.js`): language toggle top-left (localStorage, try/catch;
+  falls back to the guest's language, then `meta.defaultLang`), RSVP pill at the bottom that
+  hides while the RSVP section is on screen (IntersectionObserver). Music button slot (Phase 4).
+- `time.js`: IST formatting via `Intl` (`शनिवार, 12 दिसंबर · रात 9 बजे` / `Saturday, 12 December · 9:00 PM`),
+  phase detection pre/live/post, `?phase=` override only in dev or with `?preview=1`.
+- Countdown to `meta.mainEventId`, updates every second; live phase shows `countdown.today`.
+- Event cards: date/time in hi + en, muhurat, dress-code swatches, Maps + Directions
+  (`google.com/maps` links, no iframes), Add-to-calendar menu (Google link + `.ics` with
+  `VTIMEZONE Asia/Kolkata`).
+- Gallery: `scripts/optimize-images.mjs` (sharp → AVIF/WebP/JPEG at 480/960/1600, manifest in
+  `content/images.json`), `<picture>` with lazy loading, `<dialog>` lightbox with swipe,
+  arrow keys, Esc and tap-outside to close.
+- Shagun: UPI deep link (no amount), QR via `qrcode` (lazy-loaded when the section is near,
+  keeps it out of the initial JS), VPA copy with clipboard fallback.
+- Contacts: phone as text, Call, WhatsApp (wa.me), Copy.
+- `live.js` banner under the hero; post mode = thank-you hero (first gallery photo, album
+  button only if `postWedding.albumUrl` is set), RSVP/countdown/shagun hidden, gallery and
+  wishes stay.
+
+Checked (Playwright, using temporary generated test photos that were NOT committed):
+- [x] Language toggle switches every visible string (remaining Latin text in Hindi mode is
+      content itself: "UPI", "RSVP", "JAI", the VPA). Choice survives reload.
+- [x] `?phase=live` shows the "Happening now" banner; `?phase=post` shows the thank-you mode.
+- [x] Google Calendar URL has correct UTC times (21:00 IST → 15:30Z); `.ics` downloads with
+      `DTSTART;TZID=Asia/Kolkata:20261212T210000`.
+- [x] Maps/Directions URLs use the venue lat/lng.
+- [x] UPI link correct; QR renders.
+- [x] Gallery images are `loading="lazy"`; lightbox: swipe → next, ArrowRight → next, Esc closes.
+
+Check on your phone:
+- Add to calendar on Android (Google Calendar opens) and iPhone (.ics opens Calendar,
+  especially inside WhatsApp's browser).
+- UPI button opens a UPI app on Android; QR scans in GPay/PhonePe/Paytm. Some UPI apps
+  block web deep links for payments to personal VPAs; the QR scan is the reliable fallback.
+- Lightbox swipe with a real finger.

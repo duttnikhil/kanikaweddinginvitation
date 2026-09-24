@@ -23,8 +23,9 @@ import * as travel from "./scenes/travel.js";
 import * as contacts from "./scenes/contacts.js";
 import * as closing from "./scenes/closing.js";
 import * as live from "./scenes/live.js";
+import * as floatingUi from "./scenes/floating-ui.js";
 
-const SCENES = { hero, amantran, couple, story, countdown, events: eventsScene, pheras, varmala, gallery, rsvp, shagun, wishes, travel, contacts, closing, live };
+const SCENES = { hero, amantran, couple, story, countdown, events: eventsScene, pheras, varmala, gallery, rsvp, shagun, wishes, travel, contacts, closing, live, floatingUi };
 
 // Alternate paper / paper-2 on the visible light sections (dark ones keep maroon).
 function toneSections(main) {
