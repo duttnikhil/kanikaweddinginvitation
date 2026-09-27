@@ -66,7 +66,7 @@ Event ids in this wedding.json: `haldi` (Mandap & Haldi), `mehendi`, `phoolon-ha
 | `ADMIN_PASSWORD` | a strong password; only the family admins get it |
 | `EXPORT_KEY` | 32 random characters (password generator); same value goes in `.env` / Cloudflare |
 | `DEPLOY_HOOK_URL` | empty for now; Cloudflare deploy hook URL later (MANUAL-STEPS §4) |
-| `SITE_URL` | `https://kanika-weds-arjit.pages.dev` (used by "Copy all invite links") |
+| `SITE_URL` | `https://kanikaweddinginvitation.pages.dev` (used by "Copy all invite links") |
 
 ## 4. Deploy
 

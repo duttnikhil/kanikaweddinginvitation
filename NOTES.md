@@ -392,7 +392,7 @@ login); their captions list RSVP, countdown, venue maps and story, so those feat
 
 Client rules followed:
 - **Bride's name first everywhere** (Kanika & Arjit): cover, monogram (K then A), card, welcome,
-  closing, OG image, WhatsApp message, page title, site URL → `kanika-weds-arjit.pages.dev`.
+  closing, OG image, WhatsApp message, page title, site URL → `kanikaweddinginvitation.pages.dev`.
   Exception: the hashtag `#ArjitWedsKanika` is kept exactly as the client wrote it. Ask her.
 - Page order: 1 cover (monogram, greeting, art, names, vertical label) → welcome (her "page 1"
   text: Om, blessing, WE WELCOME YOU, names, tagline) → 2 invitation card (sample layout, bride

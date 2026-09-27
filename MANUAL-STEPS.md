@@ -36,7 +36,7 @@ hain. Wo sab yahan hain, kab karna hai woh bhi likha hai. Sab free hai.
      | `ADMIN_PASSWORD` | koi strong password (family admins ko hi batana) |
      | `EXPORT_KEY` | 32 random characters (koi password generator se) |
      | `DEPLOY_HOOK_URL` | abhi khali, §4 mein bharenge |
-     | `SITE_URL` | `https://kanika-weds-arjit.pages.dev` ("Copy all invite links" ke liye) |
+     | `SITE_URL` | `https://kanikaweddinginvitation.pages.dev` ("Copy all invite links" ke liye) |
 4. **Deploy ▸ New deployment** → type **Web app**
    - Execute as: **Me**
    - Who has access: **Anyone**
@@ -75,7 +75,7 @@ version ▸ Deploy** karna. "New deployment" mat karna, warna URL badal jayega.
    `SITE_URL` (= `https://<project-name>.pages.dev`).
 5. Save and Deploy. 1–2 minute mein site live: `https://<project-name>.pages.dev`.
    Poori detail (env vars, testing): `DEPLOY.md`.
-   Project name soch ke rakhna (jaise `kanika-weds-arjit`), yahi link guests ko jayega.
+   Project name soch ke rakhna (jaise `kanikaweddinginvitation`), yahi link guests ko jayega.
 
 ---
 

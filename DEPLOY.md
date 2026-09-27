@@ -21,7 +21,7 @@ dash.cloudflare.com → **Workers & Pages ▸ Create ▸ Pages ▸ Connect to Gi
 
 | Setting | Value |
 |---|---|
-| Project name | `kanika-weds-arjit` (becomes `https://kanika-weds-arjit.pages.dev`) |
+| Project name | `kanikaweddinginvitation` (becomes `https://kanikaweddinginvitation.pages.dev`) |
 | Production branch | `main` |
 | Framework preset | None |
 | Build command | `npm run sync-guests && npm run build` |
@@ -35,7 +35,7 @@ dash.cloudflare.com → **Workers & Pages ▸ Create ▸ Pages ▸ Connect to Gi
 | `APPS_SCRIPT_URL` | Apps Script web app URL (`…/exec`) |
 | `VITE_API_URL` | same as `APPS_SCRIPT_URL` |
 | `EXPORT_KEY` | same 32 characters as the Script Property |
-| `SITE_URL` | `https://kanika-weds-arjit.pages.dev` (no trailing slash) |
+| `SITE_URL` | `https://kanikaweddinginvitation.pages.dev` (no trailing slash) |
 
 Save and Deploy. The first build takes 1–2 minutes. After changing env vars, trigger a new
 deploy (Deployments ▸ ⋯ ▸ Retry deployment) so they take effect.
@@ -74,7 +74,7 @@ curl -s -A "WhatsApp/2.23.20.0 A" "http://localhost:8788/" | grep og:title      
 ```
 
 Live:
-- Send `https://kanika-weds-arjit.pages.dev/?g=<real id>` to yourself on WhatsApp: title shows
+- Send `https://kanikaweddinginvitation.pages.dev/?g=<real id>` to yourself on WhatsApp: title shows
   the family name, plus the image and the date line.
 - WhatsApp caches previews per URL. To re-test after a change, add `&v=2` (then `&v=3`, …).
 - View source of the live page (`view-source:` on desktop): no guest phone numbers anywhere.

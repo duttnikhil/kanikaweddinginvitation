@@ -55,7 +55,7 @@ curl -s -A "WhatsApp/2.23.20.0 A" "http://localhost:8788/?g=devAll001" | grep og
 1. Google Sheet ke **Guests** tab mein row (guest_id khali chhodo).
 2. Menu **Shubh Vivah ▸ Generate missing guest IDs**.
 3. Menu **Shubh Vivah ▸ Publish guest list** → ~2 min baad naye link par naam dikhega.
-4. `https://kanika-weds-arjit.pages.dev/admin/` → Guests → **WhatsApp** → bhejo → **Mark sent**.
+4. `https://kanikaweddinginvitation.pages.dev/admin/` → Guests → **WhatsApp** → bhejo → **Mark sent**.
    Ek baar mein 30–40 se zyada nahi.
 
 ## Preview dobara test karna
