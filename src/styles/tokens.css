@@ -12,23 +12,25 @@
 /* Dropped to stay near the font budget (NOTES.md): Cormorant 600 italic, Cinzel 700. */
 
 :root {
-  /* Pastel theme (client samples): ice-blue paper, antique gold, blush florals.
-     Variable names kept from the royal theme so all components follow automatically. */
-  --paper: #F8FAFD;
-  --paper-2: #EEF3FA;
-  --ink: #26324A;
-  --ink-soft: #5B6780;
-  --sindoor: #8A6630;      /* primary accent: headings, buttons (AA on paper and with white text) */
-  --maroon: #3A4A6B;       /* deep dusty blue: dark surfaces */
-  --gold: #C5A165;
-  --gold-light: #F3EAD6;
-  --gold-dark: #8C6A2F;
-  --blush: #E3A5AE;
-  --sky: #DCE7F5;
+  /* "Watercolor Ivory" theme (client's envelope reference). */
+  --paper: #FBF8F2;
+  --paper-2: #F3EEE4;
+  --ink: #2E3A4F;          /* navy slate body text */
+  --ink-soft: #5E6B7E;
+  --accent: #7E6124;       /* headings, buttons, links on paper (AA; white text on it AA) */
+  --gold: #B8923A;         /* ornaments, hairlines (not for text: 2.75:1) */
+  --gold-light: #E8D6A8;
+  --gold-dark: #8C6A1C;
+  --sage: #8A9A78;
+  --blush: #E9CFC4;
+  --sky: #9DB7D0;
+  --sindoor: #A3161A;      /* only small Hindu accents: kumkum dot, swastik, tilak */
+  --night: #24314A;        /* dark sections, gold-light text on it */
+  --maroon: var(--night);  /* legacy name used by older components */
   --haldi: #F2C94C;
   --mehendi: #7A5A2E;
-  --peacock: #3E6A8A;
-  --line: #DCE3EE;
+  --peacock: #3E6A8A;      /* focus rings */
+  --line: #E6DCC8;
 
   --f-script: "Great Vibes", "Yatra One", cursive;
   --f-display: "Cinzel", "Yatra One", serif;

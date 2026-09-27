@@ -35,6 +35,10 @@ const fontsHi = fontSet(["yatra-one-", "tiro-devanagari-hindi-devanagari", "mukt
 const jsGz = js.reduce((s, f) => s + gz(f), 0);
 const cssGz = css.reduce((s, f) => s + gz(f), 0);
 const htmlRaw = Buffer.byteLength(html);
+// Above-the-fold artwork if supplied: envelope scene + arch frame (1200w) and the card inside the
+// envelope (hero-frame-start, else hero-frame; 744w). The animation sprites load after, not counted.
+const artFiles = ["envelope-scene-1200", "arch-frame-1200", existsSync("public/img/hero-frame-start-744.webp") ? "hero-frame-start-744" : "hero-frame-744"];
+const artAbove = artFiles.map((k) => `public/img/${k}.webp`).filter(existsSync).reduce((n, f) => n + statSync(f).size, 0);
 const og = existsSync("public/og/og-default.jpg") ? statSync("public/og/og-default.jpg").size : null;
 
 // ponytail: Hindi fonts are an owner-approved exception (Devanagari fonts must stay) -> warn, don't fail
@@ -45,7 +49,7 @@ const rows = [
   ["Fonts, Hindi page", fontsHi, 250 * KB, false],
   ["HTML", htmlRaw, 30 * KB, true],
   ["og-default.jpg", og, 300 * KB, true],
-  ["First load, Hindi (JS+CSS+HTML+fonts)", jsGz + cssGz + htmlRaw + fontsHi, 1536 * KB, true],
+  ["First load, Hindi (JS+CSS+HTML+fonts+art)", jsGz + cssGz + htmlRaw + fontsHi + artAbove, 1843 * KB, true],
 ];
 
 let failed = false;

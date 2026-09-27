@@ -79,11 +79,14 @@ export function revealOnScroll(targets, from = { y: 24, opacity: 0 }, { each = 0
   const els = gsap.utils.toArray(targets).filter((el) => el.getClientRects().length && el.getBoundingClientRect().top > innerHeight * 0.85);
   if (!els.length) return;
   gsap.set(els, from);
-  ScrollTrigger.batch(els, {
-    start,
-    once: true,
-    onEnter: (batch) => gsap.to(batch, { x: 0, y: 0, opacity: 1, scale: 1, rotation: 0, duration: dur.m, ease: ease.enter, stagger: each || stagger.items, overwrite: true }),
-  });
+  const onEnter = (batch) => gsap.to(batch, { x: 0, y: 0, opacity: 1, scale: 1, rotation: 0, duration: dur.m, ease: ease.enter, stagger: each || stagger.items, overwrite: true });
+  // Elements in the last screen of the page can never scroll up to "top 85%": reveal them as
+  // soon as they enter the viewport instead (else e.g. the closing hashtag stays invisible).
+  const lastScreen = document.documentElement.scrollHeight - innerHeight * 0.2;
+  const late = els.filter((el) => el.getBoundingClientRect().top + scrollY > lastScreen);
+  const rest = els.filter((el) => !late.includes(el));
+  if (rest.length) ScrollTrigger.batch(rest, { start, once: true, onEnter });
+  if (late.length) ScrollTrigger.batch(late, { start: "top bottom", once: true, onEnter });
 }
 
 // True if el's top is still below the given viewport fraction (i.e. not yet revealed).

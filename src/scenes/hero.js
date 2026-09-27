@@ -1,9 +1,10 @@
 // Hero / cover page (SPEC §7.3 #1, restyled to the client's page-1 sample).
 // In the post phase this becomes the thank-you hero (SPEC §7.16).
 import { h, svg } from "../core/dom.js";
-import { ownerSvg, photo, picture } from "../core/assets.js";
+import { ownerSvg, photo, picture, art } from "../core/assets.js";
 import { mandala } from "../fx/mandala.js";
-import { toran, monogram, floralSpray, divider } from "../fx/ornaments.js";
+import { toran, wreath, archFrame, sceneSvg } from "../fx/ornaments.js";
+import { mountFrameAnim } from "../fx/frame-anim.js";
 
 export function ganeshArt() {
   const line = ownerSvg("ganesh-line");
@@ -35,32 +36,45 @@ function greeting(c, guest) {
     h("p", { class: "greeting-sub", text: c.hero.genericGreeting }));
 }
 
-// Page 1 (client sample): arch monogram, guest greeting, cover art, names, vertical label.
-// Bride's name comes first everywhere (client request).
+// Hero = the invitation card that comes out of the envelope (SPEC §7.4/§9, client reference):
+// arch frame, invocation, laurel monogram, names (bride first), subtitle, date ticket,
+// greeting, watercolor scene at the bottom.
 export function mount(ctx) {
   const { content: c, guest } = ctx;
   if (ctx.phase === "post") return postHero(ctx);
   const { bride, groom } = c.couple;
-  const cv = c.cover;
-  const names = (l) => `${bride.name[l]} ${c.hero.joiner[l]} ${groom.name[l]}`;
-  const mono = svg(monogram({ first: bride.initial, second: groom.initial, namesText: names("en").toUpperCase(), date: cv.monogramDate }));
-  mono.classList.add("ganesh-line", "is-fallback"); // drawn by the gate intro
-  const coverPhoto = photo("cover.jpg");
-  const art = coverPhoto
-    ? picture(coverPhoto, names, { eager: true, cls: "cover-photo" })
-    : h("div", { class: "cover-florals", "aria-hidden": "true" }, svg(floralSpray("right")), svg(floralSpray("left")));
-  const sec = h("section", { id: "hero", class: "section hero cover", "aria-labelledby": "hero-names" },
-    h("p", { class: "cover-vertical", "aria-hidden": "true", text: cv.vertical }),
-    h("div", { class: "ganesh cover-mono", "aria-hidden": "true" }, mono),
-    greeting(c, guest),
-    art,
-    h("h1", { id: "hero-names", class: "couple-names cover-names" },
+  const hero = c.hero;
+  const t = hero.ticket;
+  const archImg = art("arch-frame");
+  // Owner's full card artwork (arch, border, procession) as a stretchable frame (CSS border-image).
+  const frame = art("hero-frame");
+  const scene = art("envelope-scene");
+  const corner = (n, cls) => { const a = art(`corner-${n}`); return a ? picture(a, "", { cls: `hero-corner ${cls}`, sizes: "40vw" }) : null; };
+  const sceneFallback = svg(sceneSvg());
+  sceneFallback.setAttribute("preserveAspectRatio", "xMidYMid slice"); // wide crop keeps the palace
+  const wreathSvg = svg(wreath(`${bride.initial} | ${groom.initial}`));
+  wreathSvg.classList.add("ganesh-line", "is-fallback"); // drawn by the gate intro
+  const sec = h("section", { id: "hero", class: `section hero cover${frame ? " hero--framed" : ""}`, "aria-labelledby": "hero-names" },
+    frame ? null : h("div", { class: "hero-arch", "aria-hidden": "true" }, archImg ? picture(archImg, "", { eager: true, sizes: "(min-width: 600px) 560px, 100vw" }) : svg(archFrame())),
+    frame ? null : [corner(1, "hero-corner--tl"), corner(2, "hero-corner--br")],
+    h("p", { class: "hero-invocation", text: c.amantran?.invocation || c.invocation.line }),
+    frame ? null : h("div", { class: "hero-wreath", "aria-hidden": "true" }, wreathSvg), // the artwork's arch + bells take its place
+    h("h1", { id: "hero-names", class: "couple-names" },
       h("span", { class: "name", text: bride.name }),
-      h("span", { class: "joiner", text: c.hero.joiner }),
+      h("span", { class: "joiner", text: hero.joiner }),
       h("span", { class: "name", text: groom.name })),
-    svg(divider()),
-    h("p", { class: "hero-date" }, h("span", { text: c.meta.dateRange }), h("span", { class: "dot", "aria-hidden": "true" }, "·"), h("span", { text: c.meta.city })),
+    hero.subtitle ? h("p", { class: "hero-subtitle" }, `${hero.subtitle.hi} · ${hero.subtitle.en}`) : null,
+    t ? h("div", { class: "ticket" },
+      h("div", { class: "ticket-left" }, h("span", { class: "ticket-date", text: t.label })),
+      h("div", { class: "ticket-perf", "aria-hidden": "true" }),
+      h("div", { class: "ticket-right" }, h("span", { class: "ticket-day", text: t.note }), h("span", { class: "ticket-city", text: t.city }))) : null,
+    greeting(c, guest),
+    frame ? null : h("div", { class: "hero-scene", "aria-hidden": "true" }, scene ? picture(scene, "", { sizes: "(min-width: 600px) 560px, 100vw" }) : sceneFallback),
     h("a", { href: "#welcome", class: "scroll-hint" }, h("span", { text: c.hero.scrollHint }), ctx.icon("chevron-down")));
+  if (frame) {
+    sec.style.setProperty("--frame", `url("/img/${frame.key}-${frame.w}.webp")`);
+    mountFrameAnim(sec);
+  }
   ctx.main.append(sec);
   return sec;
 }

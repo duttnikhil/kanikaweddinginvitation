@@ -15,7 +15,7 @@ build order. Work one phase at a time. Do not start the next phase until the cur
 3. **Content lives in `content/wedding.json`.** Never hard-code names, dates, venues or copy in
    JS/HTML/CSS. Every user-visible string exists in both `hi` and `en`.
 4. **Performance budget** (enforced by `scripts/check-budget.mjs`, see SPEC §10):
-   initial JS ≤ 150 KB gzip, initial CSS ≤ 40 KB gzip, fonts ≤ 250 KB, total first load ≤ 1.5 MB
+   initial JS ≤ 150 KB gzip, initial CSS ≤ 40 KB gzip, fonts ≤ 250 KB, total first load ≤ 1.8 MB incl. above-the-fold artwork
    (photos and audio load later). Lighthouse mobile Performance ≥ 90.
 5. **Animate only `transform` and `opacity`** (plus SVG stroke via DrawSVG and `clip-path` for the
    haldi wipe). Never animate `width/height/top/left/box-shadow/filter` on scroll.

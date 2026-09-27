@@ -1,21 +1,28 @@
 import { defineConfig, loadEnv } from "vite";
 import { resolve } from "node:path";
 import { readFileSync, existsSync } from "node:fs";
-import { gateMarkup } from "./src/fx/ornaments.js";
+import { gateMarkup } from "./src/fx/envelope.js";
+import { pictureHtml } from "./src/core/picture-html.js";
 
 const wedding = JSON.parse(readFileSync(new URL("./content/wedding.json", import.meta.url), "utf8"));
 
 const escapeAttr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
-// Static opening gate in the default language (owner door/toran SVGs if present). Its SVG ids
+// Static opening gate (envelope) in the default language, with the envelope scene picture if
+// assets/img/envelope-scene.* was supplied (npm run images runs before vite build). SVG ids
 // get an "s-" prefix so they never clash with ids generated at runtime.
 function staticGate() {
   const l = wedding.meta.defaultLang;
-  const owner = (name) => (existsSync(`assets/svg/${name}.svg`) ? readFileSync(`assets/svg/${name}.svg`, "utf8") : null);
   const g = wedding.gate;
+  const { bride, groom } = wedding.couple;
+  const images = existsSync("content/images.json") ? JSON.parse(readFileSync("content/images.json", "utf8")) : {};
+  const scene = images["envelope-scene"];
+  const frame = images["hero-frame-start"] || images["hero-frame"]; // card before the procession arrives
   const html = gateMarkup(
-    { cta: g.cta[l], skip: g.skip[l], hint: existsSync("assets/audio/shehnai-loop.mp3") ? g.hint[l] : "" },
-    { doorLeft: owner("door-left"), doorRight: owner("door-right"), toranSvg: owner("toran") });
+    { cta: g.cta[l], skip: g.skip[l], tagline: g.tagline[l], to: g.to?.[l], monogramText: `${bride.initial} | ${groom.initial}`,
+      names: `${bride.name[l]} ${wedding.hero.joiner[l]} ${groom.name[l]}` },
+    { sceneHtml: scene ? pictureHtml("envelope-scene", scene, { eager: true }) : null,
+      frameUrl: frame ? `/img/${images["hero-frame-start"] ? "hero-frame-start" : "hero-frame"}-${frame.w}.webp` : null });
   return html.replace(/\bid="(?!gate)/g, 'id="s-').replace(/url\(#/g, "url(#s-");
 }
 

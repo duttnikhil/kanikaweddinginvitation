@@ -5,18 +5,18 @@ body::before { display: none; }
 #admin { max-width: 1100px; margin: 0 auto; padding: 16px; }
 .a-login { display: grid; gap: 14px; max-width: 360px; margin: 12vh auto 0; }
 .a-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.a-head h1, .a-login h1 { font: 500 22px/1.2 var(--f-display); color: var(--sindoor); }
+.a-head h1, .a-login h1 { font: 500 22px/1.2 var(--f-display); color: var(--accent); }
 .a-head-actions, .a-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .a-note { color: var(--ink-soft); margin-block: 8px; }
-.a-error { color: var(--sindoor); font-weight: 600; min-height: 1.2em; }
+.a-error { color: var(--accent); font-weight: 600; min-height: 1.2em; }
 .a-tabs { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
 .a-tab { min-height: 44px; padding: 8px 16px; border: 0; border-bottom: 3px solid transparent; background: none; font-weight: 600; color: var(--ink-soft); }
-.a-tab[aria-selected="true"] { color: var(--sindoor); border-bottom-color: var(--sindoor); }
+.a-tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
 .a-body h2 { font-size: 18px; margin: 20px 0 10px; color: var(--maroon); }
 .a-body h3 { font-size: 15px; margin: 14px 0 4px; }
 .a-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
 .a-stat { display: grid; gap: 2px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
-.a-stat-v { font: 600 22px/1.2 var(--f-ui); color: var(--sindoor); }
+.a-stat-v { font: 600 22px/1.2 var(--f-ui); color: var(--accent); }
 .a-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
 .a-table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 14px; }
 .a-table th, .a-table td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }

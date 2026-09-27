@@ -10,6 +10,12 @@ function fill(template, vars) {
   return template.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m)).replace(/\s{2,}/g, " ").trim();
 }
 
+// Tagline split like gateMarkup(): all but the last word / the last word (script line).
+function tagParts(t) {
+  const i = t.lastIndexOf(" ");
+  return i > 0 ? [t.slice(0, i), t.slice(i + 1)] : [t, ""];
+}
+
 class SetAttr {
   constructor(attr, value) {
     this.attr = attr;
@@ -45,9 +51,10 @@ export async function onRequest(ctx) {
     .on('meta[name="description"]', new SetAttr("content", desc))
     .on('meta[property="og:url"]', new SetAttr("content", ogUrl))
     // The pre-rendered gate is in the default language; switch it to the guest's.
-    .on("#gate-open span", { element: (el) => el.setInnerContent(wedding.gate.cta[l]) })
+    .on("#gate-open-label, .gate-cta", { element: (el) => el.setInnerContent(wedding.gate.cta[l]) })
     .on("#gate-skip", { element: (el) => el.setInnerContent(wedding.gate.skip[l]) })
-    .on(".gate-hint", { element: (el) => el.setInnerContent(wedding.gate.hint[l]) });
+    .on(".gate-tag1", { element: (el) => el.setInnerContent(tagParts(wedding.gate.tagline[l])[0]) })
+    .on(".gate-tag2", { element: (el) => el.setInnerContent(tagParts(wedding.gate.tagline[l])[1]) });
   if (guest) {
     const json = JSON.stringify({ id, ...guest }).replace(/</g, "\\u003c");
     rewriter = rewriter.on("head", {

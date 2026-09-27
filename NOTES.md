@@ -437,3 +437,168 @@ Fixes found while doing this (also valid for main):
 Checked (Playwright, 360 px, English + Hindi): all pages render, no console errors, no horizontal
 scroll; gate intro, RSVP (incl. offline/retry, prefill), admin counts, early-tap replay;
 `npm test` green; budget: JS 101.7 KB gz, CSS 7.5 KB, HTML 11 KB, OG image 66 KB.
+
+## Envelope opening + Watercolor Ivory theme (branch `client-kanika`)
+
+Client changed the opening and look (reference: 4 frames in `reference/` of an envelope with a
+heart wax seal that opens into an arch card). Built from the brief, but **with Kanika's details,
+not the brief's sample values**:
+- Monogram "**K | A**" and "Kanika *weds* Arjit": the brief said `{groom} | {bride}` and
+  "Arjit weds Kanika", but the client's rule is her name first everywhere.
+- Date ticket = the real wedding day: Tuesday · 24th November · Jhansi (the brief had a
+  sample "Saturday, 12th December").
+- `--sindoor` is red again but only for tiny accents; text/buttons use the new `--accent`
+  `#7E6124` because the brief's `--gold #B8923A` is 2.75:1 on paper (fails AA).
+
+What's new:
+- Gate = envelope (SPEC §7.4 rewritten): ivory back + noise, scene liner with slow ken-burns,
+  hidden card, three clip-path flaps with static edge shading, heart wax seal in pure SVG
+  (gold radial gradient, static turbulence/displacement wax edge, embossed ring, laurel,
+  engraved two-layer "K | A", 3 s shine band, breathing), CTA, tagline (last word in script),
+  top laurel wreath. Tap anywhere (or the seal) → crack + 14 flecks (6 on low-end) → pocket
+  drops, card rises and fills the screen → hero reveal → gate removed at 3.2 s. Skip, scroll
+  lock, reduced motion (fade only) and the early-tap replay all kept.
+- Hero = the card: arch frame, invocation, wreath (DrawSVG), names, "शुभ विवाह · WE ARE
+  GETTING MARRIED", date ticket with perforation, greeting, bottom scene with mask fade.
+- Theme tokens per the brief; labels are Cinzel 0.28em; event cards get watercolor washes
+  from dress-code colours (none given yet → blush/sky); music button moved bottom-right.
+- `seal-crack.mp3` replaces the shankh (silent if missing).
+- Images: `npm run images` also converts `assets/img/*` to AVIF + WebP at 600/1200 (alpha
+  kept). The static gate includes the scene `<picture>` when the file exists. First-load budget
+  now 1.8 MB including scene + arch artwork (SPEC §10, CLAUDE.md).
+- `wedding.json`: `gate.cta`, `gate.tagline`, `hero.subtitle`, `hero.ticket`, `hero.joiner` =
+  weds/संग; `gate.hint`, `cover.vertical`, `cover.monogramDate` removed (unused now).
+
+Fallbacks until you add the art: code-drawn watercolor-style SVG scene (sky, hills, palace with
+chhatris, lake, boat), SVG gold arch, no corners, no crack sound. It looks clean but flatter
+than the reference; the real `envelope-scene.webp` + `arch-frame.webp` make the biggest difference.
+
+Checked (Playwright): 4 opening frames at 360 and 768 px (idle, seal broken + card rising,
+card filling the screen, final hero), Hindi gate + hero text, Skip, tap anywhere, reduced
+motion, no console errors, no horizontal scroll; RSVP + admin + `npm test` still green;
+budget: JS 103.7 KB gz, CSS 8.0 KB, HTML 20.9 KB (the inline seal/scene SVG), first load 553 KB.
+
+Check on your phone:
+- The wax seal edge (turbulence filter) and flap shading on a real Android WebView + iPhone.
+- Smoothness of the pocket drop + card grow on a low-end Android (flecks drop to 6 there).
+- Crack sound + shehnai start inside WhatsApp's browser (once the mp3 files are added).
+- With the real `envelope-scene.webp`: that the interesting part of the picture sits in the
+  open V (upper-middle); crop the image if needed.
+
+## Envelope polish (owner: "cartoonish lag raha hai")
+
+- Seal: 128 → 96 px, muted antique gold instead of bright yellow, softer shine; it now lifts off
+  in one piece (the two-halves break + 14 gold flecks looked like a cartoon; removed).
+- Flaps: ivory paper grain, crease highlights, one static drop-shadow so they sit on the scene.
+- Timeline 3.2 → 2.6 s: the empty arch card no longer sits on screen for ~1 s; the hero starts
+  fading in while the pocket slides away. Card radius is no longer animated (transform/opacity only).
+- Fallback scene gets a static watercolor filter (wobbly edges, slight bleed, paper grain).
+- **Biggest remaining gap vs. the reference: the art.** The reference is a painted watercolor
+  scene + painted arch; ours is code-drawn. Add `assets/img/envelope-scene.webp` (portrait,
+  ~1200×1600, palace/lake/ghats in soft watercolor, interesting part in the upper-middle) and
+  `assets/img/arch-frame.webp` (transparent, floral arch) and run `npm run images`.
+
+## Save the Date scratch card (owner, 27 Sep 2026)
+
+- The date on Save the Date is hidden under a gold foil (`src/fx/scratch.js`, canvas). The guest
+  scratches it off with a finger; at ~35% cleared the rest fades away and petals burst. Keyboard:
+  Enter/Space on the foil. Reduced motion or no `saveDate.scratchHint`: the date is shown directly.
+  The date text is always in the DOM underneath (screen readers, no JS).
+- So the scratch actually reveals something, the date was removed from above it (owner's
+  choice): the hero ticket now reads "Save the Date · Scratch below · Jhansi"
+  (`hero.ticket.label/note/city`), and the invitation card has no date line (`amantran.date`
+  removed; the card hides the line when it's missing). The WhatsApp preview still says
+  "21–25 November 2026" (range of all functions, `meta.dateRange`).
+- `touch-action: none` on the foil: a swipe that starts on the card scratches instead of
+  scrolling (the card is ~160 px tall; the page scrolls normally everywhere else).
+
+## Envelope redesign (owner: "mature look nahi de raha", 27 Sep 2026)
+
+The first polish kept the full-screen flat V; it still read as clip-art. Rebuilt as a physical
+object (SPEC §7.4 rewritten; markup moved to `src/fx/envelope.js`):
+- An envelope lying on a cool linen backdrop with a real drop shadow, instead of flaps covering
+  the whole screen. The code-drawn palace/lake scene is gone from the gate (it was the most
+  cartoonish part); the hero still uses it at the bottom until `envelope-scene.webp` is added.
+- Top flap on a 3D hinge (rotateX, two faces with backface-visibility): outside paper, inside a
+  dusty-blue liner with a fine gold ogee lattice (or the owner's scene image, if supplied).
+- The card is no longer empty: laurel monogram + "Kanika weds Arjit" (still no date).
+- Sequence: seal lifts → flap opens → card slides out → envelope drops → card fills the screen
+  → hero. ≈ 3.65 s (was 2.6 s), Skip unchanged.
+- Checked with Playwright's fake clock frame by frame (360×740, 360×600, 1280×800, Hindi),
+  reduced motion, Skip mid-animation; no errors. HTML 22.1 KB, JS 105.3 KB gz.
+- Check on a real low-end Android: the 3D flip (preserve-3d inside WhatsApp's WebView) and the
+  static SVG shadows on the flaps.
+
+## Card artwork from the owner (27 Sep 2026)
+
+- The owner supplied a Canva design (`~/Downloads/Copy of Pink And White Elegant Wedding
+  Invitation.svg`): one embedded 406×720 JPEG (paper texture, Mughal gold arch with bells and
+  marigolds, filigree border, baraat procession + lotuses). Extracted to
+  `assets/img/hero-frame.jpg` → `public/img/hero-frame-406.{avif,webp}` (41 KB webp).
+- Used as a CSS `border-image` (slices 38.9% / 6.9% / 17.2%, widths in `cqw` of the column):
+  the arch and the procession keep their proportions, only the plain paper in between stretches,
+  so it fits every phone height. Used on the hero and on the card inside the envelope, so the
+  card that rises out of the envelope is the same card that becomes the hero.
+- With the frame: no code-drawn palace scene, no arch SVG, no laurel wreath in the hero (the
+  bells hang where it was). Ticket's right half is a warm gold wash instead of sky blue.
+- Removed the desktop diamond side strips and the double gold ring around the column (owner:
+  "border ajeeb hai"); the artwork has its own border.
+- Gate backdrop is warm linen now; the flap liner is sage with the gold lattice.
+- **Resolution:** 406 px wide is soft on 3× phones and upscaled 1.4× on desktop. Export a bigger
+  PNG from Canva (Download → PNG, size ×3) and drop it in as `assets/img/hero-frame.png`
+  (delete the .jpg); the slices are percentages, nothing else changes.
+- **Licence (owner to confirm):** it's a Canva template. Canva's licence generally lets you use
+  templates in your own designs, but Pro elements need a Pro account. Using it on a public site
+  is the owner's call; the file came from the owner (CLAUDE.md rule 8).
+
+## Animated card from the owner's frames (27 Sep 2026)
+
+- Owner supplied `~/Downloads/ezgif-…-png-split.zip`: 10 frames (744×1306) of the Canva animation.
+  Measured: only the top 610 rows (bells, garlands, leaves) and the bottom 246 rows (butterflies,
+  drummers from the left, elephant from the right) change; the middle is identical. It's an
+  entrance (the procession arrives), not a loop.
+- Frames live in `assets/img/hero-frame-frames/` (12 MB of PNGs; the site ships only the derived
+  files). `npm run images` builds: `hero-frame` = last frame (static hero, replaces the 406 px JPEG,
+  which is deleted), `hero-frame-start` = first frame (the card in the envelope), and two sprites
+  `hero-frame-top/bottom.{avif,webp}` (≈ 360 + 210 KB AVIF).
+- `fx/frame-anim.js` stacks the sprites over the card's top/bottom bands and steps them once
+  (`steps(9)`, 1.26 s) as the hero appears, so the card that came out of the envelope comes alive:
+  bells swing, the baraat walks in. Then the overlay is removed; checked pixel diff overlay vs
+  static = resampling noise only (no shift). Inner 2 px of each band is clipped (fractional sprite
+  offsets let a row of the neighbouring frame peek in). Reduced motion: no overlay. Sprites not
+  loaded yet: nothing plays, the static card shows.
+- Border-image slices now come from the moving rows: 46.71% / 6.72% / 18.84%.
+- Budget counts the envelope card artwork now (first load 671 KB). Sprites load in the background
+  while the guest looks at the envelope; not counted.
+
+## Celebrations redesign (owner: "bahut basic lag rahe hain", 27 Sep 2026)
+
+- Event cards rebuilt as stationery (SPEC §7.6/7.7 replaced): ivory paper, double gold hairline,
+  corner flourishes, line-art medallion that draws itself, roman numeral, script name, date lockup
+  (weekday | 21 | month), italic time, small-caps venue, quiet gold links in three columns.
+- Removed: haldi yellow flood + drops (`haldiDrops` deleted), the mehendi mandala block with the
+  hidden groom initial (the medallion is a small mandala now), colourful emoji-like motifs, pill
+  buttons in cards. If the owner later sends `mehendi-hand.svg`, it isn't used by the card anymore.
+- New: `src/fx/event-art.js`, `fmtDateParts()` in `core/time.js`.
+- Checked 360 px English + Hindi, 1280 px, reduced motion, full motion scroll-through (all cards
+  opacity 1, all icons fully drawn), calendar menu opens; no horizontal scroll, no errors.
+
+## Premium pass over the whole site (owner: "website dekh ke basic lagta hai", 27 Sep 2026)
+
+- **Envelope / first frame:** wine backdrop `#3B1018` with a faint gold jaali, warm light pool,
+  inset gold frame + filigree corners (replaces the pastel florals), gold-foil flap edges, ivory
+  tagline, CTA between gold rules. The envelope is addressed to the guest on the bottom flap
+  (`gate.to` = "Specially for" / "सेवा में" + salutation + name); generic link shows no line.
+  Skip moved next to the corner ornament. Fixed on the way: the static gate card rendered
+  "undefined" until JS ran (vite.config.js didn't pass `names`).
+- **Everything else** (`src/styles/premium.css`, loaded after sections.css): one stationery
+  language — ivory paper `#FBF7EF`, 1 px gold hairlines, soft deep shadow, squared foil-gold
+  buttons with letter-spaced caps, gold rule + diamond under every heading.
+  Welcome: faint gold mandala watermark. Invitation card: gold filigree corners instead of pastel
+  florals. Countdown: numerals between double rules, no white boxes. RSVP: script event names,
+  squared gold choice chips, underline inputs. Blessings: form and wishes as paper notes.
+  Closing: wine + jaali like the envelope, so the site opens and closes on the same colour.
+- **Bug fixed (was already there):** elements in the last screen of the page (the closing
+  hashtag) never reached `top 85%` and stayed invisible; `revealOnScroll` now reveals those
+  when they enter the viewport. Checked: every revealed element opacity 1 after a scroll-through
+  for the English guest, Hindi guest and the generic link; no errors.

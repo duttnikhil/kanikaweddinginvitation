@@ -1,6 +1,6 @@
 # SPEC.md — Shubh Vivah invite website
 
-Version 1.0 · Theme: **Royal (laal–sona)** · Audience: wedding guests on phones, plus 1–3 family
+Version 1.1 · Theme: **Watercolor Ivory** (client-kanika branch; `main` keeps Royal laal–sona) · Audience: wedding guests on phones, plus 1–3 family
 admins.
 
 Contents
@@ -328,7 +328,7 @@ Default section reveal: elements with `[data-reveal]` go from `y: 24, opacity: 0
 | 2 | `amantran` | amantran.js | Patrika-style text: inviting family (`hosts`), "Chi. {groom} sang Sau. Ka. {bride}", blessing line, grandparents' names | Line-by-line SplitText (`lines`) fade-up, `stagger 0.12` |
 | 3 | `couple` | couple.js | Two portrait cards (photo, name, parents, one line) | Photos clip-path reveal from arch shape; names SplitText chars |
 | 4 | `story` | story.js | 3–6 milestones (date, title, 2 lines, optional photo) | Vertical SVG vine path; `drawSVG 0%→100%` scrubbed with scroll; each milestone dot pops (`scale 0→1`, `back.out(2)`) when the line reaches it |
-| 5 | `countdown` | countdown.js | Days/Hours/Minutes/Seconds to `mainEventId` start | Digit change: old digit `yPercent -100`, new from `100`, `dur.xs`. In live phase shows "Aaj shubh din hai" |
+| 5 | `countdown` | countdown.js | Save the Date (`saveDate`): the date sits under a gold scratch card (`fx/scratch.js`, hint `saveDate.scratchHint`); Days/Hours/Minutes/Seconds to `mainEventId` start | Scratch: canvas foil, `destination-out` brush, ~35% cleared → foil fades + `petals.burst`; Enter/Space reveals; reduced motion shows the date directly. The date is not shown anywhere above this section. Digit change: old digit `yPercent -100`, new from `100`, `dur.xs`. In live phase shows "Aaj shubh din hai" |
 | 6 | `utsav` | events.js | Cards for allowed events only, in date order: name, date, time, muhurat line, venue, dress-code swatches, Maps + Directions + Add to calendar | Cards slide up with `stagger.items`; haldi and mehendi cards get §7.6 / §7.7 |
 | 7 | `phere` | pheras.js | Agni kund illustration, 7 vachan texts | §7.8 (pinned) |
 | 8 | `varmala` | varmala.js | Bride/groom silhouettes, "Tap to exchange varmala" | §7.9 |
@@ -345,37 +345,59 @@ Default section reveal: elements with `[data-reveal]` go from `y: 24, opacity: 0
 Section headings: small decorative divider (lotus/paisley SVG, owner-supplied or simple
 geometric fallback) + title in display font.
 
-### 7.4 Opening gate (signature moment)
+### 7.4 Opening gate: envelope + wax seal (signature moment)
 
-DOM: fixed full-screen overlay `#gate` (use `100dvh`) containing `.door-left`, `.door-right`,
-`.gate-light`, button `#gate-open`, button `#gate-skip`. Parent has `perspective: 1200px`.
-Doors: each 50% width, `transform-origin` at outer edge, `backface-visibility: hidden`, artwork
-`assets/svg/door-left.svg` / `door-right.svg` (fallback: CSS gradient doors with brass knobs).
+An ivory envelope resting on a cool linen backdrop, heart-shaped gold wax seal on the tip of
+the top flap, "Tap to open" under it, tagline above. Tapping lifts the seal, the top flap swings
+open on its hinge (3D) showing a gold-lattice liner, the card slides up out of the pocket, the
+envelope drops away and the card grows to fill the screen and becomes the hero.
 
-Idle state: button text `wedding.gate.cta` ("स्पर्श करें" / "Tap to open"), breathing
-`scale 1→1.04`, `ease.float`, `repeat -1, yoyo`, 1.8 s. Toran SVG at the top sways
-`rotation ±1.5deg`, 3 s.
+The gate is pre-rendered into `index.html` at build time (`gateMarkup()` in `fx/envelope.js`)
+so it paints before any JS; `scenes/opening.js` adopts it. `#gate` is fixed, `100dvh`. The
+envelope is `--ew × --eh` (`min(84vw, 360px, 44dvh)`, ratio 1.2) so the opened flap still fits
+above it on short phones. Layers:
 
-On tap (single GSAP timeline, total ≈ 5.2 s):
+1. `.gate-bg`: deep wine `#3B1018` with a faint gold ogee jaali, a warm light pool behind the
+   envelope, vignette, grain; a thin inset gold frame and gold filigree corners. Tagline and CTA
+   in gold/ivory. The envelope's flap edges are gold foil (gradient stroke).
+2. `.gate-top`: divider + `gate.tagline` (last word on its own line in the script font).
+3. `.env` (`perspective: 1400px`), back → front:
+   - `.env-back`: inside of the envelope, with the envelope's static drop shadow.
+   - `.env-card`: the invitation card: names `{bride} {hero.joiner} {groom}` (bride first), no date
+     (revealed on Save the Date). With `assets/img/hero-frame.*` the card is that artwork (same
+     `border-image` as the hero, so it grows into the hero); without it, paper + double gold
+     hairline + laurel monogram.
+   - `.env-pocket`: side flaps + bottom flap (inline SVG, gradients, static `feDropShadow`, grain),
+     with the addressee printed on it for personal links: `gate.to` + salutation + name
+     ("Specially for Shri & Smt. Verma Parivar"); hidden on the generic link.
+   - `.env-flap`: top flap, `transform-origin` top, `preserve-3d`; outside face = paper, inside
+     face (`rotateX(180deg)`, `backface-visibility: hidden`) = dusty-blue liner with a gold ogee
+     lattice, or `assets/img/envelope-scene.*` clipped to the liner triangle if supplied.
+4. `.seal` (`#gate-open` button): heart wax seal, pure SVG, 80 px, muted antique gold
+   (`#F1DFAE → #C9A45A → #7E5E22`), static turbulence wax edge, embossed ring, laurel, engraved
+   "K | A". Idle: shine band every 3 s, seal "breathes" `scale 1 → 1.03`. The envelope is still.
+5. `.gate-cta` under the envelope (opacity pulse); `#gate-skip` top-right from the start.
+
+Tap on the seal or anywhere on the gate (except Skip). One GSAP timeline, ≈ 3.65 s:
 
 | t (s) | Action |
 |---|---|
-| 0.00 | `audio.unlock()`; play `shankh.mp3` (vol 0.9); `navigator.vibrate?.(40)` |
-| 0.00 | Button fades out `dur.xs` |
-| 0.25 | `.gate-light` (vertical gold gradient line, width 2px) scales `scaleX 1 → 60`, opacity 0 → 1, 0.9 s |
-| 0.30 | Doors `rotateY: -105 / 105`, `dur.xl`, `ease.door` |
-| 1.20 | Start shehnai loop, fade volume 0 → 0.35 over 3 s |
-| 1.40 | Hero Ganesh SVG: `drawSVG: "0%" → "100%"` on all `path`s, 1.4 s, `stagger 0.02`, `power1.inOut` |
-| 2.60 | Ganesh fill layer opacity 0 → 1 (gold), 0.6 s |
-| 2.80 | `petals.start()` |
-| 3.40 | Greeting SplitText chars: `opacity 0, y 12 → rest`, `stagger.chars` |
-| 4.40 | Couple names (script font) — chars with `rotation -8 → 0`, `stagger 0.05` |
-| 5.00 | Gate overlay `display:none`; `lenis.start()`; floating UI fades in |
+| 0.00 | `audio.unlock()`; `seal-crack.mp3` (skipped if missing); `vibrate(30)`; seal press `scale → 0.94` |
+| 0.10 | CTA + tagline fade out |
+| 0.12 | Seal lifts off: `y -16`, `scale 1.05`, opacity 0, 0.5 s |
+| 0.45 | Flap `rotationX 0 → 180`, 0.9 s `power2.inOut`; at 0.9 (past 90°) it goes behind the card (`zIndex`) |
+| 1.10 | Card `yPercent → -58` out of the pocket, 0.85 s `power3.inOut` |
+| 1.95 | Back, pocket, flap drop `y +75vh`, 0.75 s `power2.in` |
+| 2.05 | Card content fades; card moves to the centre and scales to cover the viewport, 0.75 s |
+| 2.10 | Backdrop fades |
+| 2.35–2.90 | Page shown under the card; shehnai + `petals.start()`; gate fades out (0.45 s) |
+| 2.45 | Hero: invocation, wreath DrawSVG, names SplitText, subtitle, ticket, greeting + scene; with `assets/img/hero-frame-frames/` the owner's animation plays once over the card (`fx/frame-anim.js`: top band = bells, bottom band = procession, 10 frames at ≈ 7 fps, sprites stepped with `transform`), then the overlay is removed (the static card is the last frame) |
+| 3.65 | `#gate` removed, `lenis.start()`, floating UI fades in |
 
-Skip button (visible from t=0, low emphasis, top-right): jumps timeline to end
-(`tl.progress(1)`), no sound. Reduced motion: no doors animation; tap fades the overlay
-0.4 s and shows the final hero. If the guest scrolls/touches before tapping, nothing scrolls
-(`lenis.stop()` + `overflow: hidden` on body) until the gate is opened or skipped.
+Only `transform`/`opacity` are animated (the flap's rotateX included); every shadow and filter is static.
+Skip jumps to the end (no sound before a tap). Scroll is locked until opened. Reduced
+motion: tap → seal fades, envelope fades, final hero. A tap before the app JS has loaded is
+remembered (`boot.js`) and replayed. No `seal-crack.mp3` → silent; no shehnai → no music button.
 
 ### 7.5 Petals (`fx/petals.js`)
 
@@ -390,19 +412,21 @@ Skip button (visible from t=0, low emphasis, top-right): jumps timeline to end
 - Pauses on `visibilitychange` hidden. Disabled for reduced motion (burst shows a static
   flower icon instead).
 
-### 7.6 Haldi splash (`scenes/haldi.js`)
+### 7.6 / 7.7 Event cards: stationery style (replaces the haldi splash and the mehendi hand)
 
-On the haldi event card entering at `top 70%`: a haldi-yellow layer
-(`--haldi`) over the card goes `clip-path: circle(0% at 20% 30%)` → `circle(150% at 20% 30%)`,
-0.9 s, `power2.out`, then the card content fades in over the yellow background; 6 small SVG
-"splash drops" scale from 0 with `back.out(3)`. Once only.
+Owner, 27 Sep 2026: the yellow haldi flood with drops and the big mehendi mandala looked basic /
+cartoonish. Every event card (`scenes/events.js`, art in `fx/event-art.js`) is now the same
+stationery card, matching the owner's card artwork:
 
-### 7.7 Mehendi reveal (`scenes/mehendi.js`)
-
-Mehendi card holds `assets/svg/mehendi-hand.svg` (stroke-only paths, ≤ 60 paths). Scrubbed with
-scroll from `top 80%` to `center center`: `drawSVG 0%→100%`, `stagger 0.015`. The groom's
-initial (from `wedding.json` couple.groom.initial) is placed as a `<text>` in the palm group and
-revealed last with opacity. Stroke color `--mehendi` (#7A3E12).
+- Ivory paper `#FBF7EF`, 1 px gold border + inner hairline at 7 px, gold corner flourishes,
+  a very light wash of the event colour at the top (`--ev`: haldi marigold, mehendi sage,
+  phoolon blush, phere terracotta, vidaai sky).
+- Medallion: gold line icon per function (katori, mandala, flower, diya, palki; kalash
+  otherwise) in a double-ringed circle; roman numeral; name in the script font.
+- Date lockup: weekday | big day | month between gold rules (screen readers get the full date).
+- Time in italic; venue name in small caps, address in prose; actions as three gold text
+  links in equal columns (icon over label), ≥ 44 px tall. Venues block uses the same paper.
+- Motion: cards rise in on scroll; each medallion draws itself (DrawSVG, 1.4 s) once.
 
 ### 7.8 Saat phere (`scenes/pheras.js`)
 
@@ -511,33 +535,33 @@ closing section is 60% visible. Skipped in reduced motion and on low-end.
 - **Tools tab** — site QR (download PNG for printed cards), UPI QR, CSV export of RSVP.
 - Design: same tokens, simpler; tables scroll horizontally inside their own container.
 
-## 9. Design system — Royal (laal–sona)
+## 9. Design system — Watercolor Ivory
 
-The invite is a designed object with one deliberate look (ivory paper, sindoor, gold). It does
-**not** follow system dark mode. The admin page may use a plain light UI.
+The invite is a designed object with one deliberate look (ivory paper, watercolor washes,
+antique gold, navy slate text). It does **not** follow system dark mode. The admin page may
+use a plain light UI.
 
 ### 9.1 Color tokens (`src/styles/tokens.css`)
 
 | Token | Hex | Use |
 |---|---|---|
-| `--paper` | `#FBF4E6` | page background |
-| `--paper-2` | `#F4E7CC` | alternate section background |
-| `--ink` | `#2A1612` | body text |
-| `--ink-soft` | `#6B4A3F` | secondary text |
-| `--sindoor` | `#A3161A` | primary accent, headings on paper |
-| `--maroon` | `#5A0E12` | gate background, footer, dark sections |
-| `--gold` | `#C9A043` | ornaments, dividers, buttons on maroon |
-| `--gold-light` | `#E9D29A` | text on maroon |
-| `--haldi` | `#F2B705` | haldi card and splash |
-| `--mehendi` | `#7A3E12` | mehendi strokes |
-| `--peacock` | `#0F5E5A` | small secondary accent (links, focus rings) |
-| `--line` | `#E3CFA6` | hairlines |
+| `--paper` | `#FBF8F2` | page background |
+| `--paper-2` | `#F3EEE4` | alternate section background |
+| `--ink` | `#2E3A4F` | body text (navy slate) |
+| `--ink-soft` | `#5E6B7E` | secondary text |
+| `--accent` | `#7E6124` | headings, buttons, text links on paper (AA; white text on it AA) |
+| `--gold` | `#B8923A` | ornaments, hairlines, seal — never text (2.75:1) |
+| `--gold-light` | `#E8D6A8` | text on `--night` |
+| `--sage` | `#8A9A78` | greenery |
+| `--blush` | `#E9CFC4` | washes, flowers |
+| `--sky` | `#9DB7D0` | ticket wash, water |
+| `--sindoor` | `#A3161A` | only small Hindu accents (kumkum dot, swastik, tilak) |
+| `--night` | `#24314A` | dark sections (music button, any phere/closing dark variant), `--gold-light` text |
+| `--line` | `#E6DCC8` | hairlines |
 
-Contrast: body text `--ink` on `--paper` and `--gold-light` on `--maroon` both pass WCAG AA.
-Gold (`--gold`) is never used for body text on paper.
-
-Paper texture: a subtle SVG noise (`feTurbulence`) as a fixed background at 4% opacity, generated
-once as a data URI — not an image file.
+Paper texture: subtle SVG noise as a data URI, not an image file.
+Event cards keep the arch shape on paper with a gold hairline and a watercolor wash made of
+CSS radial-gradient blobs in the event's dress-code colours (theme blush/sky if none).
 
 ### 9.2 Typography
 
@@ -554,7 +578,8 @@ above the fold (Yatra One + Great Vibes). `font-display: swap`.
 Scale (mobile → desktop, via `clamp`):
 names 44→72 px · h2 28→40 · h3 20→24 · prose 19→21 (line-height 1.7) · UI 15→16 ·
 small caps labels 12 (letter-spacing 0.14em, uppercase for Latin only).
-Numbers use `font-variant-numeric: tabular-nums`.
+Numbers use `font-variant-numeric: tabular-nums`. Small-caps labels use Cinzel with
+`letter-spacing: 0.28em` (Latin only).
 
 ### 9.3 Layout
 
@@ -568,6 +593,15 @@ Numbers use `font-variant-numeric: tabular-nums`.
   outline with `--gold-light` text. Focus ring: 3 px `--peacock` offset 2 px.
 - Event card: arched top (CSS `border-radius: 999px 999px 16px 16px / 180px 180px 16px 16px`),
   `--line` border, motif icon in the arch.
+
+Hero = the invitation card from the envelope: watercolor arch frame
+(`assets/img/arch-frame.webp`, fallback: SVG gold arch line) around the whole card;
+invocation, laurel monogram wreath "K | A", names in script "Kanika *weds* Arjit" (bride first),
+"शुभ विवाह · WE ARE GETTING MARRIED", a date ticket (left: ivory with the date in script; right:
+`--sky` wash with day and city; perforation dots between; from `hero.ticket` = the wedding day),
+the guest greeting, and the bottom of the envelope scene with a soft mask fade; petals behind.
+Optional greenery corners `assets/img/corner-1.webp`, `corner-2.webp` (hidden if missing);
+gold dividers between sections.
 
 ### 9.4 Iconography
 
@@ -607,6 +641,16 @@ the fallbacks for any missing owner asset.
 If a file is missing, the module uses a simple geometric fallback and logs a dev warning — never
 blocks the build.
 
+**Raster artwork (`assets/img/`, envelope theme):** the build (`npm run images`) converts each
+to AVIF + WebP at 600 and 1200 px (alpha kept) into `public/img/`.
+
+| File | Spec | Fallback |
+|---|---|---|
+| `assets/img/envelope-scene.webp` | 1200×900, ≤ 180 KB, watercolor Indian scene | code-drawn SVG scene |
+| `assets/img/arch-frame.webp` | 1200×1800, transparent, ≤ 220 KB | SVG arch, gold line |
+| `assets/img/corner-1.webp`, `corner-2.webp` | transparent greenery, ≤ 60 KB each | hidden |
+| `assets/audio/seal-crack.mp3` | ≤ 30 KB | silent |
+
 ## 10. Performance, accessibility, compatibility
 
 **Budget (fail the build if exceeded — `scripts/check-budget.mjs`):**
@@ -617,6 +661,7 @@ blocks the build.
 | Initial CSS (gzip) | 40 KB |
 | Fonts total | 250 KB |
 | SVGs above the fold | 200 KB |
+| First load incl. above-the-fold artwork (JS+CSS+HTML+fonts+scene+arch) | 1.8 MB |
 | HTML | 30 KB |
 | og-default.jpg | 300 KB |
 

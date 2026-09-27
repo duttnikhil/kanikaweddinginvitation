@@ -8,3 +8,4 @@ content/images.json
 .wrangler
 .DS_Store
 test-results
+.playwright-mcp

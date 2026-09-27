@@ -9,7 +9,7 @@ export function mount(ctx) {
   const c = ctx.content.closing;
   const { groom, bride } = ctx.content.couple;
   if (!c) return;
-  const sec = section("closing", { tone: "soft" });
+  const sec = section("closing", { tone: "wine" });
   append(sec, 
     h("canvas", { class: "fireworks", "aria-hidden": "true" }),
     h("p", { class: "closing-line script", text: c.line, "data-reveal": "" }),

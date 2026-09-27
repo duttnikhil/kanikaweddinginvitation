@@ -5,6 +5,7 @@ import { countdownParts } from "../core/time.js";
 import { section } from "./common.js";
 import { tr } from "../core/i18n.js";
 import { gsap, dur, prefersReduced } from "../core/motion.js";
+import { scratchCard } from "../fx/scratch.js";
 
 // Digit change: old digit slides up out, new one slides in from below (SPEC §7.3 #5).
 function roll(el, prev, next) {
@@ -49,8 +50,8 @@ export function mount(ctx) {
       return h("div", { class: "cd-cell" }, cells[u], h("span", { class: "label", text: c.labels[u] }));
     }));
   const today = h("p", { class: "cd-today script", text: c.today });
-  if (sd) append(sec, 
-    sdDate(ctx, sd.date),
+  if (sd) append(sec,
+    scratchCard(sdDate(ctx, sd.date), sd.scratchHint),
     h("p", { class: "sd-tagline prose", text: sd.tagline, "data-reveal": "" }));
   append(sec, grid, today, sd?.hashtag ? h("p", { class: "sd-hashtag", text: sd.hashtag, "data-reveal": "" }) : null);
   ctx.main.append(sec);

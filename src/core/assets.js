@@ -27,16 +27,19 @@ export function photo(file) {
   return entry ? { key, ...entry } : null;
 }
 
-// <picture> with AVIF -> WebP -> JPEG, srcset at the generated widths (SPEC §10)
+// <picture> with AVIF -> WebP -> JPEG (photos) or AVIF -> WebP (artwork), SPEC §10.
 export function picture(p, alt, { sizes = "(min-width: 600px) 560px, 100vw", eager = false, cls = "" } = {}) {
   const set = (ext) => p.widths.map((w) => `/img/${p.key}-${w}.${ext} ${w}w`).join(", ");
+  const fb = p.fallback || "jpg";
   const img = h("img", {
-    src: `/img/${p.key}-${p.widths[Math.min(1, p.widths.length - 1)]}.jpg`,
-    srcset: set("jpg"), sizes, width: p.w, height: p.h,
+    src: `/img/${p.key}-${p.widths[Math.min(1, p.widths.length - 1)]}.${fb}`,
+    srcset: set(fb), sizes, width: p.w, height: p.h,
     loading: eager ? "eager" : "lazy", decoding: "async", i18n: { alt },
   });
   return h("picture", { class: cls },
-    h("source", { type: "image/avif", srcset: set("avif"), sizes }),
-    h("source", { type: "image/webp", srcset: set("webp"), sizes }),
+    (p.formats || ["avif", "webp", "jpg"]).filter((f) => f !== fb).map((f) => h("source", { type: `image/${f}`, srcset: set(f), sizes })),
     img);
 }
+
+// Artwork from assets/img (envelope scene, arch frame, corners), or null if not supplied.
+export const art = (name) => (manifest[name] ? { key: name, ...manifest[name] } : null);

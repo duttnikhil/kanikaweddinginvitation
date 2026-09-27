@@ -85,19 +85,6 @@ export function door(side) {
 <circle cx="${knobX}" cy="312" r="5" fill="#C5A165"/></svg>`;
 }
 
-// Opening gate markup (SPEC §7.4). Rendered into index.html at build time so the first paint
-// doesn't wait for JS; opening.js adopts it. Text is trusted copy from wedding.json.
-export function gateMarkup({ cta, skip, hint }, { doorLeft, doorRight, toranSvg } = {}) {
-  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
-  return `<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-open">
-<div class="door door-left" aria-hidden="true">${doorLeft || door("left")}</div>
-<div class="door door-right" aria-hidden="true">${doorRight || door("right")}</div>
-<div class="gate-light" aria-hidden="true"></div>
-<div class="gate-toran" aria-hidden="true">${toranSvg || toran()}</div>
-<div class="gate-center"><button type="button" id="gate-open" class="gate-btn"><span>${esc(cta)}</span></button>${hint ? `<p class="gate-hint">${esc(hint)}</p>` : ""}</div>
-<button type="button" id="gate-skip" class="gate-skip">${esc(skip)}</button></div>`;
-}
-
 // Fire altar with three flame groups #flame-1..3 (fallback for agni-kund.svg)
 export function agniKund() {
   const g = gid("ak");
@@ -141,13 +128,6 @@ export function varmalaCouple() {
 ${garland("garland-groom", 150, 118)}${garland("garland-bride", 208, 122)}</svg>`;
 }
 
-export function haldiDrops() {
-  const drops = [[14, 18, 9], [82, 12, 6], [90, 70, 8], [8, 78, 5], [56, 90, 7], [40, 8, 4]];
-  return drops
-    .map(([x, y, r]) => `<svg class="haldi-drop" style="left:${x}%;top:${y}%" viewBox="0 0 20 24" width="${r * 3}" height="${r * 3.6}" aria-hidden="true"><path d="M10 0c6 9 9 14 9 17a9 9 0 0 1-18 0c0-3 3-8 9-17Z" fill="#F2B705"/></svg>`)
-    .join("");
-}
-
 // Minimal line Ganesh (crown, ears, trunk, tilak) like the client's card sample.
 export function ganeshSymbol() {
   const g = gid("gs");
@@ -189,4 +169,89 @@ export function monogram({ first, second, namesText, date }) {
 <text x="136" y="214" text-anchor="middle" font-family="Cinzel, serif" font-size="58" fill="url(#${g})">${esc(second)}</text>
 <path d="M110 222c-10-8-16-14-16-20a8 8 0 0 1 16-2 8 8 0 0 1 16 2c0 6-6 12-16 20Z" fill="none" stroke="#C98B96" stroke-width="1.6" data-draw/>
 <text x="110" y="268" text-anchor="middle" font-family="Cinzel, serif" font-size="12" letter-spacing="2" fill="#8A6630">${esc(date)}</text></svg>`;
+}
+
+// ---------- Envelope opening (client reference: envelope + heart wax seal) ----------
+
+const HEART = "M100 178C40 138 8 104 8 66 8 34 32 12 60 12c18 0 32 10 40 24 8-14 22-24 40-24 28 0 52 22 52 54 0 38-32 72-92 112Z";
+
+// Laurel sprig along an arc: leaves as small stroked ellipses (drawable).
+function laurel(cx, cy, r, from, to, n, flip = 1) {
+  let out = "";
+  for (let i = 0; i < n; i++) {
+    const a = ((from + ((to - from) * i) / (n - 1)) * Math.PI) / 180;
+    const x = cx + Math.cos(a) * r;
+    const y = cy + Math.sin(a) * r;
+    const rot = (a * 180) / Math.PI + 90 + 35 * flip;
+    out += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="3.2" ry="7.5" transform="rotate(${rot.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+  }
+  return out;
+}
+
+// Heart wax seal, all code: radial gold gradient, wax-irregular edge (static turbulence +
+// displacement, rendered once), embossed inner ring, laurel, engraved monogram, shine band.
+export function waxSeal(monogramText) {
+  const g = gid("ws");
+  const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  return `<svg class="seal-svg" viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<radialGradient id="${g}g" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#F1DFAE"/><stop offset=".5" stop-color="#C9A45A"/><stop offset="1" stop-color="#7E5E22"/></radialGradient>
+<filter id="${g}f" x="-10%" y="-10%" width="120%" height="125%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="7"/><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#5a4210" flood-opacity=".35"/></filter>
+<clipPath id="${g}c"><path d="${HEART}"/></clipPath>
+<linearGradient id="${g}s" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<path d="${HEART}" fill="url(#${g}g)" filter="url(#${g}f)"/>
+<g transform="translate(100 95) scale(.74) translate(-100 -95)" fill="none">
+<path d="${HEART}" stroke="#F8EBC0" stroke-width="2.4" transform="translate(1 1.2)" opacity=".8"/>
+<path d="${HEART}" stroke="#8C6A1C" stroke-width="2.4" opacity=".75"/></g>
+<g fill="none" stroke="#8C6A1C" stroke-width="1.4" opacity=".8">${laurel(100, 92, 44, 115, 215, 6, 1)}${laurel(100, 92, 44, 65, -35, 6, -1)}</g>
+<g font-family="Cinzel, serif" font-size="34" text-anchor="middle" font-weight="500">
+<text x="101" y="105" fill="#FFF3C4" opacity=".75">${esc(monogramText)}</text>
+<text x="100" y="104" fill="#6E5212">${esc(monogramText)}</text></g>
+<g clip-path="url(#${g}c)"><rect class="seal-shine" x="-60" y="0" width="50" height="190" fill="url(#${g}s)" transform="skewX(-18)"/></g></svg>`;
+}
+
+// Laurel wreath monogram ("K | A" with a heart). Stroked parts carry data-draw.
+export function wreath(monogramText, { size = 200 } = {}) {
+  const g = gid("wr");
+  const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  return `<svg class="wreath" viewBox="0 0 200 200" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg"><defs>${goldGradient(g, "v")}</defs>
+<g fill="none" stroke="url(#${g})" stroke-width="1.4" stroke-linecap="round" data-draw>
+<path d="M92 176A78 78 0 0 1 40 44"/><path d="M108 176A78 78 0 0 0 160 44"/>
+${laurel(100, 100, 78, 95, 222, 10, 1)}${laurel(100, 100, 78, 85, -42, 10, -1)}
+<path d="M100 30v6M96 33h8"/></g>
+<path class="wreath-fill" d="M100 184c-6-5-10-8-10-12a5 5 0 0 1 10-1 5 5 0 0 1 10 1c0 4-4 7-10 12Z" fill="#B8923A"/>
+<text class="wreath-fill" x="100" y="114" text-anchor="middle" font-family="Cinzel, serif" font-size="40" letter-spacing="4" fill="#2E3A4F">${esc(monogramText)}</text></svg>`;
+}
+
+// Watercolor-style Indian scene (fallback for assets/img/envelope-scene.webp):
+// warm sky, layered hills, a palace with chhatris by a lake, reflections. Gradients only.
+export function sceneSvg() {
+  const g = gid("sc");
+  const dome = (x, y, w) => `<path d="M${x - w} ${y}q${w} ${-w * 1.3} ${w * 2} 0Z"/><rect x="${x - 1}" y="${y - w * 1.5}" width="2" height="${w * 0.5}"/>`;
+  return `<svg class="scene-svg" viewBox="0 0 400 420" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<linearGradient id="${g}sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4EEE2"/><stop offset=".55" stop-color="#E6ECF2"/><stop offset="1" stop-color="#CFDDE9"/></linearGradient>
+<linearGradient id="${g}lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B9CCDD"/><stop offset="1" stop-color="#8FAAC4"/></linearGradient>
+<linearGradient id="${g}pal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EAD9BD"/><stop offset="1" stop-color="#CDB38C"/></linearGradient>
+<filter id="${g}wc" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="3"/><feDisplacementMap in="SourceGraphic" scale="4"/><feGaussianBlur stdDeviation=".3"/></filter>
+<filter id="${g}gr"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .25 0 0 0 .09 0"/></filter></defs>
+<rect width="400" height="420" fill="url(#${g}sky)"/><g transform="translate(0 120)" filter="url(#${g}wc)">
+<path d="M0 150 60 112l50 20 60-40 70 38 60-30 100 44v56H0Z" fill="#B7C6D6" opacity=".55"/>
+<path d="M0 168 80 140l70 16 70-24 90 30 90-12v50H0Z" fill="#9EB2C6" opacity=".55"/>
+<g fill="url(#${g}pal)"><rect x="130" y="128" width="140" height="52"/><rect x="155" y="104" width="90" height="28"/><rect x="182" y="80" width="36" height="28"/>${dome(200, 80, 18)}${dome(145, 128, 12)}${dome(255, 128, 12)}${dome(170, 104, 9)}${dome(230, 104, 9)}</g>
+<g fill="#A9895F" opacity=".45"><rect x="140" y="146" width="8" height="14" rx="4"/><rect x="160" y="146" width="8" height="14" rx="4"/><rect x="180" y="146" width="8" height="14" rx="4"/><rect x="212" y="146" width="8" height="14" rx="4"/><rect x="232" y="146" width="8" height="14" rx="4"/><rect x="252" y="146" width="8" height="14" rx="4"/><rect x="194" y="88" width="12" height="16" rx="6"/><rect x="190" y="150" width="20" height="30" rx="10"/></g>
+<g fill="#8A9A78" opacity=".8"><ellipse cx="112" cy="172" rx="24" ry="14"/><ellipse cx="290" cy="170" rx="26" ry="16"/><ellipse cx="40" cy="176" rx="44" ry="12"/><ellipse cx="370" cy="176" rx="40" ry="12"/></g>
+<rect y="180" width="400" height="120" fill="url(#${g}lake)"/>
+<g fill="#E8D8BC" opacity=".35"><rect x="130" y="184" width="140" height="30"/><rect x="182" y="214" width="36" height="16"/></g>
+<g stroke="#fff" stroke-opacity=".45" stroke-width="1.2"><path d="M40 205h60M150 222h90M260 240h80M60 258h120M300 270h60"/></g>
+<g fill="#F6F0E4"><path d="M168 236l14-24v24Z"/><path d="M160 238h28l-4 5h-20Z" fill="#8C7A60"/></g></g><rect width="400" height="420" filter="url(#${g}gr)"/></svg>`;
+}
+
+// Arch frame fallback (for assets/img/arch-frame.webp): double gold line + florets.
+export function archFrame() {
+  const g = gid("af");
+  return `<svg class="arch-frame" viewBox="0 0 400 700" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>${goldGradient(g, "v")}</defs>
+<g fill="none" stroke="url(#${g})" vector-effect="non-scaling-stroke">
+<path d="M18 700V200C18 96 100 18 200 18S382 96 382 200V700" stroke-width="2"/>
+<path d="M30 700V204C30 106 106 30 200 30S370 106 370 204V700" stroke-width="1"/></g>
+<g fill="#E9CFC4"><circle cx="200" cy="18" r="6"/><circle cx="60" cy="96" r="4"/><circle cx="340" cy="96" r="4"/></g>
+<g fill="#8A9A78" opacity=".8"><ellipse cx="186" cy="20" rx="8" ry="3"/><ellipse cx="214" cy="20" rx="8" ry="3"/></g></svg>`;
 }

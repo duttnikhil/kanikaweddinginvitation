@@ -1,11 +1,13 @@
-// Opening gate: temple doors, shankh, Ganesh draws itself, petals, names (SPEC §7.4).
-import { ownerSvg } from "../core/assets.js";
+// Opening gate: envelope on linen, wax seal, hinged flap, card rises and becomes the hero (SPEC §7.4).
+import { art } from "../core/assets.js";
 import { gsap, dur, ease, stagger, split, lenis, prefersReduced } from "../core/motion.js";
 import * as audio from "../core/audio.js";
 import * as petals from "../fx/petals.js";
-import { gateMarkup } from "../fx/ornaments.js";
+import { gateMarkup } from "../fx/envelope.js";
+import { pictureHtml } from "../core/picture-html.js";
 import { bind, tr } from "../core/i18n.js";
 import { drawTargets } from "../fx/draw.js";
+import { playFrameAnim } from "../fx/frame-anim.js";
 
 // Removes the pre-rendered gate and shows the page (post phase, errors).
 export function dropGate() {
@@ -21,31 +23,48 @@ export function mount(ctx) {
     return done();
   }
   const g = ctx.content.gate;
+  const { bride, groom } = ctx.content.couple;
+  const names = (l) => `${tr(bride.name, l)} ${tr(ctx.content.hero.joiner, l)} ${tr(groom.name, l)}`;
   // The gate is pre-rendered into index.html (fast first paint); build it only if missing.
   if (!document.getElementById("gate")) {
-    document.body.insertAdjacentHTML("afterbegin", gateMarkup({ cta: tr(g.cta), skip: tr(g.skip), hint: audio.hasMusic ? tr(g.hint) : "" },
-      { doorLeft: ownerSvg("door-left"), doorRight: ownerSvg("door-right"), toranSvg: ownerSvg("toran") }));
+    const scene = art("envelope-scene");
+    const frame = art("hero-frame-start") || art("hero-frame");
+    document.body.insertAdjacentHTML("afterbegin", gateMarkup(
+      { cta: tr(g.cta), skip: tr(g.skip), tagline: tr(g.tagline), monogramText: `${bride.initial} | ${groom.initial}`, names: names(), to: tr(g.to) },
+      { sceneHtml: scene ? pictureHtml(scene.key, scene, { eager: true }) : null, frameUrl: frame ? `/img/${frame.key}-${frame.w}.webp` : null }));
   }
   const gate = document.getElementById("gate");
-  const openBtn = gate.querySelector("#gate-open");
-  const skipBtn = gate.querySelector("#gate-skip");
-  const left = gate.querySelector(".door-left");
-  const right = gate.querySelector(".door-right");
-  const light = gate.querySelector(".gate-light");
-  const center = gate.querySelector(".gate-center");
-  const tor = gate.querySelector(".gate-toran");
+  const $ = (sel) => gate.querySelector(sel);
+  const el = {
+    gate, seal: $(".seal"), shine: gate.querySelectorAll(".seal-shine"), bg: $(".gate-bg"), top: $(".gate-top"),
+    back: $(".env-back"), card: $(".env-card"), cardIn: $(".env-card-in"), pocket: $(".env-pocket"),
+    flap: $(".env-flap"), cta: $(".gate-cta"), skip: $("#gate-skip"),
+  };
   // Static text is in the default language: bind it so the guest's language applies.
-  bind(openBtn.firstElementChild, g.cta);
-  bind(skipBtn, g.skip);
-  const hint = gate.querySelector(".gate-hint");
-  if (hint) bind(hint, g.hint);
+  bind($("#gate-open-label"), g.cta);
+  bind(el.cta, g.cta);
+  bind(el.skip, g.skip);
+  const tag = (i) => (l) => { const t = tr(g.tagline, l); const k = t.lastIndexOf(" "); return k > 0 ? [t.slice(0, k), t.slice(k + 1)][i] : i ? "" : t; };
+  bind($(".gate-tag1"), tag(0));
+  bind($(".gate-tag2"), tag(1));
+  bind($(".env-card-names"), names);
+  // Envelope addressed to the guest ("Specially for Shri & Smt. Verma Parivar"); generic link: no line.
+  const to = $(".env-to");
+  if (to && ctx.guest && g.to) {
+    bind($(".env-to-label"), g.to);
+    bind($(".env-to-name"), (l) => `${ctx.guest.salutation[l]} ${ctx.guest.name[l]}`.trim());
+    to.hidden = false;
+  }
   document.body.classList.add("is-locked");
-  openBtn.focus({ preventScroll: true });
 
   const reduced = prefersReduced();
-  const idle = reduced ? null : gsap.timeline()
-    .add(gsap.to(openBtn, { scale: 1.04, duration: 0.9, ease: ease.float, repeat: -1, yoyo: true }), 0)
-    .add(gsap.fromTo(tor.firstElementChild, { rotation: -1.5 }, { rotation: 1.5, transformOrigin: "50% 0%", duration: 3, ease: ease.float, repeat: -1, yoyo: true }), 0);
+  // Idle: the envelope lies still; the seal "breathes", a shine passes every 3 s, CTA pulses.
+  const idle = reduced ? null : gsap.timeline();
+  if (idle) {
+    idle.add(gsap.to(el.seal, { scale: 1.03, duration: 1.5, ease: ease.float, repeat: -1, yoyo: true }), 0)
+      .add(gsap.fromTo(el.shine, { x: 0 }, { x: 280, duration: 1.1, ease: "power1.inOut", repeat: -1, repeatDelay: 1.9 }), 0.6)
+      .add(gsap.fromTo(el.cta, { opacity: 1 }, { opacity: 0.45, duration: 1.2, ease: ease.float, repeat: -1, yoyo: true }), 0);
+  }
 
   let finished = false;
   let tl = null;
@@ -55,32 +74,39 @@ export function mount(ctx) {
     finished = true;
     idle?.kill();
     reveal();
+    playFrameAnim(); // no-op if the intro already started it
     gate.remove();
     document.body.classList.remove("is-locked");
     lenis?.start();
     done();
   }
 
-  openBtn.addEventListener("click", async () => {
+  async function open() {
     if (tl || finished) return;
-    // Inside the user gesture: unlock audio (iOS) and play the shankh.
+    // Inside the user gesture: unlock audio (iOS) and play the seal crack.
     audio.unlock();
-    audio.playShankh();
-    navigator.vibrate?.(40);
-    reveal();
+    audio.playCrack();
+    navigator.vibrate?.(30);
     if (reduced) {
+      reveal();
       audio.startShehnai();
-      tl = gsap.to(gate, { opacity: 0, duration: 0.4, onComplete: finish });
+      tl = gsap.timeline({ onComplete: finish })
+        .to(el.seal, { opacity: 0, duration: 0.3 })
+        .to(gate, { opacity: 0, duration: 0.4 });
       return;
     }
+    idle?.pause();
     await document.fonts.ready;
-    tl = introTimeline(ctx, { center, skipBtn, left, right, light, idle, finish });
-  });
+    tl = introTimeline(ctx, el, finish, reveal);
+  }
 
-  // Skip: jump to the final state, no sound.
-  skipBtn.addEventListener("click", () => {
-    if (tl) tl.progress(1);
-    else finish();
+  gate.addEventListener("click", (e) => {
+    if (e.target.closest("#gate-skip")) {
+      if (tl) tl.progress(1); // Skip: jump to the final state
+      else finish();
+      return;
+    }
+    open();
   });
 
   // Replay a tap that happened before the app loaded (no sound: not a user gesture any more).
@@ -93,48 +119,62 @@ export function mount(ctx) {
   }
 }
 
-function introTimeline(ctx, { center, skipBtn, left, right, light, idle, finish }) {
+// SPEC §7.4 (envelope): ≈ 3.65 s from tap to the hero.
+function introTimeline(ctx, el, finish, reveal) {
   const hero = document.getElementById("hero");
-  const line = hero.querySelector(".ganesh-line");
-  const paths = line ? drawTargets(line) : [];
-  const fillLayer = hero.querySelector(".ganesh-fill");
-  const greet = hero.querySelector(".greeting-name") || hero.querySelector(".greeting");
+  const wreathSvg = hero.querySelector(".ganesh-line");
+  const paths = wreathSvg ? drawTargets(wreathSvg) : [];
   const names = [...hero.querySelectorAll(".couple-names .name")];
-  const greetSplit = greet ? split(greet, "chars") : null;
   const nameSplits = names.map((n) => split(n, "chars"));
+  const H = 2.45; // hero entrance starts as the card covers the screen
+
+  // Card → full screen: centre it and scale it up to cover the viewport (measured when it starts).
+  let grow = null;
+  const measure = () => {
+    const r = el.card.getBoundingClientRect();
+    grow = {
+      dx: innerWidth / 2 - (r.left + r.width / 2),
+      dy: innerHeight / 2 - (r.top + r.height / 2),
+      s: Math.max(innerWidth / r.width, innerHeight / r.height) * 1.04,
+    };
+  };
+
   const tl = gsap.timeline({
     onComplete: () => {
       finish();
-      // Restore plain text so the language toggle can re-render these nodes.
-      greetSplit?.revert();
-      nameSplits.forEach((s) => s.revert());
+      nameSplits.forEach((s) => s.revert()); // plain text again for the language toggle
     },
   });
-  tl.to(center, { opacity: 0, duration: dur.xs, onStart: () => idle?.pause() }, 0)
-    .to(skipBtn, { opacity: 0.6, duration: dur.xs }, 0)
-    .fromTo(light, { scaleX: 1, opacity: 0 }, { scaleX: 60, opacity: 1, duration: 0.9, ease: ease.move }, 0.25)
-    .to(left, { rotateY: -105, duration: dur.xl, ease: ease.door }, 0.3)
-    .to(right, { rotateY: 105, duration: dur.xl, ease: ease.door }, 0.3)
-    .to(light, { opacity: 0, duration: 0.6 }, 1.5)
-    .call(() => audio.startShehnai(), null, 1.2);
-  if (paths.length) {
-    tl.fromTo(paths, { drawSVG: "0%" }, {
-      drawSVG: "100%", duration: 1.4, ease: "power1.inOut",
-      stagger: { amount: Math.min(0.02 * paths.length, 1) }, // 0.02 each, capped at 1 s total
-    }, 1.4);
-  }
-  if (fillLayer) tl.fromTo(fillLayer, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 2.6);
-  tl.call(() => petals.start(), null, 2.8);
-  const gSplit = greetSplit ? (greetSplit.chars.length ? greetSplit.chars : greetSplit.words) : [];
-  if (gSplit.length) tl.from(gSplit, { opacity: 0, y: 12, duration: dur.s, ease: ease.enter, stagger: stagger.chars }, 3.4);
-  const sub = hero.querySelector(".greeting-sub");
-  if (sub) tl.from(sub, { opacity: 0, y: 8, duration: dur.m, ease: ease.enter }, 3.9);
+  // Seal presses, then lifts off the flap.
+  tl.to(el.seal, { scale: 0.94, duration: 0.12, ease: "power2.out" }, 0)
+    .to(el.seal, { y: -16, scale: 1.05, opacity: 0, duration: 0.5, ease: "power2.inOut" }, 0.12)
+    .to([el.cta, el.top], { opacity: 0, duration: 0.35 }, 0.1)
+    // The flap swings open on its hinge; past 90° it goes behind the card.
+    .to(el.flap, { rotationX: 180, duration: 0.9, ease: "power2.inOut" }, 0.45)
+    .set(el.flap, { zIndex: 0 }, 0.9)
+    // The card slides up out of the pocket.
+    .to(el.card, { yPercent: -58, duration: 0.85, ease: "power3.inOut" }, 1.1)
+    // Envelope drops away; the card comes forward and fills the screen.
+    .set(el.card, { zIndex: 3 }, 1.95) // out of the pocket: now in front of the falling envelope
+    .to([el.back, el.pocket, el.flap], { y: () => innerHeight * 0.75, duration: 0.75, ease: "power2.in" }, 1.95)
+    .to(el.cardIn, { opacity: 0, duration: 0.3 }, 2.05)
+    .call(measure, null, 2.05)
+    .to(el.card, { x: () => `+=${grow.dx}`, y: () => `+=${grow.dy}`, scale: () => grow.s, duration: 0.75, ease: "power2.inOut" }, 2.05)
+    .to(el.bg, { opacity: 0, duration: 0.45 }, 2.1)
+    .call(() => { audio.startShehnai(); petals.start(); }, null, 2.4)
+    .call(reveal, null, 2.35)
+    // The card is now the hero's paper: fade the gate away over the hero.
+    .to(el.gate, { opacity: 0, duration: 0.45, ease: "power1.out" }, 2.45)
+    .from(hero.querySelector(".hero-invocation"), { opacity: 0, y: 8, duration: dur.m, ease: ease.enter }, H)
+    .call(playFrameAnim, null, H); // bells swing, the procession walks in
+  if (paths.length) tl.fromTo(paths, { drawSVG: "0%" }, { drawSVG: "100%", duration: 1.0, ease: "power1.inOut", stagger: { amount: 0.4 } }, H);
+  tl.from(hero.querySelectorAll(".wreath-fill"), { opacity: 0, duration: 0.6 }, H + 0.5);
   nameSplits.forEach((s, i) => {
-    const parts = s.chars.length ? s.chars : s.words;
-    tl.from(parts, { opacity: 0, rotation: -8, y: 10, transformOrigin: "0% 100%", duration: dur.m, ease: ease.enter, stagger: 0.05 }, 4.4 + i * 0.25);
+    tl.from(s.chars.length ? s.chars : s.words, { opacity: 0, y: 12, rotation: -6, transformOrigin: "0% 100%", duration: dur.s, ease: ease.enter, stagger: stagger.chars }, H + 0.2 + i * 0.25);
   });
-  tl.from(hero.querySelectorAll(".couple-names .joiner, .hero-date, .scroll-hint"), { opacity: 0, duration: dur.m, stagger: 0.1 }, 4.6);
-  // The page is usable at 5.0 s even though the name flourish finishes a little later.
-  tl.call(finish, null, 5.0);
+  tl.from(hero.querySelectorAll(".couple-names .joiner, .hero-subtitle"), { opacity: 0, letterSpacing: "0.5em", duration: dur.m, ease: ease.enter }, H + 0.6)
+    .from(hero.querySelector(".ticket"), { x: 40, opacity: 0, duration: dur.m, ease: ease.enter }, H + 0.7)
+    .from(hero.querySelectorAll(".greeting, .hero-scene, .scroll-hint"), { opacity: 0, duration: dur.m, stagger: 0.1 }, H + 0.8)
+    .call(finish, null, H + 1.2);
   return tl;
 }

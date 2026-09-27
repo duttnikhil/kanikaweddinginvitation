@@ -8,6 +8,11 @@ const fmt = (l, opts) => new Intl.DateTimeFormat(loc(l), { timeZone: TZ, ...opts
 
 // "शनिवार, 12 दिसंबर" / "Saturday, 12 December"
 export const fmtDate = (iso, l) => fmt(l, { weekday: "long", day: "numeric", month: "long" }).format(new Date(iso));
+// Date lockup parts for event cards: { weekday: "Saturday", day: "21", month: "November" }
+export const fmtDateParts = (iso, l) => {
+  const p = Object.fromEntries(fmt(l, { weekday: "long", day: "numeric", month: "long" }).formatToParts(new Date(iso)).map((x) => [x.type, x.value]));
+  return { weekday: p.weekday, day: p.day, month: p.month };
+};
 // "30 नवंबर 2026" / "30 November 2026"
 export const fmtDay = (iso, l) => fmt(l, { day: "numeric", month: "long", year: "numeric" }).format(new Date(iso));
 

@@ -1,5 +1,5 @@
 {
-  "_readme": "Kanika & Arjit. Real details from the client (23 Sep 2026). Hindi versions written by us: family must check spellings. Missing on purpose (client hasn't sent): groom's grandparents, Vidaai venue, dress codes, contacts, UPI, photos. meta.rsvpDeadline is a PLACEHOLDER, confirm with the family.",
+  "_readme": "Kanika & Arjit. Real details from the client (23 Sep 2026). Hindi versions written by us: family must check spellings. Missing on purpose (client hasn't sent): groom's grandparents, Vidaai venue, dress codes, contacts, UPI, photos. meta.rsvpDeadline is a PLACEHOLDER, confirm with the family. The wedding date is shown first on the Save the Date scratch card (owner, 27 Sep 2026): the hero ticket and the invitation card carry no date on purpose.",
   "meta": {
     "siteUrl": "https://kanika-weds-arjit.pages.dev",
     "defaultLang": "en",
@@ -24,16 +24,20 @@
   },
   "gate": {
     "cta": {
-      "hi": "स्पर्श करें",
+      "hi": "खोलने के लिए छुएँ",
       "en": "Tap to open"
     },
     "skip": {
       "hi": "आगे बढ़ें",
       "en": "Skip"
     },
-    "hint": {
-      "hi": "ध्वनि के साथ देखें",
-      "en": "Best with sound on"
+    "tagline": {
+      "hi": "हमारे जीवन का नया अध्याय",
+      "en": "Our forever begins together"
+    },
+    "to": {
+      "hi": "सेवा में",
+      "en": "Specially for"
     }
   },
   "hero": {
@@ -46,12 +50,30 @@
       "en": "You and your family are cordially invited"
     },
     "joiner": {
-      "hi": "&",
-      "en": "&"
+      "hi": "संग",
+      "en": "weds"
     },
     "scrollHint": {
       "hi": "आगे देखें",
       "en": "Scroll to open"
+    },
+    "subtitle": {
+      "hi": "शुभ विवाह",
+      "en": "We are getting married"
+    },
+    "ticket": {
+      "note": {
+        "hi": "नीचे खुरचें",
+        "en": "Scratch below"
+      },
+      "label": {
+        "hi": "शुभ तिथि",
+        "en": "Save the Date"
+      },
+      "city": {
+        "hi": "झाँसी",
+        "en": "Jhansi"
+      }
     }
   },
   "cover": {
@@ -70,12 +92,7 @@
     "tagline": {
       "hi": "दो दिल, एक सुंदर शुरुआत।",
       "en": "Two hearts. One beautiful beginning."
-    },
-    "vertical": {
-      "hi": "विवाह निमंत्रण",
-      "en": "Wedding Invitation"
-    },
-    "monogramDate": "24.11.2026"
+    }
   },
   "couple": {
     "bride": {
@@ -133,10 +150,6 @@
       "hi": "संग",
       "en": "To"
     },
-    "date": {
-      "hi": "मंगलवार, 24 नवंबर 2026",
-      "en": "On Tuesday, 24th November 2026"
-    },
     "venue": {
       "hi": "प्रेमकुंज रिसॉर्ट, बालाजी उन्नाव रोड, झाँसी (उ.प्र.)",
       "en": "at Premakunj Resort, Balaji Unnao Road, Jhansi (U.P.)"
@@ -155,7 +168,11 @@
       "hi": "एक नए अध्याय की शुरुआत…",
       "en": "A new chapter begins…"
     },
-    "hashtag": "#ArjitWedsKanika"
+    "hashtag": "#ArjitWedsKanika",
+    "scratchHint": {
+      "hi": "खुरचें और तिथि देखें",
+      "en": "Scratch to reveal"
+    }
   },
   "countdown": {
     "title": {

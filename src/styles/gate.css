@@ -1,84 +1,210 @@
-/* Opening gate (SPEC §7.4) + petals canvas + floating UI visibility */
+/* Opening gate: an envelope resting on linen, heart wax seal (SPEC §7.4). Inlined as critical CSS.
+   Envelope size: --ew × --eh, sized so the opened flap still fits above it on short phones. */
 #gate {
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+  --ew: min(84vw, 360px, 44dvh);
+  --eh: calc(var(--ew) * 1.2);
+  --eb: max(78px, 12dvh); /* envelope bottom offset */
   position: fixed;
   inset: 0;
   z-index: 100;
   height: 100vh;
   height: 100dvh;
-  perspective: 1200px;
   overflow: hidden;
-  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.door {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50.5%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  background: linear-gradient(90deg, #e3eaf5, #f8fafd 50%, #e3eaf5);
-  box-shadow: inset 0 0 0 1px rgb(201 160 67 / 0.4);
+#gate > * { position: absolute; }
+
+/* Backdrop: deep wine velvet with a faint gold jaali, a warm pool of light behind the envelope,
+   a thin inset gold frame and filigree corners. */
+.gate-bg {
+  inset: 0;
+  background-color: #3B1018;
+  background-image:
+    radial-gradient(62% 46% at 50% 60%, rgb(222 160 118 / 0.24), transparent 72%),
+    radial-gradient(125% 95% at 50% 50%, transparent 48%, rgb(12 2 5 / 0.6)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='60'%3E%3Cpath d='M22 0C34 10 34 50 22 60C10 50 10 10 22 0Z' fill='none' stroke='%23C9A45A' stroke-opacity='.17'/%3E%3Ccircle cx='0' cy='30' r='1.6' fill='%23C9A45A' fill-opacity='.25'/%3E%3Ccircle cx='44' cy='30' r='1.6' fill='%23C9A45A' fill-opacity='.25'/%3E%3C/svg%3E"),
+    var(--paper-grain);
 }
-.door > svg { width: 100%; height: 100%; }
-.door-left { left: 0; transform-origin: 0 50%; }
-.door-right { right: 0; transform-origin: 100% 50%; }
-.gate-light {
+.gate-bg::after {
+  content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(50% - 1px);
-  width: 2px;
-  opacity: 0;
-  background: linear-gradient(180deg, transparent, #fff3b0 20%, #e9d29a 50%, #fff3b0 80%, transparent);
-  filter: blur(1px);
+  inset: 12px;
+  border: 1px solid rgb(201 164 90 / 0.38);
   pointer-events: none;
 }
-.gate-toran { position: absolute; inset: 0 0 auto; height: 76px; z-index: 2; pointer-events: none; }
-.gate-toran svg { width: 100%; height: 100%; }
-.gate-center {
-  position: absolute;
-  left: 50%;
-  top: 58%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
+.gate-corner { position: absolute; width: 58px; height: 58px; color: #C9A45A; opacity: 0.8; }
+.gate-corner svg { display: block; width: 100%; height: 100%; }
+.gate-corner--tl { top: 6px; left: 6px; }
+.gate-corner--tr { top: 6px; right: 6px; transform: scaleX(-1); }
+.gate-corner--bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+.gate-corner--br { bottom: 6px; right: 6px; transform: scale(-1); }
+
+/* Tagline above the envelope */
+.gate-top {
+  left: 0;
+  right: 0;
+  top: max(34px, calc(env(safe-area-inset-top) + 20px), calc((100dvh - var(--eb) - var(--eh)) / 2 - 56px));
   display: grid;
   justify-items: center;
-  gap: 14px;
-  width: max-content;
-  max-width: 90vw;
+  gap: 6px;
+  text-align: center;
 }
-.gate-btn {
-  display: grid;
-  place-items: center;
-  width: 128px;
-  height: 128px;
-  border: 2px solid var(--gold);
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff 0, var(--paper-2) 75%);
-  color: var(--sindoor);
-  font: 400 20px/1.2 var(--f-display);
-  box-shadow: 0 0 0 6px rgb(255 255 255 / 0.7), 0 0 0 7px var(--gold), 0 10px 40px rgb(38 50 74 / 0.25);
+.gate-top .divider { width: 120px; height: auto; }
+.gate-tag1 {
+  font: 500 12px/1.3 Cinzel, "Yatra One", serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #D8C08C;
 }
-:lang(hi) .gate-btn { font-family: "Yatra One", serif; font-size: 22px; }
-.gate-hint {
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.8);
-  color: var(--ink-soft);
-  font: 400 13px/1.4 var(--f-ui);
+:lang(hi) .gate-tag1 { letter-spacing: 0.04em; font-size: 16px; }
+.gate-tag2 { font: 400 44px/1 "Great Vibes", "Yatra One", cursive; color: #F4E6C4; }
+:lang(hi) .gate-tag2 { font-size: 30px; }
+
+/* The envelope */
+.env {
+  left: 50%;
+  bottom: var(--eb);
+  width: var(--ew);
+  height: var(--eh);
+  margin-left: calc(var(--ew) / -2);
+  perspective: 1400px;
 }
-.gate-skip {
+.env > * { position: absolute; }
+.env-back {
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #E4DBCB, #EDE6D9 40%);
+  box-shadow: 0 34px 60px -14px rgb(0 0 0 / 0.6), 0 4px 12px rgb(0 0 0 / 0.25);
+}
+.env-card {
+  left: 5%;
+  top: 4%;
+  width: 90%;
+  height: 92%;
+  z-index: 1;
+  border-radius: 4px;
+  background: radial-gradient(ellipse at 50% 30%, #fff, #FBF8F2 70%);
+  box-shadow: 0 -2px 12px rgb(60 50 30 / 0.08);
+}
+.env-card-in {
   position: absolute;
-  top: max(84px, calc(env(safe-area-inset-top) + 76px));
-  right: 12px;
+  inset: 8px;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 6px;
+  padding-top: 18px;
+  border: 1px solid rgb(184 146 58 / 0.55);
+  outline: 1px solid rgb(184 146 58 / 0.3);
+  outline-offset: -5px;
+}
+.env-card-in .wreath { width: 84px; height: 84px; }
+/* Card = the owner's artwork (same frame as the hero), so it grows into the hero seamlessly. */
+.env-card--framed { container-type: inline-size; background: #F3EEE7; }
+.env-card--framed::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-style: solid;
+  border-width: 82cqw 6.72cqw 33.06cqw;
+  border-image: var(--frame) 46.71% 6.72% 18.84% fill / 82cqw 6.72cqw 33.06cqw stretch;
+}
+.env-card--framed .env-card-in { inset: 0; padding: 58cqw 8cqw 30cqw; border: 0; outline: 0; align-content: center; }
+.env-card-names { font: 400 30px/1.1 "Great Vibes", "Yatra One", cursive; color: #2E3A4F; }
+:lang(hi) .env-card-names { font-size: 24px; }
+.env-pocket { inset: 0; z-index: 2; border-radius: 6px; overflow: hidden; }
+.env-pocket-svg { display: block; width: 100%; height: 100%; }
+/* Addressee, printed on the bottom flap */
+.env-to {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 9%;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  text-align: center;
+}
+.env-to[hidden] { display: none; }
+.env-to-label { font: 500 9.5px/1.3 Cinzel, "Yatra One", serif; letter-spacing: 0.3em; text-transform: uppercase; color: #8C6A1C; }
+:lang(hi) .env-to-label { font-size: 13px; letter-spacing: 0; }
+.env-to-name { font: 400 25px/1.15 "Great Vibes", "Yatra One", cursive; color: #3A2A14; text-wrap: balance; }
+:lang(hi) .env-to-name { font-size: 19px; }
+.env-pocket::after { content: ""; position: absolute; inset: 0; background-image: var(--paper-grain); pointer-events: none; }
+
+/* Top flap: hinged on the top edge; outside face, and the liner face shown once it flips over. */
+.env-flap {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 62%;
   z-index: 3;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+}
+.env-flap-face {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.env-flap-face svg { display: block; width: 100%; height: 100%; }
+.env-flap-back { transform: rotateX(180deg); }
+.env-liner-img {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(4.7% 100%, 95.3% 100%, 50% 8%);
+}
+.env-liner-img img, .env-liner-img picture { width: 100%; height: 100%; object-fit: cover; }
+
+/* Wax seal on the tip of the top flap */
+.seal {
+  left: 50%;
+  bottom: calc(var(--eb) + var(--eh) * 0.41 - 38px);
+  width: 80px;
+  height: 76px;
+  margin-left: -40px;
+  z-index: 4;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.seal-svg { width: 100%; height: 100%; overflow: visible; }
+.seal:focus-visible { outline: 3px solid #3E6A8A; outline-offset: 4px; border-radius: 50%; }
+
+.gate-cta {
+  left: 0;
+  right: 0;
+  bottom: calc(var(--eb) - 46px);
+  text-align: center;
+  font: 500 12px/1.3 Cinzel, "Yatra One", serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #E2C98A;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+.gate-cta::before, .gate-cta::after { content: ""; width: 28px; height: 1px; background: linear-gradient(90deg, transparent, #C9A45A); }
+.gate-cta::after { transform: scaleX(-1); }
+:lang(hi) .gate-cta { letter-spacing: 0.04em; font-size: 16px; text-transform: none; }
+
+.gate-skip {
+  top: max(14px, env(safe-area-inset-top));
+  right: 68px; /* just left of the gold corner */
+  z-index: 5;
   min-height: 44px;
   padding: 8px 16px;
-  border: 1px solid var(--gold);
+  border: 1px solid rgb(201 164 90 / 0.7);
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.8);
-  color: var(--ink);
-  font: 600 14px/1 var(--f-ui);
+  background: rgb(59 16 24 / 0.55);
+  color: #F4E6C4;
+  font: 600 14px/1 Mukta, system-ui, sans-serif;
 }
 
 .petals { position: fixed; inset: 0; z-index: 40; width: 100%; height: 100%; pointer-events: none; }
@@ -87,7 +213,7 @@
   z-index: 40;
   transform: translate(-50%, -50%);
   font-size: 40px;
-  color: var(--haldi);
+  color: #B8923A;
   pointer-events: none;
 }
 
@@ -98,5 +224,6 @@ html:not(.gate-open) .floating { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
-/* Until the gate is tapped the page behind the doors is not painted (it can't be seen anyway). */
+
+/* Until the gate is tapped the page behind the envelope is not painted (it can't be seen anyway). */
 .gate-closed #main { visibility: hidden; }
