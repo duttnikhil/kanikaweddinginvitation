@@ -140,3 +140,34 @@ textarea.input:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 1p
 .section--wine :focus-visible { outline-color: #E9D29A; }
 .cd-cell .label { font-size: 9.5px; letter-spacing: 0.12em; }
 .rsvp-event-name { flex-direction: column; align-items: flex-start; gap: 2px; }
+
+/* Music toggle: wine + gold, like the envelope; a soft gold ring pulses while music plays */
+.fab--music { background: var(--wine); border-color: rgb(201 164 90 / 0.8); color: #E9D29A; box-shadow: 0 8px 20px -8px rgb(59 16 24 / 0.6); }
+.fab--music[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgb(201 164 90 / 0.7);
+  animation: music-ring 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes music-ring { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.45); opacity: 0; } }
+
+/* Calendar menu: the button is the card's last column, so open the menu flush with the card's
+   right edge (it overflowed the screen on phones when centred on the button). */
+.event-card .cal-wrap { position: static; }
+.event-card .cal-menu { left: 12px; right: 12px; bottom: 56px; transform: none; min-width: 0; }
+/* Countdown digits: equal width so the numbers don't jiggle every second */
+.cd-digit { min-width: 0.62em; text-align: center; }
+
+/* Small phones (≤ 360 px): the three link columns and the date lockup must fit the card, never
+   push it wider than the screen (at 320 px it overflowed by 13 px and #main clipped it). */
+.event-card .ev-links { grid-auto-columns: minmax(0, 1fr); }
+.event-card .ev-link { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 360px) {
+  .event-card { padding-inline: 18px; }
+  .event-card .ev-link { letter-spacing: 0.06em; font-size: 10.5px; }
+  .event-date { gap: 8px; }
+  .ev-wd, .ev-mon { letter-spacing: 0.12em; font-size: 10px; }
+}

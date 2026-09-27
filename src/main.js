@@ -45,13 +45,13 @@ function setupMusic(ctx) {
   if (!f || !audio.hasMusic) return;
   const ui = content.ui;
   const render = () => {
-    const m = audio.isMuted();
+    const m = !audio.isOn();
     f.musicIcon.replaceChildren(icon(m ? "volume-x" : "volume-2"));
     f.musicLabel.textContent = tr(m ? ui.musicOff : ui.musicOn);
     f.musicBtn.setAttribute("aria-pressed", String(!m));
   };
   f.musicBtn.hidden = false;
-  f.musicBtn.addEventListener("click", () => audio.setMuted(!audio.isMuted()));
+  f.musicBtn.addEventListener("click", audio.toggle);
   audio.onMute(render);
   onLang(render);
   render();

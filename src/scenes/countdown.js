@@ -20,7 +20,9 @@ function roll(el, prev, next) {
     const neu = h("span", { class: "cd-d cd-d--in" }, d);
     slot.append(neu);
     gsap.to(old, { yPercent: -100, duration: dur.xs, ease: "power2.in", onComplete: () => old.remove() });
-    gsap.fromTo(neu, { yPercent: 100 }, { yPercent: 0, duration: dur.xs, ease: "power2.out" });
+    // Back in the flow once it has landed: an absolute-only slot collapses to zero width and the
+    // digit vanished (the seconds looked frozen/blank).
+    gsap.fromTo(neu, { yPercent: 100 }, { yPercent: 0, duration: dur.xs, ease: "power2.out", onComplete: () => neu.classList.remove("cd-d--in") });
   });
 }
 

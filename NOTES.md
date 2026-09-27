@@ -602,3 +602,22 @@ object (SPEC §7.4 rewritten; markup moved to `src/fx/envelope.js`):
   hashtag) never reached `top 85%` and stayed invisible; `revealOnScroll` now reveals those
   when they enter the viewport. Checked: every revealed element opacity 1 after a scroll-through
   for the English guest, Hindi guest and the generic link; no errors.
+
+## Music, looping card, countdown, viewport audit (27 Sep 2026)
+
+- **Music:** owner's track (`~/Downloads/mondamusic-indian-wedding-499177.mp3`, Pixabay) →
+  `assets/audio/shehnai-loop.mp3`, re-encoded 256 → 96 kbps (4.5 → 1.7 MB) with 1.5 s fade-in /
+  2.4 s fade-out so the loop seam doesn't click. Loads only after the gate tap.
+  **Bug fixed (was always there):** the fade-in was queued before the file loaded and the music
+  played at volume 0 — silent. Now the fade starts on Howler's `play` event (0 → 0.35 in 3 s).
+  Music button (bottom-right, wine + gold, gold ring pulses while playing) now shows the real
+  state; after Skip (no music by design) tapping it starts the music.
+- **Hero card animation loops** while the hero is on screen (paused off-screen via
+  IntersectionObserver): frames, 3 s hold, soft fade back to frame 1, again.
+- **Countdown bug fixed:** after a digit rolled, the slot held only the absolutely positioned new
+  digit, collapsed to zero width and the digit vanished (seconds always blank, looked frozen).
+  The new digit returns to normal flow when it lands; digits have equal width (no jiggle).
+- **Viewport audit** (320×568 … 1920×1080, landscape 740×360 and 568×320, EN + HI): no element
+  wider than the screen, gate buttons and floating buttons inside the viewport, calendar menu
+  inside the card. Fixed: event cards were 13 px wider than a 320 px screen (link columns'
+  min-content), and the calendar menu opened past the right edge on every phone.

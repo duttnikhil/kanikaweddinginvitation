@@ -28,11 +28,23 @@ export function playCrack() {
 export function startShehnai() {
   if (!shehnai) return;
   started = true;
-  const id = shehnai.play();
-  shehnai.fade(0, 0.35, 3000, id);
+  // Fade in once it really plays: a fade queued before the file has loaded left it at volume 0.
+  shehnai.once("play", (id) => shehnai.fade(0, 0.35, 3000, id));
+  shehnai.play();
+  listeners.forEach((fn) => fn(muted));
 }
 
 export const isMuted = () => muted;
+// What the music button shows: on only while the music is actually playing (not after Skip).
+export const isOn = () => started && !muted;
+
+// Music button: after Skip nothing has played yet, so the tap (a user gesture) starts it.
+export function toggle() {
+  if (started) return setMuted(!muted);
+  muted = false;
+  unlock();
+  startShehnai();
+}
 export function onMute(fn) {
   listeners.add(fn);
 }
