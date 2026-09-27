@@ -19,7 +19,7 @@ function staticGate() {
   const scene = images["envelope-scene"];
   const frame = images["hero-frame-start"] || images["hero-frame"]; // card before the procession arrives
   const html = gateMarkup(
-    { cta: g.cta[l], skip: g.skip[l], tagline: g.tagline[l], to: g.to?.[l], monogramText: `${bride.initial} | ${groom.initial}`,
+    { cta: g.cta[l], skip: g.skip[l], tagline: g.tagline[l], to: g.to?.[l], lang: wedding.ui?.langToggle?.[l], monogramText: `${bride.initial} | ${groom.initial}`,
       names: `${bride.name[l]} ${wedding.hero.joiner[l]} ${groom.name[l]}` },
     { sceneHtml: scene ? pictureHtml("envelope-scene", scene, { eager: true }) : null,
       frameUrl: frame ? `/img/${images["hero-frame-start"] ? "hero-frame-start" : "hero-frame"}-${frame.w}.webp` : null });

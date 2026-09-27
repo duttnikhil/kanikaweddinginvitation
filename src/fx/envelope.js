@@ -55,7 +55,7 @@ function flapBack(sceneHtml) {
 <path d="${LINER_IN}" fill="none" stroke="#B8923A" stroke-opacity=".5" stroke-width=".8"/></svg>${sceneHtml ? `<div class="env-liner-img">${sceneHtml}</div>` : ""}`;
 }
 
-export function gateMarkup({ cta, skip, tagline, monogramText, names, to }, { sceneHtml, frameUrl } = {}) {
+export function gateMarkup({ cta, skip, tagline, monogramText, names, to, lang }, { sceneHtml, frameUrl } = {}) {
   const cut = String(tagline).lastIndexOf(" ");
   const [tag1, tag2] = cut > 0 ? [tagline.slice(0, cut), tagline.slice(cut + 1)] : [tagline, ""];
   return `<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-open-label">
@@ -71,5 +71,6 @@ ${frameUrl
 </div>
 <button type="button" id="gate-open" class="seal"><span id="gate-open-label" class="sr-only">${esc(cta)}</span>${waxSeal(monogramText)}</button>
 <p class="gate-cta" aria-hidden="true">${esc(cta)}</p>
+${lang ? `<button type="button" id="gate-lang" class="gate-skip gate-lang" lang="${/[a-z]/i.test(lang) ? "en" : "hi"}">${esc(lang)}</button>` : ""}
 <button type="button" id="gate-skip" class="gate-skip">${esc(skip)}</button></div>`;
 }

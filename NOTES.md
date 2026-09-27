@@ -621,3 +621,7 @@ object (SPEC §7.4 rewritten; markup moved to `src/fx/envelope.js`):
   wider than the screen, gate buttons and floating buttons inside the viewport, calendar menu
   inside the card. Fixed: event cards were 13 px wider than a 320 px screen (link columns'
   min-content), and the calendar menu opened past the right edge on every phone.
+- **Language switch on the envelope** (owner): `#gate-lang` top-left, mirrors Skip (same style,
+  just right of the gold corner). Label = `ui.langToggle` in the other language; switching
+  re-labels the gate (tagline, CTA, Skip, addressee, card names) and never opens the envelope.
+  A tap on it before the app has loaded is ignored (boot.js early-tap replay skips it).

@@ -5,7 +5,7 @@ import * as audio from "../core/audio.js";
 import * as petals from "../fx/petals.js";
 import { gateMarkup } from "../fx/envelope.js";
 import { pictureHtml } from "../core/picture-html.js";
-import { bind, tr } from "../core/i18n.js";
+import { bind, tr, setLang, otherLang } from "../core/i18n.js";
 import { drawTargets } from "../fx/draw.js";
 import { playFrameAnim } from "../fx/frame-anim.js";
 
@@ -30,7 +30,7 @@ export function mount(ctx) {
     const scene = art("envelope-scene");
     const frame = art("hero-frame-start") || art("hero-frame");
     document.body.insertAdjacentHTML("afterbegin", gateMarkup(
-      { cta: tr(g.cta), skip: tr(g.skip), tagline: tr(g.tagline), monogramText: `${bride.initial} | ${groom.initial}`, names: names(), to: tr(g.to) },
+      { cta: tr(g.cta), skip: tr(g.skip), tagline: tr(g.tagline), monogramText: `${bride.initial} | ${groom.initial}`, names: names(), to: tr(g.to), lang: tr(ctx.content.ui.langToggle) },
       { sceneHtml: scene ? pictureHtml(scene.key, scene, { eager: true }) : null, frameUrl: frame ? `/img/${frame.key}-${frame.w}.webp` : null }));
   }
   const gate = document.getElementById("gate");
@@ -44,6 +44,12 @@ export function mount(ctx) {
   bind($("#gate-open-label"), g.cta);
   bind(el.cta, g.cta);
   bind(el.skip, g.skip);
+  // Language switch on the envelope (like Skip): re-labels everything, never opens the envelope.
+  const langBtn = $("#gate-lang");
+  if (langBtn) {
+    bind(langBtn, ctx.content.ui.langToggle);
+    bind(langBtn, (l) => (l === "hi" ? "en" : "hi"), "lang"); // the label is in the other language
+  }
   const tag = (i) => (l) => { const t = tr(g.tagline, l); const k = t.lastIndexOf(" "); return k > 0 ? [t.slice(0, k), t.slice(k + 1)][i] : i ? "" : t; };
   bind($(".gate-tag1"), tag(0));
   bind($(".gate-tag2"), tag(1));
@@ -101,6 +107,7 @@ export function mount(ctx) {
   }
 
   gate.addEventListener("click", (e) => {
+    if (e.target.closest("#gate-lang")) return setLang(otherLang());
     if (e.target.closest("#gate-skip")) {
       if (tl) tl.progress(1); // Skip: jump to the final state
       else finish();

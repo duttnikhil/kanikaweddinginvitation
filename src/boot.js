@@ -8,7 +8,7 @@ import "./styles/premium.css";
 
 // A tap on the static gate before the app has loaded is remembered and replayed by opening.js.
 document.addEventListener("click", (e) => {
-  if (!e.target.closest?.("#gate") || document.documentElement.dataset.appReady) return;
+  if (!e.target.closest?.("#gate") || e.target.closest("#gate-lang") || document.documentElement.dataset.appReady) return;
   document.documentElement.dataset.earlyTap = e.target.closest("#gate-skip") ? "gate-skip" : "gate-open";
 }, true);
 
