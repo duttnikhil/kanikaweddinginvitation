@@ -10,12 +10,9 @@ import * as audio from "./core/audio.js";
 import * as petals from "./fx/petals.js";
 import * as opening from "./scenes/opening.js";
 import * as hero from "./scenes/hero.js";
-import * as welcome from "./scenes/welcome.js";
-import * as amantran from "./scenes/amantran.js";
 import * as countdown from "./scenes/countdown.js";
 import * as eventsScene from "./scenes/events.js";
 import * as gallery from "./scenes/gallery.js";
-import * as rsvp from "./scenes/rsvp.js";
 import * as shagun from "./scenes/shagun.js";
 import * as wishes from "./scenes/wishes.js";
 import * as travel from "./scenes/travel.js";
@@ -24,10 +21,11 @@ import * as closing from "./scenes/closing.js";
 import * as live from "./scenes/live.js";
 import * as floatingUi from "./scenes/floating-ui.js";
 
-// Client sequence (Kanika & Arjit): cover → welcome → invitation card → save the date →
-// celebrations + venues → RSVP → blessings → closing. couple/story/pheras/varmala modules
+// Client sequence (Kanika & Arjit): cover (invocation + names + the whole invitation card)
+// → save the date →
+// celebrations + venues → blessings → closing. couple/story/pheras/varmala modules
 // still exist and can be added back here.
-const SCENES = { hero, welcome, amantran, countdown, events: eventsScene, gallery, rsvp, shagun, wishes, travel, contacts, closing, live, floatingUi };
+const SCENES = { hero, countdown, events: eventsScene, gallery, shagun, wishes, travel, contacts, closing, live, floatingUi };
 
 // Alternate paper / paper-2 on the visible light sections (dark ones keep maroon).
 function toneSections(main) {
@@ -93,11 +91,6 @@ async function boot() {
     gateDone: () => {
       afterGate(ctx);
       gateOpened();
-    },
-    // RSVP success: petals burst from the diya.
-    celebrate: (el) => {
-      const r = (el.querySelector(".diya") || el).getBoundingClientRect();
-      petals.burst(r.left + r.width / 2, r.top + r.height / 2, 30);
     },
   };
 

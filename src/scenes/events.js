@@ -89,7 +89,7 @@ function card(ctx, ev, i) {
 export function mount(ctx) {
   const list = visibleEvents(ctx.guest);
   if (!list.length) return;
-  const sec = section("utsav", { title: ctx.content.eventsTitle });
+  const sec = section("utsav", { title: ctx.content.eventsTitle, tone: "wine" });
   append(sec, h("div", { class: "event-list" }, list.map((ev, i) => card(ctx, ev, i))), venues(ctx, list));
   ctx.main.append(sec);
   ctx.motion.scene(({ full }) => full && animate(ctx, sec));

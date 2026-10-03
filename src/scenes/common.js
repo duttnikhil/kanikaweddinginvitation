@@ -45,3 +45,31 @@ export function copyButton(ctx, getText, label, cls = "btn btn--ghost btn--sm") 
 // wa.me link, digits only
 export const waLink = (phone, text = "") =>
   `https://wa.me/${String(phone).replace(/\D/g, "")}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
+
+// Share the invitation: the native share sheet where it exists (WhatsApp's browser has it),
+// clipboard copy otherwise. Always the generic site link, never the guest's personal one.
+export function shareButton(ctx, cls = "btn btn--ghost btn--sm") {
+  const url = ctx.content.meta.siteUrl || location.origin;
+  const ui = ctx.content.ui;
+  if (!navigator.share) return copyButton(ctx, url, ui.share, cls);
+  const btn = h("button", { type: "button", class: cls }, ctx.icon("share-2"), h("span", { text: ui.share }));
+  btn.addEventListener("click", () => {
+    const title = tr(ctx.content.share.ogTitleGeneric);
+    navigator.share({ title, text: title, url }).catch(() => {});
+  });
+  return btn;
+}
+
+// "Dear Shri & Smt. Verma, you and your family are cordially invited" — the personal line for a
+// known guest, the generic one otherwise.
+export function greeting(content, guest) {
+  const hero = content.hero;
+  if (!guest) return h("p", { class: "greeting", text: hero.genericGreeting });
+  const line = (l) => {
+    const s = guest.salutation[l];
+    return `${hero.greetingPrefix[l]} ${s ? `${s} ` : ""}${guest.name[l]}`.replace(/\s+/g, " ");
+  };
+  return h("div", { class: "greeting" },
+    h("p", { class: "greeting-name", text: line }),
+    h("p", { class: "greeting-sub", text: hero.genericGreeting }));
+}

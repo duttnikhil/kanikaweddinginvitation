@@ -1,5 +1,6 @@
 /* Design tokens: Royal (laal-sona) theme, SPEC §9 */
 @import "@fontsource/great-vibes/latin-400.css";
+@import "@fontsource/parisienne/latin-400.css";
 @import "@fontsource/yatra-one/latin-400.css";
 @import "@fontsource/yatra-one/devanagari-400.css";
 @import "@fontsource/cinzel/latin-500.css";
@@ -33,6 +34,9 @@
   --line: #E6DCC8;
 
   --f-script: "Great Vibes", "Yatra One", cursive;
+  /* Names: Parisienne has a much larger x-height than Great Vibes, so "Arjit Shrivastava"
+     does not read smaller than the rest of the card. */
+  --f-name: "Parisienne", "Great Vibes", cursive;
   --f-display: "Cinzel", "Yatra One", serif;
   --f-prose: "Cormorant Garamond", "Tiro Devanagari Hindi", Georgia, serif;
   --f-ui: "Mukta", system-ui, sans-serif;
@@ -56,6 +60,7 @@
 /* Hindi: Devanagari families first (SPEC §9.2) */
 :root:lang(hi) {
   --f-script: "Yatra One", "Great Vibes", serif;
+  --f-name: "Yatra One", "Great Vibes", serif;
   --f-display: "Yatra One", "Cinzel", serif;
   --f-prose: "Tiro Devanagari Hindi", "Cormorant Garamond", serif;
 }

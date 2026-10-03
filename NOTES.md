@@ -625,3 +625,76 @@ object (SPEC §7.4 rewritten; markup moved to `src/fx/envelope.js`):
   just right of the gold corner). Label = `ui.langToggle` in the other language; switching
   re-labels the gate (tagline, CTA, Skip, addressee, card names) and never opens the envelope.
   A tap on it before the app has loaded is ignored (boot.js early-tap replay skips it).
+- **Client's handwritten notes (3 Oct 2026) applied:**
+  - **One cover page.** The hero is now the whole invitation card: श्री गणेशाय नमः → शुभ विवाह →
+    the Ganesha blessing line → Wedding of → both families → venue → the guest's greeting. The
+    welcome section (`src/scenes/welcome.js`, `content.cover`) and the separate card section
+    (`src/scenes/amantran.js`, its `.card`/`.card-section` CSS) are gone; `content.amantran` is
+    still the source of the card text. Also dropped on the owner's call: the Save the Date /
+    "scratch below" ticket on the cover (`hero.ticket`, `.ticket*` CSS — the real Save the Date
+    section with the scratch card is untouched), the big "Kanika weds Arjit" line that repeated
+    the card's own names (an sr-only `h1` keeps the heading), and `amantran.invite`, whose text
+    the personal greeting already says.
+  - **Cover trimmed to one screen** (owner: "stretch nahi karna"). Dropped from the cover: the
+    "Shubh Vivah" headline and the Ganesha blessing line (`hero.subtitle`, `hero.blessing`) and
+    the venue line (the venue is in the celebrations section). Tightened the framed-card paddings
+    (`50cqw → 44cqw` top, `36cqw → 30cqw` bottom), type sizes and gaps. At 390×740 the hero is now
+    688 px (EN) / 672 px (HI). On a 390×620 viewport — an iPhone in Safari with its chrome showing,
+    the worst case the owner tested on — the whole card (Ganesh, invocation, "Wedding of", both
+    families) plus the scroll hint ends at 579 px, so nothing is cut and only the procession
+    artwork needs the scroll. Three rounds of trimming got it there, all on the owner's real
+    phone: the Ganesh art is now 46 px tall (half), the guest's greeting moved to the Save the
+    Date reveal (`greeting()` now lives in `scenes/common.js`, rendered by `scenes/countdown.js`),
+    and the card type came down a step (names 40→34 px max, family lines 14.5→13 px, "Wedding of"
+    20→16 px, joiner 18→15 px, invocation 14→12.5 px) with tighter gaps.
+  - **Ganesh line art** above the invocation: `assets/svg/ganesh-line.svg`, drawn stroke-by-stroke
+    with DrawSVG. It **redraws on a loop** (1.6 s draw, fills fade in, 3.5 s rest) for as long as
+    the hero is on screen — `mountGaneshLoop()` in `fx/ganesh.js`, paused by an IntersectionObserver
+    off screen and skipped entirely on reduced motion; `.hero-ganesh.is-drawing` hides the fills
+    while the strokes run. The gate intro only kicks it off (`playGaneshLoop`) and now draws just
+    the fallback wreath itself.
+  - **Frame flipbook hold cut** 3 s → 1.2 s (fade 0.6 → 0.5 s): the loop was always there, but the
+    long pause made the owner read it as playing once. The bells now swing roughly every 4 s. The file is the artwork the owner supplied
+    from jaiganesh.netlify.com ("Digital Art by Jitendra") — **the owner confirmed on 3 Oct 2026
+    that they have the artist's permission**; recoloured to `currentColor` and cropped. Keep that
+    permission on record. `src/fx/ganesh.js` holds a hand-drawn fallback if the file is removed.
+  - The invocation `॥ श्री गणेशाय नमः ॥` stays in Devanagari in both languages (owner).
+  - **Celebrations on wine** (`section("utsav", { tone: "wine" })`): same dark maroon + gold jaali
+    as the envelope and the closing, with the ivory stationery cards on top. Only the section
+    headings needed a light colour; the cards keep their own ink.
+  - **Names use Parisienne** (`--f-name`, `@fontsource/parisienne`, latin-400 only) instead of
+    Great Vibes: Great Vibes has a tiny x-height, so "Arjit Shrivastava" read noticeably smaller
+    than the rest of the card. Great Vibes still carries the other script bits; Hindi names stay
+    on Yatra One. Fonts budget unchanged in practice (English page 135 KB of 250 KB).
+  - **Growing garden under Save the Date** (`src/fx/flowers.js` + `.garden` CSS): one procedural
+    SVG (fixed seed, so it is the same patch every visit) with 14 grass blades and 9 plants of
+    varying height — curved stems that stroke-draw themselves, then leaves, buds and blossoms pop
+    open and the patch sways. Rebuilt from the CSS garden the owner shared: a first pass with
+    three straight CSS stems looked fake and empty, hence the curved SVG version. Card colours,
+    only `stroke-dashoffset`/`transform`/`opacity` animate (the original animates `height` and
+    `filter: blur`, both too costly on mid-range Android), and an IntersectionObserver adds
+    `.is-live` so nothing animates off screen. The grown state is the default, so without JS or
+    with `prefers-reduced-motion` the garden simply sits there.
+  - **Fireworks rewritten** (`src/fx/fireworks.js`): shell model (comet with spark trail →
+    spherical burst → glitter sparks, air drag, gravity, burst flash, fading trails) ported from
+    Caleb Miller's CodePen fireworks, which the **owner says they have permission to use**
+    (3 Oct 2026). Only the simulation was taken — no settings UI, sound, fullscreen, `Stage`/
+    `fscreen` libraries or CDN audio (CLAUDE.md forbids runtime CDN) — and the palette is the
+    card's gold/blush. Still one-shot, still skipped on reduced motion and low-end devices.
+  - Card page: groom's grandparents added (Late Smt. Ram Kishori Shrivastava & Late Shri Rajendra
+    Mohan Shrivastava — the second surname is a ditto mark in the notes, **confirm with the
+    family**) and the joiner reads "with". The Share button ("SS share") sits on the closing
+    page, not the cover.
+  - Closing page: अK logo on top, "Kanika weds Arjit", "With Love & Blessings of the Khare
+    Family", `#KanikaWedsArjit` (was `#ArjitWedsKanika`). The old mandala monogram is gone.
+  - **Logo** (`src/fx/logo.js`) is drawn in-house from the client's brief (अ + K in teal, mor
+    pankh, bansuri, lotus, Prem Sarovar ripples). The RangeelaSutra image they sent is an
+    annotated mock-up, not shippable artwork; if they own the original file, drop it in
+    `assets/svg/logo-ak.svg` and swap the import.
+  - **RSVP removed** (owner confirmed, 3 Oct 2026): `src/scenes/rsvp.js`, the floating RSVP pill,
+    `content.rsvp`, `ui.rsvpPill`, `meta.rsvpDeadline`, `getRsvp`/`sendRsvp` in `api.js` and all
+    `.rsvp-*` CSS are gone. The guest list, open tracking and blessings still work. Kept on
+    purpose: the Apps Script `rsvp` endpoints and the admin page's RSVP columns / CSV export —
+    they read the Sheet and simply stay empty, and deleting them would break the admin views.
+    The only error string the blessings form needed moved to `ui.error`.
+  - **Open:** "font 2nd page wala" for श्री गणेशाय नमः — need the sample page to match it.

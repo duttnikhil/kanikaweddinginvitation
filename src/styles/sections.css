@@ -282,11 +282,12 @@
 /* Closing (dark) */
 .closing { overflow: hidden; }
 .fireworks { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.closing-line { color: var(--accent); font-size: clamp(34px, 5vw + 20px, 52px); }
-.monogram { position: relative; display: grid; place-items: center; width: 180px; aspect-ratio: 1; margin: 28px auto; }
-.monogram svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.monogram-letters { position: relative; font: 400 44px/1 var(--f-script); color: var(--accent); }
-.monogram-letters .amp { margin-inline: 8px; color: var(--gold); }
+.closing-line { margin-top: 6px; font-size: var(--fs-prose); font-style: italic; color: var(--ink-soft); }
+:lang(hi) .closing-line { font-style: normal; }
+.closing-logo { width: min(240px, 62%); margin: 0 auto 10px; }
+.closing-logo svg { width: 100%; height: auto; }
+.closing-names { font-family: var(--f-name); font-size: clamp(30px, 4.4vw + 16px, 44px); color: var(--accent); }
+.card-share { position: relative; display: grid; justify-items: center; margin-top: 18px; }
 .darshan { display: grid; gap: 10px; margin-top: 12px; }
 .darshan-title { font-size: var(--fs-h3); }
 .kids-line { margin-top: 24px; font-style: italic; }
@@ -313,21 +314,12 @@
 .fab--lang { left: 12px; }
 .fab--music { top: auto; right: 12px; bottom: max(16px, env(safe-area-inset-bottom)); justify-content: center; padding: 8px; background: var(--night); color: var(--gold-light); border-color: var(--night); }
 .fab-icon { display: inline-grid; }
-.rsvp-pill {
-  position: absolute;
-  left: 50%;
-  bottom: max(16px, env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  box-shadow: 0 8px 24px rgb(138 102 48 / 0.35);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-.rsvp-pill.is-hidden { opacity: 0; transform: translate(-50%, 20px); pointer-events: none; }
 @media (min-width: 1024px) {
   .fab--lang { left: calc(50% - 280px + 34px); }
   .fab--music { right: calc(50% - 280px + 34px); }
 }
 
-/* Forms (RSVP, wishes) */
+/* Forms (blessings) */
 .input {
   width: 100%;
   min-height: 48px;
@@ -342,71 +334,8 @@ textarea.input { resize: vertical; }
 .input:focus-visible { outline: 3px solid var(--peacock); outline-offset: 1px; }
 .field { display: grid; gap: 6px; text-align: left; }
 fieldset { border: 0; padding: 0; min-width: 0; }
-.link-btn {
-  min-height: 44px;
-  border: 0; background: none;
-  color: var(--peacock);
-  font: 600 15px/1.3 var(--f-ui);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.rsvp-sub { margin-bottom: 24px; }
-.rsvp-note { margin-bottom: 20px; }
-.rsvp-form { display: grid; gap: 18px; text-align: left; }
-.rsvp-event, .rsvp-shared {
-  display: grid;
-  gap: 14px;
-  padding: 18px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgb(255 255 255 / 0.4);
-}
-.rsvp-event-name {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
-  float: left; width: 100%;
-  margin-bottom: 4px;
-  font: 500 var(--fs-h3)/1.25 var(--f-display);
-  color: var(--accent);
-}
-:lang(hi) .rsvp-event-name { font-weight: 400; }
-.rsvp-event-name + * { clear: both; }
-.segmented { display: grid; grid-template-columns: repeat(auto-fit, minmax(62px, 1fr)); gap: 6px; }
-.seg { position: relative; }
-.seg span {
-  display: grid; place-items: center;
-  min-height: 46px;
-  padding: 6px 8px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fffdf7;
-  font: 600 15px/1.2 var(--f-ui);
-  text-align: center;
-  cursor: pointer;
-}
-.seg input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--paper); }
-.seg input:focus-visible + span { outline: 3px solid var(--peacock); outline-offset: 2px; }
-.rsvp-detail { display: grid; gap: 10px; }
-.food { display: grid; gap: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
-.stepper-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.stepper-label { font-weight: 600; }
-.stepper { display: inline-flex; align-items: center; gap: 6px; }
-.stepper-btn {
-  width: 44px; height: 44px;
-  border: 1px solid var(--gold); border-radius: 50%;
-  background: #fffdf7; color: var(--accent);
-  font: 600 22px/1 var(--f-ui);
-}
-.stepper-btn:disabled { opacity: 0.35; cursor: default; }
-.stepper-value { min-width: 2ch; text-align: center; font: 600 20px/1 var(--f-ui); }
-.rsvp-mismatch, .rsvp-error p { color: var(--accent); font-weight: 600; }
-.rsvp-error { display: grid; gap: 10px; justify-items: start; padding: 12px 14px; border-radius: 12px; background: #fbe3dc; }
-.rsvp-submit { justify-self: center; min-width: 200px; }
-.rsvp-updated { margin-bottom: 16px; font-size: 14px; }
-.rsvp-success { display: grid; justify-items: center; gap: 8px; margin-bottom: 24px; }
-.rsvp-success .diya { width: 90px; }
 .diya .flame { opacity: 0; transform: scale(0.3); transition: opacity 0.6s ease, transform 0.6s ease; }
 .diya.is-lit .flame { opacity: 1; transform: none; }
-.rsvp-success-text { font-size: clamp(28px, 3vw + 20px, 38px); }
 
 .wish-form { display: grid; gap: 14px; margin-bottom: 28px; text-align: left; }
 .wish-form .btn { justify-self: center; }
@@ -435,8 +364,8 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 /* Hero = invitation card out of the envelope */
 .hero.cover {
   justify-content: flex-start;
-  gap: 10px;
-  padding: calc(84px + env(safe-area-inset-top)) 34px 0;
+  gap: 6px;
+  padding: calc(52px + env(safe-area-inset-top)) 30px 0;
   background: radial-gradient(ellipse at 50% 30%, #fff, var(--paper) 70%);
   overflow: hidden;
 }
@@ -445,71 +374,22 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 .hero-corner { position: absolute; width: 42%; max-width: 220px; pointer-events: none; z-index: 1; }
 .hero-corner--tl { top: 0; left: 0; }
 .hero-corner--br { bottom: 0; right: 0; }
+.hero-ganesh { position: relative; width: clamp(32px, 8.5vw, 44px); margin: 6px 0 0; color: var(--accent); }
+.hero-ganesh svg { width: 100%; height: auto; }
+/* The artwork is drawn in a 1080-wide space: thicker strokes keep the lines visible this small. */
+.hero-ganesh svg path, .hero-ganesh svg circle { stroke-width: 5; transition: fill 1.2s ease; }
+/* While the gate intro draws the outline, nothing is filled yet. */
+.hero-ganesh.is-drawing svg path, .hero-ganesh.is-drawing svg circle { fill: transparent; }
 .hero-invocation {
   position: relative;
-  font: 500 12px/1.4 var(--f-display);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
+  margin-bottom: 4px;
+  font: 400 12.5px/1.4 "Yatra One", serif; /* always Devanagari, in both languages */
+  letter-spacing: 0.02em;
   color: var(--accent);
 }
-:lang(hi) .hero-invocation { font: 400 17px/1.4 "Yatra One", serif; letter-spacing: 0.02em; }
 .hero-wreath { position: relative; width: 108px; }
 .hero-wreath svg { width: 100%; height: auto; }
-.cover .couple-names {
-  position: relative;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: baseline;
-  gap: 0 10px;
-  font: 400 clamp(46px, 9vw + 12px, 64px)/1.1 var(--f-script);
-  color: var(--ink);
-}
-.cover .couple-names .joiner { font: italic 500 18px/1 var(--f-prose); color: var(--accent); }
-:lang(hi) .cover .couple-names .joiner { font-style: normal; }
-.hero-subtitle {
-  position: relative;
-  font: 500 11px/1.5 var(--f-display);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-/* Date ticket: ivory half with the date in script, sky-wash half with day + city, perforation */
-.ticket {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.3fr 0 1fr;
-  width: min(300px, 88%);
-  margin: 10px 0 4px;
-  border-radius: 14px;
-  box-shadow: 0 10px 26px rgb(46 58 79 / 0.14);
-  overflow: hidden;
-}
-.ticket-left { display: grid; place-items: center; padding: 16px 10px; background: #fff; }
-.ticket-date { font: 400 30px/1.1 var(--f-script); color: var(--ink); }
-:lang(hi) .ticket-date { font-size: 24px; }
-.ticket-perf { position: relative; }
-.ticket-perf::before {
-  content: "";
-  position: absolute;
-  top: 6px;
-  bottom: 6px;
-  left: -2px;
-  width: 4px;
-  background: radial-gradient(circle, var(--paper) 1.6px, transparent 2px) 0 0 / 4px 10px repeat-y;
-}
-.ticket-right {
-  display: grid;
-  place-content: center;
-  gap: 2px;
-  padding: 12px 10px;
-  background: radial-gradient(circle at 30% 30%, #c9d9e8, var(--sky) 70%);
-  color: var(--ink);
-}
-.ticket-day { font: 500 11px/1.3 var(--f-display); letter-spacing: 0.24em; text-transform: uppercase; }
-.ticket-city { font: 600 16px/1.2 var(--f-ui); }
-:lang(hi) .ticket-day { letter-spacing: 0.02em; font-size: 14px; }
-.cover .greeting { position: relative; max-width: 30ch; margin-top: 6px; }
+.sd-greeting { display: grid; justify-items: center; margin: 2px 0 22px; }
 .hero-scene {
   position: relative;
   width: calc(100% + 68px);
@@ -521,48 +401,19 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 .hero-scene > svg, .hero-scene img, .hero-scene picture { width: 100%; height: 100%; object-fit: cover; object-position: 50% 80%; }
 .cover .scroll-hint { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); color: #fff; text-shadow: 0 1px 4px rgb(0 0 0 / 0.35); }
 
-/* Welcome */
-.welcome { display: grid; justify-items: center; gap: 10px; }
-.welcome-om { font: 400 26px/1.3 "Yatra One", serif; color: var(--accent); }
-.welcome-bless, .welcome-to, .welcome-tagline { font-style: italic; color: var(--ink-soft); }
-:lang(hi) .welcome-bless, :lang(hi) .welcome-to, :lang(hi) .welcome-tagline { font-style: normal; }
-.welcome-title {
-  margin-top: 10px;
-  font: 500 clamp(22px, 3vw + 14px, 30px)/1.2 var(--f-display);
-  letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink);
-}
-:lang(hi) .welcome-title { letter-spacing: 0; font-family: "Yatra One", serif; font-weight: 400; }
-.welcome-names { font-size: clamp(46px, 8vw + 14px, 64px); line-height: 1.15; }
-.welcome-names .amp { font-size: 0.6em; color: var(--gold-dark); }
-
-/* Page 2: invitation card */
-.card-section { background: var(--paper-2); padding-inline: 12px; }
-.card {
-  position: relative;
-  display: grid; justify-items: center; gap: 8px;
-  padding: 56px 22px 48px;
-  border: 1px solid var(--gold);
-  outline: 1px solid var(--gold); outline-offset: -8px;
-  background: radial-gradient(ellipse at 50% 30%, #fff, var(--paper) 70%);
-  box-shadow: 0 14px 40px rgb(38 50 74 / 0.12);
-  overflow: hidden;
-}
-.card-corner { position: absolute; width: 130px; pointer-events: none; opacity: 0.9; }
-.card-corner--tl { top: -8px; left: -8px; transform: rotate(-90deg) scaleX(-1); }
-.card-corner--br { bottom: -8px; right: -8px; transform: rotate(90deg) scaleX(-1); }
-.card-invocation { letter-spacing: 0.2em; color: var(--gold-dark); }
-.card-ganesh { width: 70px; margin: 4px 0 6px; }
-.card-invite { font-size: 17px; max-width: 30em; color: var(--ink-soft); }
-.card-rule { display: grid; justify-items: center; gap: 4px; margin: 10px 0 2px; }
-.card-rule .divider, .card > .divider { width: min(200px, 60%); height: auto; }
+/* Invitation text inside the hero */
+.card-rule { display: grid; justify-items: center; gap: 2px; margin: 0 0 2px; }
+/* position: relative keeps these above the hero frame artwork, like the other cover bits. */
+.hero-invite { position: relative; display: grid; justify-items: center; gap: 3px; width: 100%; margin-top: 0; }
+.card-rule .divider, .hero-invite > .divider { width: min(200px, 60%); height: auto; }
 .card-weddingof {
-  font: 500 20px/1.2 var(--f-display); letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold-dark);
+  font: 500 16px/1.2 var(--f-display); letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-dark);
 }
 :lang(hi) .card-weddingof { letter-spacing: 0; font-family: "Yatra One", serif; font-weight: 400; }
-.card-family { font: 500 16px/1.45 var(--f-prose); max-width: 30em; }
+.card-family { font: 500 13px/1.3 var(--f-prose); max-width: 34em; }
 :lang(hi) .card-family { font-weight: 400; }
-.card-name { font-size: clamp(40px, 7vw + 12px, 56px); line-height: 1.15; }
-.card-joiner { font: italic 500 22px/1 var(--f-prose); color: var(--gold-dark); }
+.card-name { font-family: var(--f-name); font-size: clamp(29px, 5vw + 9px, 38px); line-height: 1.15; color: var(--accent); }
+.card-joiner { margin: 2px 0; font: italic 500 15px/1 var(--f-prose); color: var(--gold-dark); }
 :lang(hi) .card-joiner { font-style: normal; }
 .card-date { margin-top: 6px; font: 600 19px/1.4 var(--f-prose); color: var(--ink); }
 .card-venue { font: 500 16px/1.45 var(--f-prose); }
@@ -577,6 +428,25 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 :lang(hi) .sd-date { letter-spacing: 0.04em; }
 .sd-tagline { font-style: italic; color: var(--ink-soft); margin-bottom: 26px; }
 :lang(hi) .sd-tagline { font-style: normal; }
+/* Save the Date garden (fx/flowers.js): stems draw themselves, then blossoms open and the patch
+   sways. The grown state is the default, so without JS or with reduced motion it is simply there. */
+.garden { width: 100%; margin: 26px 0 -26px; line-height: 0; pointer-events: none; }
+.garden-svg { display: block; width: 100%; height: clamp(150px, 42vw, 190px); }
+.g-plant { transform-origin: 50% 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .garden .g-stem, .garden .g-blade { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .garden .g-bloom, .garden .g-leaf { opacity: 0; transform: scale(0.1); }
+  .garden.is-live .g-blade { animation: g-draw 0.8s ease-out forwards; animation-delay: calc(var(--i) * 0.05s); }
+  .garden.is-live .g-stem { animation: g-draw 1s cubic-bezier(.25,.7,.3,1) forwards; animation-delay: calc(0.2s + var(--i) * 0.11s); }
+  .garden.is-live .g-leaf { animation: g-pop 0.5s ease-out forwards; animation-delay: calc(0.75s + var(--i) * 0.11s); }
+  .garden.is-live .g-bloom { animation: g-pop 0.7s cubic-bezier(.2,1.4,.5,1) forwards; animation-delay: calc(1s + var(--i) * 0.11s); }
+  /* Sway starts once everything has opened, and only while the patch is on screen. */
+  .garden.is-live .g-plant { animation: g-sway 6s 2.4s ease-in-out infinite; animation-delay: calc(2.2s + var(--i) * 0.2s); }
+}
+@keyframes g-draw { to { stroke-dashoffset: 0; } }
+@keyframes g-pop { from { opacity: 0; transform: scale(0.1); } to { opacity: 1; transform: none; } }
+@keyframes g-sway { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
+
 .sd-hashtag { margin-top: 24px; font: 600 16px/1.3 var(--f-ui); letter-spacing: 0.06em; color: var(--peacock); }
 .cd-cell { background: #fff; border-color: var(--line); box-shadow: 0 6px 18px rgb(38 50 74 / 0.06); }
 
@@ -609,8 +479,9 @@ fieldset { border: 0; padding: 0; min-width: 0; }
    744×1306): top 610 → 46.71%, sides 50 → 6.72%, bottom 246 → 18.84%; widths in cqw = px / 7.44. */
 .hero.hero--framed {
   min-height: max(100svh, 150cqw);
-  padding: 61cqw 11cqw 36cqw;
-  gap: 8px;
+  /* Top/bottom paddings clear the artwork bands; trimmed so the card does not stretch the page. */
+  padding: 46cqw 9cqw 28cqw;
+  gap: 4px;
   background: #F3EEE7;
 }
 .hero--framed::before {
@@ -625,7 +496,7 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 .hero--framed .ticket-right { background: radial-gradient(circle at 30% 30%, #FBF1D6, #EED9A6 75%); }
 .hero--framed .ticket { box-shadow: 0 8px 22px rgb(90 66 20 / 0.14); }
 /* In the flow (not absolute) so it never overlaps the greeting on short phones */
-.cover.hero--framed .scroll-hint { position: relative; bottom: auto; left: auto; transform: none; margin-top: auto; padding-top: 10px; color: var(--accent); text-shadow: none; }
+.cover.hero--framed .scroll-hint { position: relative; bottom: auto; left: auto; transform: none; margin-top: auto; padding-top: 4px; color: var(--accent); text-shadow: none; }
 /* Owner's animation frames over the top/bottom of the card (fx/frame-anim.js), played once. */
 .hero-anim { position: absolute; left: 0; right: 0; overflow: hidden; pointer-events: none; }
 /* Hide the inner edge: fractional sprite offsets let a row of the neighbouring frame peek in there

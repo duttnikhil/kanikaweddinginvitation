@@ -2,10 +2,11 @@
 import { h, append } from "../core/dom.js";
 import { mainEvent } from "../core/content.js";
 import { countdownParts } from "../core/time.js";
-import { section } from "./common.js";
+import { section, greeting } from "./common.js";
 import { tr } from "../core/i18n.js";
 import { gsap, dur, prefersReduced } from "../core/motion.js";
 import { scratchCard } from "../fx/scratch.js";
+import { garden } from "../fx/flowers.js";
 
 // Digit change: old digit slides up out, new one slides in from below (SPEC §7.3 #5).
 function roll(el, prev, next) {
@@ -55,7 +56,8 @@ export function mount(ctx) {
   if (sd) append(sec,
     scratchCard(sdDate(ctx, sd.date), sd.scratchHint),
     h("p", { class: "sd-tagline prose", text: sd.tagline, "data-reveal": "" }));
-  append(sec, grid, today, sd?.hashtag ? h("p", { class: "sd-hashtag", text: sd.hashtag, "data-reveal": "" }) : null);
+  append(sec, h("div", { class: "sd-greeting", "data-reveal": "" }, greeting(ctx.content, ctx.guest)));
+  append(sec, grid, today, sd?.hashtag ? h("p", { class: "sd-hashtag", text: sd.hashtag, "data-reveal": "" }) : null, garden());
   ctx.main.append(sec);
 
   // One span per digit so Phase 5 can roll individual digits.

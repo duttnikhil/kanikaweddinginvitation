@@ -19,12 +19,13 @@ import gift from "lucide-static/icons/gift.svg?raw";
 import train from "lucide-static/icons/train.svg?raw";
 import plane from "lucide-static/icons/plane.svg?raw";
 import hotel from "lucide-static/icons/hotel.svg?raw";
+import share2 from "lucide-static/icons/share-2.svg?raw";
 
 const ICONS = {
   "map-pin": mapPin, navigation, "calendar-plus": calendarPlus, copy, phone,
   "message-circle": messageCircle, "volume-2": volume2, "volume-x": volumeX, languages,
   check, x, "chevron-down": chevronDown, "chevron-left": chevronLeft,
-  "chevron-right": chevronRight, image, gift, train, plane, hotel,
+  "chevron-right": chevronRight, image, gift, train, plane, hotel, "share-2": share2,
 };
 
 // h("p", { class: "x", text: {hi,en} }, child, ...)

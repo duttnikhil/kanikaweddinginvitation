@@ -1,6 +1,6 @@
 // Opening gate: envelope on linen, wax seal, hinged flap, card rises and becomes the hero (SPEC §7.4).
 import { art } from "../core/assets.js";
-import { gsap, dur, ease, stagger, split, lenis, prefersReduced } from "../core/motion.js";
+import { gsap, dur, ease, lenis, prefersReduced } from "../core/motion.js";
 import * as audio from "../core/audio.js";
 import * as petals from "../fx/petals.js";
 import { gateMarkup } from "../fx/envelope.js";
@@ -8,6 +8,7 @@ import { pictureHtml } from "../core/picture-html.js";
 import { bind, tr, setLang, otherLang } from "../core/i18n.js";
 import { drawTargets } from "../fx/draw.js";
 import { playFrameAnim } from "../fx/frame-anim.js";
+import { playGaneshLoop } from "../fx/ganesh.js";
 
 // Removes the pre-rendered gate and shows the page (post phase, errors).
 export function dropGate() {
@@ -81,6 +82,7 @@ export function mount(ctx) {
     idle?.kill();
     reveal();
     playFrameAnim(); // no-op if the intro already started it
+    playGaneshLoop();
     gate.remove();
     document.body.classList.remove("is-locked");
     lenis?.start();
@@ -129,10 +131,7 @@ export function mount(ctx) {
 // SPEC §7.4 (envelope): ≈ 3.65 s from tap to the hero.
 function introTimeline(ctx, el, finish, reveal) {
   const hero = document.getElementById("hero");
-  const wreathSvg = hero.querySelector(".ganesh-line");
-  const paths = wreathSvg ? drawTargets(wreathSvg) : [];
-  const names = [...hero.querySelectorAll(".couple-names .name")];
-  const nameSplits = names.map((n) => split(n, "chars"));
+  const paths = [...hero.querySelectorAll(".hero-wreath .ganesh-line")].flatMap(drawTargets);
   const H = 2.45; // hero entrance starts as the card covers the screen
 
   // Card → full screen: centre it and scale it up to cover the viewport (measured when it starts).
@@ -147,10 +146,7 @@ function introTimeline(ctx, el, finish, reveal) {
   };
 
   const tl = gsap.timeline({
-    onComplete: () => {
-      finish();
-      nameSplits.forEach((s) => s.revert()); // plain text again for the language toggle
-    },
+    onComplete: finish,
   });
   // Seal presses, then lifts off the flap.
   tl.to(el.seal, { scale: 0.94, duration: 0.12, ease: "power2.out" }, 0)
@@ -173,15 +169,11 @@ function introTimeline(ctx, el, finish, reveal) {
     // The card is now the hero's paper: fade the gate away over the hero.
     .to(el.gate, { opacity: 0, duration: 0.45, ease: "power1.out" }, 2.45)
     .from(hero.querySelector(".hero-invocation"), { opacity: 0, y: 8, duration: dur.m, ease: ease.enter }, H)
-    .call(playFrameAnim, null, H); // bells swing, the procession walks in
+    .call(() => { playFrameAnim(); playGaneshLoop(); }, null, H); // bells swing, Ganesh draws
   if (paths.length) tl.fromTo(paths, { drawSVG: "0%" }, { drawSVG: "100%", duration: 1.0, ease: "power1.inOut", stagger: { amount: 0.4 } }, H);
   tl.from(hero.querySelectorAll(".wreath-fill"), { opacity: 0, duration: 0.6 }, H + 0.5);
-  nameSplits.forEach((s, i) => {
-    tl.from(s.chars.length ? s.chars : s.words, { opacity: 0, y: 12, rotation: -6, transformOrigin: "0% 100%", duration: dur.s, ease: ease.enter, stagger: stagger.chars }, H + 0.2 + i * 0.25);
-  });
-  tl.from(hero.querySelectorAll(".couple-names .joiner, .hero-subtitle"), { opacity: 0, letterSpacing: "0.5em", duration: dur.m, ease: ease.enter }, H + 0.6)
-    .from(hero.querySelector(".ticket"), { x: 40, opacity: 0, duration: dur.m, ease: ease.enter }, H + 0.7)
-    .from(hero.querySelectorAll(".greeting, .hero-scene, .scroll-hint"), { opacity: 0, duration: dur.m, stagger: 0.1 }, H + 0.8)
+  tl.from(hero.querySelector(".hero-invite"), { y: 24, opacity: 0, duration: dur.l, ease: ease.enter }, H + 0.5)
+    .from(hero.querySelectorAll(".hero-scene, .scroll-hint"), { opacity: 0, duration: dur.m, stagger: 0.1 }, H + 0.8)
     .call(finish, null, H + 1.2);
   return tl;
 }

@@ -35,7 +35,7 @@ export function mount(ctx) {
         load();
       } catch (err) {
         console.warn("[wish]", err.code || err);
-        status.textContent = tr(ctx.content.rsvp.error);
+        status.textContent = tr(ctx.content.ui.error);
       } finally {
         btn.disabled = false;
       }

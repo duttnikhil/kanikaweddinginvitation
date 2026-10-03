@@ -53,8 +53,6 @@ async function call(method, action, payload = {}) {
 }
 
 export const getWishes = () => call("GET", "wishes");
-export const getRsvp = (g) => call("GET", "rsvp", { g });
-export const sendRsvp = (payload) => call("POST", "rsvp", payload);
 export const sendWish = (g, name, message) => call("POST", "wish", { g, name, message });
 export const admin = (action, password, extra = {}) => call("POST", `admin.${action}`, { password, ...extra });
 

@@ -27,8 +27,8 @@ export function mountFrameAnim(hero) {
 // Plays on a loop while the hero is on screen: frames 1→10, hold, then the overlay fades out
 // (invisible: the static card underneath is frame 10), jumps back to frame 1 and fades in again,
 // so the procession softly clears and walks in once more. Only transform/opacity animate.
-const HOLD_S = 3;
-const FADE_S = 0.6;
+const HOLD_S = 1.2;
+const FADE_S = 0.5;
 
 export function playFrameAnim() {
   if (played || !bands.length) return;

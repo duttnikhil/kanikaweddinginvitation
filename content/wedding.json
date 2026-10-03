@@ -5,7 +5,6 @@
     "defaultLang": "en",
     "theme": "pastel",
     "mainEventId": "phere",
-    "rsvpDeadline": "2026-11-15T23:59:00+05:30",
     "hostSide": "ladki",
     "city": {
       "hi": "छतरपुर एवं झाँसी",
@@ -56,42 +55,6 @@
     "scrollHint": {
       "hi": "आगे देखें",
       "en": "Scroll to open"
-    },
-    "subtitle": {
-      "hi": "शुभ विवाह",
-      "en": "We are getting married"
-    },
-    "ticket": {
-      "note": {
-        "hi": "नीचे खुरचें",
-        "en": "Scratch below"
-      },
-      "label": {
-        "hi": "शुभ तिथि",
-        "en": "Save the Date"
-      },
-      "city": {
-        "hi": "झाँसी",
-        "en": "Jhansi"
-      }
-    }
-  },
-  "cover": {
-    "blessing": {
-      "hi": "श्री गणेश जी के आशीर्वाद से",
-      "en": "With the blessings of Lord Ganesha"
-    },
-    "welcome": {
-      "hi": "हम आपका हार्दिक स्वागत करते हैं",
-      "en": "We welcome you"
-    },
-    "toWedding": {
-      "hi": "शुभ विवाह में",
-      "en": "to the wedding of"
-    },
-    "tagline": {
-      "hi": "दो दिल, एक सुंदर शुरुआत।",
-      "en": "Two hearts. One beautiful beginning."
     }
   },
   "couple": {
@@ -129,26 +92,29 @@
         "hi": "सुपुत्र स्व. श्री अरविंद श्रीवास्तव एवं श्रीमती मीना श्रीवास्तव",
         "en": "Son of (Late) Shri Arvind Shrivastava & Smt. Meena Shrivastava"
       },
-      "grandparents": null,
+      "grandparents": {
+        "hi": "सुपौत्र स्व. श्रीमती राम किशोरी श्रीवास्तव एवं स्व. श्री राजेंद्र मोहन श्रीवास्तव",
+        "en": "Grandson of (Late) Smt. Ram Kishori Shrivastava & (Late) Shri Rajendra Mohan Shrivastava"
+      },
       "photo": "groom.jpg"
     }
   },
   "amantran": {
     "invocation": {
       "hi": "॥ श्री गणेशाय नमः ॥",
-      "en": "॥ Shree Ganeshay Namah ॥"
+      "en": "॥ श्री गणेशाय नमः ॥"
     },
     "invite": {
       "hi": "हम आपको अपनी इस नई यात्रा के उत्सव में सादर आमंत्रित करते हैं।\nआपकी उपस्थिति हमारे लिए अत्यंत महत्वपूर्ण है और हमारे इस दिन को पूर्ण बनाएगी।",
       "en": "We warmly invite you to join us in celebrating our journey together.\nYour presence holds immense significance for us and would make our day complete."
     },
     "weddingOf": {
-      "hi": "शुभ विवाह",
+      "hi": "विवाह",
       "en": "Wedding of"
     },
     "joiner": {
       "hi": "संग",
-      "en": "To"
+      "en": "with"
     },
     "venue": {
       "hi": "प्रेमकुंज रिसॉर्ट, बालाजी उन्नाव रोड, झाँसी (उ.प्र.)",
@@ -168,7 +134,7 @@
       "hi": "एक नए अध्याय की शुरुआत…",
       "en": "A new chapter begins…"
     },
-    "hashtag": "#ArjitWedsKanika",
+    "hashtag": "#KanikaWedsArjit",
     "scratchHint": {
       "hi": "खुरचें और तिथि देखें",
       "en": "Scratch to reveal"
@@ -346,114 +312,6 @@
     },
     "photos": []
   },
-  "rsvp": {
-    "title": {
-      "hi": "कृपया सूचित करें",
-      "en": "Kindly RSVP"
-    },
-    "subtitle": {
-      "hi": "{date} तक बताएँ ताकि हम आपकी अच्छी व्यवस्था कर सकें",
-      "en": "Please reply by {date} so we can arrange everything for you"
-    },
-    "status": {
-      "yes": {
-        "hi": "हाँ, आएँगे",
-        "en": "Yes"
-      },
-      "maybe": {
-        "hi": "शायद",
-        "en": "Maybe"
-      },
-      "no": {
-        "hi": "नहीं आ पाएँगे",
-        "en": "Can't make it"
-      }
-    },
-    "pax": {
-      "hi": "कितने सदस्य",
-      "en": "How many people"
-    },
-    "food": {
-      "veg": {
-        "hi": "शाकाहारी",
-        "en": "Veg"
-      },
-      "jain": {
-        "hi": "जैन",
-        "en": "Jain"
-      },
-      "nonveg": {
-        "hi": "मांसाहारी",
-        "en": "Non-veg"
-      }
-    },
-    "sameForAll": {
-      "hi": "सभी कार्यक्रमों के लिए यही",
-      "en": "Same for all functions"
-    },
-    "arrival": {
-      "hi": "कैसे पहुँचेंगे",
-      "en": "How will you arrive"
-    },
-    "arrivalModes": {
-      "car": {
-        "hi": "कार",
-        "en": "Car"
-      },
-      "train": {
-        "hi": "ट्रेन",
-        "en": "Train"
-      },
-      "flight": {
-        "hi": "फ़्लाइट",
-        "en": "Flight"
-      },
-      "local": {
-        "hi": "स्थानीय",
-        "en": "Local"
-      }
-    },
-    "arrivalAt": {
-      "hi": "पहुँचने का समय (वैकल्पिक)",
-      "en": "Arrival time (optional)"
-    },
-    "message": {
-      "hi": "कोई संदेश (वैकल्पिक)",
-      "en": "Message (optional)"
-    },
-    "submit": {
-      "hi": "भेजें",
-      "en": "Send RSVP"
-    },
-    "success": {
-      "hi": "धन्यवाद! हम आपका इंतज़ार करेंगे।",
-      "en": "Thank you! We can't wait to see you."
-    },
-    "updated": {
-      "hi": "आपका जवाब {date} को मिला था, बदलना हो तो फिर भेजें",
-      "en": "We received your reply on {date}. You can update it anytime."
-    },
-    "error": {
-      "hi": "जवाब नहीं भेजा जा सका। इंटरनेट जाँचें और फिर कोशिश करें।",
-      "en": "Couldn't send your reply. Check your internet and try again."
-    },
-    "retry": {
-      "hi": "फिर से भेजें",
-      "en": "Try again"
-    },
-    "noGuest": {
-      "hi": "RSVP के लिए कृपया WhatsApp पर भेजा गया अपना निजी लिंक खोलें।",
-      "en": "To RSVP, please open the personal link we sent you on WhatsApp."
-    },
-    "closed": {
-      "hi": "RSVP {date} को बंद हो गया। कृपया {contact} को फ़ोन करें।",
-      "en": "RSVP closed on {date}. Please call {contact}."
-    },
-    "paxMismatch": {
-      "hi": "कुल {n} होना चाहिए",
-      "en": "Total must be {n}"
-    }
-  },
   "shagun": {
     "enabled": false
   },
@@ -498,12 +356,16 @@
   },
   "closing": {
     "line": {
-      "hi": "खरे परिवार के आशीर्वाद सहित",
-      "en": "With blessings of our Khare family"
+      "hi": "खरे परिवार के प्रेम एवं आशीर्वाद सहित",
+      "en": "With Love & Blessings of the Khare Family"
     },
     "darshanTitle": null,
     "darshan": null,
-    "kidsLine": null
+    "kidsLine": null,
+    "names": {
+      "hi": "कनिका एवं अर्जित",
+      "en": "Kanika weds Arjit"
+    }
   },
   "livestream": {
     "enabled": false,
@@ -609,10 +471,6 @@
       "hi": "English",
       "en": "हिन्दी"
     },
-    "rsvpPill": {
-      "hi": "RSVP करें",
-      "en": "RSVP"
-    },
     "close": {
       "hi": "बंद करें",
       "en": "Close"
@@ -628,6 +486,18 @@
     "onwards": {
       "hi": "से",
       "en": "onwards"
+    },
+    "share": {
+      "hi": "निमंत्रण साझा करें",
+      "en": "Share this invitation"
+    },
+    "shared": {
+      "hi": "लिंक कॉपी हो गया",
+      "en": "Link copied"
+    },
+    "error": {
+      "hi": "जवाब नहीं भेजा जा सका। इंटरनेट जाँचें और फिर कोशिश करें।",
+      "en": "Couldn't send your reply. Check your internet and try again."
     }
   }
 }
