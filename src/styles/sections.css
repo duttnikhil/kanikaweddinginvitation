@@ -94,7 +94,7 @@
 .line--gap { height: 0.9em; }
 .line--name {
   margin-block: 6px;
-  font: 400 clamp(28px, 3vw + 20px, 40px)/1.25 var(--f-script);
+  font: 400 clamp(32px, 4vw + 22px, 46px)/1.25 var(--f-name); /* same font as page 2's .card-name */
   color: var(--accent);
 }
 .elders { margin-top: 24px; font-size: 17px; display: grid; gap: 4px; }
@@ -383,7 +383,7 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 .hero-invocation {
   position: relative;
   margin-bottom: 4px;
-  font: 400 12.5px/1.4 "Yatra One", serif; /* always Devanagari, in both languages */
+  font: 400 15px/1.4 "Yatra One", serif; /* always Devanagari, in both languages */
   letter-spacing: 0.02em;
   color: var(--accent);
 }
@@ -393,7 +393,7 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 .hero-scene {
   position: relative;
   width: calc(100% + 68px);
-  height: 190px;
+  height: 230px;
   margin-top: auto;
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%);
   mask-image: linear-gradient(to bottom, transparent, #000 45%);
@@ -404,19 +404,33 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 /* Invitation text inside the hero */
 .card-rule { display: grid; justify-items: center; gap: 2px; margin: 0 0 2px; }
 /* position: relative keeps these above the hero frame artwork, like the other cover bits. */
-.hero-invite { position: relative; display: grid; justify-items: center; gap: 3px; width: 100%; margin-top: 0; }
+.hero-invite { position: relative; display: grid; justify-items: center; gap: 10px; width: 100%; margin-top: 0; }
 .card-rule .divider, .hero-invite > .divider { width: min(200px, 60%); height: auto; }
 .card-weddingof {
-  font: 500 16px/1.2 var(--f-display); letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-dark);
+  font: 500 18px/1.2 var(--f-display); letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-dark);
 }
 :lang(hi) .card-weddingof { letter-spacing: 0; font-family: "Yatra One", serif; font-weight: 400; }
-.card-family { font: 500 13px/1.3 var(--f-prose); max-width: 34em; }
+.card-family { font: 500 15px/1.4 var(--f-prose); max-width: 34em; }
 :lang(hi) .card-family { font-weight: 400; }
-.card-name { font-family: var(--f-name); font-size: clamp(29px, 5vw + 9px, 38px); line-height: 1.15; color: var(--accent); }
-.card-joiner { margin: 2px 0; font: italic 500 15px/1 var(--f-prose); color: var(--gold-dark); }
+/* Parisienne only ships weight 400 (no real bold), so a thin stroke thickens the strokes instead
+   of the browser's faux-bold, which skews script letterforms and looks smudged. */
+.card-name {
+  font-family: var(--f-name);
+  font-size: clamp(32px, 6vw + 11px, 44px);
+  line-height: 1.15;
+  color: var(--accent);
+  -webkit-text-stroke: 0.6px var(--accent);
+  text-stroke: 0.6px var(--accent);
+}
+.card-joiner { margin: 2px 0; font: italic 500 17px/1 var(--f-prose); color: var(--gold-dark); }
 :lang(hi) .card-joiner { font-style: normal; }
 .card-date { margin-top: 6px; font: 600 19px/1.4 var(--f-prose); color: var(--ink); }
 .card-venue { font: 500 16px/1.45 var(--f-prose); }
+
+/* Page 1: bigger, more generous type instead of a cramped card (hero--intro, short content) */
+.hero--intro .hero-invite { gap: 16px; padding: 6px 10px; }
+.hero--intro .card-family { font-size: 17px; line-height: 1.6; max-width: 26ch; }
+.hero--intro .line--name { margin-block: 10px; }
 
 /* Page 3: save the date */
 .sd-date {
@@ -504,6 +518,18 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 .hero-anim--top { top: 0; clip-path: inset(0 0 2px 0); }
 .hero-anim--bottom { bottom: 0; clip-path: inset(2px 0 0 0); }
 .hero-anim img { display: block; width: 100%; height: auto; }
+
+/* Page 2: no owner frame border (removed on request) — the gold temple-scenery artwork full
+   bleed behind the card (assets/img/temple-scenery.png) and the twin-elephants header motif
+   (assets/img/twin-elephants-clean.avif). */
+#hero-card.hero.cover { background: #FFFCF6; }
+.hero-card-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-card-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
+.hero-card-motif { width: min(62vw, 240px); margin: 0 auto 2px; opacity: 0.92; }
 
 /* ---------- Celebrations: stationery cards (match the owner's card artwork) ---------- */
 .event-card {

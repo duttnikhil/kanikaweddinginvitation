@@ -697,4 +697,22 @@ object (SPEC §7.4 rewritten; markup moved to `src/fx/envelope.js`):
     purpose: the Apps Script `rsvp` endpoints and the admin page's RSVP columns / CSV export —
     they read the Sheet and simply stay empty, and deleting them would break the admin views.
     The only error string the blessings form needed moved to `ui.error`.
-  - **Open:** "font 2nd page wala" for श्री गणेशाय नमः — need the sample page to match it.
+
+## Cover split into two pages (owner's handwritten note + screenshot, 17 Oct 2026)
+
+- The 3 Oct note above dropped `hero.title`/`hero.blessing` ("Shubh Vivah" + the Ganesha blessing
+  line) to keep the cover to one screen. The owner now wants that content back, but as its own
+  first page instead of stretching page 1: `#hero` (first view, keeps the owner's card artwork
+  background unchanged) now shows just the Ganesh icon, invocation, `hero.title` ("शुभ विवाह"),
+  `hero.blessing`, and the names line (now visible, `.line--name`, reusing the sr-only `h1`
+  instead of adding a duplicate node). The full invitation card that used to be the whole of
+  `#hero` (Wedding of / both families / procession scene) moved as-is to a new `#hero-card`
+  section right after it, scrolled to via the first page's "Scroll to open" link. `#hero-card` has
+  no owner frame art — the request was a different, nicer background, and CLAUDE.md forbids
+  pulling one from the web — so it reuses the arch/wreath/watercolor-scene fallback pieces already
+  in `hero.js`/`ornaments.js` for projects without owner card art, confirmed with the owner.
+- `hero.blessing` en/hi text is mine (translated from the note); the owner should proof it.
+- **Still open:** the note says "font 2nd page wala" / "(@ A cap)" next to श्री गणेशाय नमः and
+  "Kanika weds Arjit" — unclear exactly which font or cap treatment is meant from the handwriting.
+  Left on the existing invocation/`.line--name` (Parisienne/Yatra One) styles; confirm with the
+  owner if they want something else there.

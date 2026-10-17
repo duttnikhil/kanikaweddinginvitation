@@ -61,7 +61,11 @@ function afterGate(ctx) {
   motion.ScrollTrigger.refresh(); // scrollbar may appear once the body is unlocked
   const hero = document.getElementById("hero");
   if (!hero || ctx.phase === "post") return;
-  new IntersectionObserver(([e]) => (e.isIntersecting ? petals.start() : petals.stop()), { threshold: 0.2 }).observe(hero);
+  const heroCard = document.getElementById("hero-card");
+  let onHero = false, onCard = false;
+  const sync = () => ((onHero || onCard) ? petals.start() : petals.stop());
+  new IntersectionObserver(([e]) => { onHero = e.isIntersecting; sync(); }, { threshold: 0.2 }).observe(hero);
+  if (heroCard) new IntersectionObserver(([e]) => { onCard = e.isIntersecting; sync(); }, { threshold: 0.2 }).observe(heroCard);
 }
 
 // Error boundary: one broken scene must not blank the page.

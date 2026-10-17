@@ -52,6 +52,14 @@
       "hi": "संग",
       "en": "weds"
     },
+    "title": {
+      "hi": "शुभ विवाह",
+      "en": "शुभ विवाह"
+    },
+    "blessing": {
+      "hi": "भगवान श्री गणेश के आशीर्वाद से, हम विवाह-बंधन में बंध रहे हैं।",
+      "en": "With the blessings of Lord Ganesha, we are getting married."
+    },
     "scrollHint": {
       "hi": "आगे देखें",
       "en": "Scroll to open"
@@ -69,12 +77,12 @@
       },
       "initial": "K",
       "parents": {
-        "hi": "सुपुत्री श्री राजेय खरे एवं श्रीमती प्रीति खरे",
-        "en": "Daughter of Shri Rajey Khare & Smt. Preeti Khare"
+        "hi": "सुपुत्री\nश्रीमती प्रीति एवं श्री राजेय खरे",
+        "en": "Daughter of\nMrs. Preeti & Mr. Rajey Khare"
       },
       "grandparents": {
-        "hi": "सुपौत्री श्री जनार्दन खरे एवं श्रीमती सुधा खरे",
-        "en": "Granddaughter of Shri Janardan Khare & Smt. Sudha Khare"
+        "hi": "सुपौत्री\nश्रीमती सुधा राजे खरे एवं श्री जनार्दन खरे",
+        "en": "Granddaughter of\nMrs. Sudha Raje Khare & Mr. Janardhan Khare"
       },
       "photo": "bride.jpg"
     },
@@ -89,12 +97,12 @@
       },
       "initial": "A",
       "parents": {
-        "hi": "सुपुत्र स्व. श्री अरविंद श्रीवास्तव एवं श्रीमती मीना श्रीवास्तव",
-        "en": "Son of (Late) Shri Arvind Shrivastava & Smt. Meena Shrivastava"
+        "hi": "सुपुत्र\nश्रीमती मीना एवं स्व. श्री अरविंद श्रीवास्तव",
+        "en": "Son of\nMrs. Meena & Mr. Late Arvind Shrivastava"
       },
       "grandparents": {
-        "hi": "सुपौत्र स्व. श्रीमती राम किशोरी श्रीवास्तव एवं स्व. श्री राजेंद्र मोहन श्रीवास्तव",
-        "en": "Grandson of (Late) Smt. Ram Kishori Shrivastava & (Late) Shri Rajendra Mohan Shrivastava"
+        "hi": "सुपौत्र\nस्व. श्रीमती राम किशोरी एवं स्व. श्री राजेंद्र मोहन श्रीवास्तव",
+        "en": "Grandson of\nMrs. Late Ram Kishori & Mr. Late Rajendra Mohan Shrivastava"
       },
       "photo": "groom.jpg"
     }

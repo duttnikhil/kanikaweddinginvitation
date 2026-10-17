@@ -1,10 +1,10 @@
 // Hero / cover page (SPEC §7.3 #1, restyled to the client's page-1 sample).
 // In the post phase this becomes the thank-you hero (SPEC §7.16).
-import { h, svg } from "../core/dom.js";
+import { h, svg, multiline } from "../core/dom.js";
 import { ownerSvg, photo, picture, art } from "../core/assets.js";
 import { mandala } from "../fx/mandala.js";
 import { ganeshLine, mountGaneshLoop } from "../fx/ganesh.js";
-import { toran, wreath, archFrame, sceneSvg, divider } from "../fx/ornaments.js";
+import { toran, divider } from "../fx/ornaments.js";
 import { mountFrameAnim } from "../fx/frame-anim.js";
 
 export function ganeshArt() {
@@ -26,56 +26,81 @@ export function ganeshArt() {
   return wrap;
 }
 
-// One family block: grandparents, name, parents.
+// One family block: name first, then grandparents and parents (each "Label\nNames").
 function person(p) {
   return [
-    p.grandparents ? h("p", { class: "card-family soft", text: p.grandparents }) : null,
     h("p", { class: "card-name script", text: p.fullName }),
-    p.parents ? h("p", { class: "card-family soft", text: (l) => `(${p.parents[l]})` }) : null,
+    p.grandparents ? multiline(p.grandparents, "card-family soft", "p") : null,
+    p.parents ? multiline(p.parents, "card-family soft", "p") : null,
   ];
 }
 
 // Hero = the invitation card that comes out of the envelope (SPEC §7.4/§9, client reference):
 // arch frame, Ganesh line art, invocation, the families, watercolor scene at the bottom.
 // The guest's greeting sits with the Save the Date reveal instead.
+// Small Ganesh line icon (as used above the invocation). Each card gets its own instance.
+function ganeshIcon() {
+  const g = svg(ownerSvg("ganesh-line") || ganeshLine());
+  g.classList.add("ganesh-line"); // the gate intro draws every .ganesh-line stroke under #hero
+  return h("div", { class: "hero-ganesh", "aria-hidden": "true" }, g);
+}
+
 export function mount(ctx) {
   const { content: c, guest } = ctx;
   if (ctx.phase === "post") return postHero(ctx);
   const { bride, groom } = c.couple;
   const hero = c.hero;
   const a = c.amantran;
-  const archImg = art("arch-frame");
   // Owner's full card artwork (arch, border, procession) as a stretchable frame (CSS border-image).
+  // Both pages use it: it is the one professional, hand-illustrated asset on the site, and the
+  // client asked page 2 to match page 1's quality rather than carry a second, plainer design.
   const frame = art("hero-frame");
-  const scene = art("envelope-scene");
-  const corner = (n, cls) => { const a = art(`corner-${n}`); return a ? picture(a, "", { cls: `hero-corner ${cls}`, sizes: "40vw" }) : null; };
-  const sceneFallback = svg(sceneSvg());
-  sceneFallback.setAttribute("preserveAspectRatio", "xMidYMid slice"); // wide crop keeps the palace
-  const ganesh = svg(ownerSvg("ganesh-line") || ganeshLine());
-  ganesh.classList.add("ganesh-line"); // the gate intro draws every .ganesh-line stroke
-  const wreathSvg = svg(wreath(`${bride.initial} | ${groom.initial}`));
-  wreathSvg.classList.add("ganesh-line", "is-fallback"); // drawn by the gate intro
-  const sec = h("section", { id: "hero", class: `section hero cover${frame ? " hero--framed" : ""}`, "aria-labelledby": "hero-names" },
-    frame ? null : h("div", { class: "hero-arch", "aria-hidden": "true" }, archImg ? picture(archImg, "", { eager: true, sizes: "(min-width: 600px) 560px, 100vw" }) : svg(archFrame())),
-    frame ? null : [corner(1, "hero-corner--tl"), corner(2, "hero-corner--br")],
-    h("div", { class: "hero-ganesh", "aria-hidden": "true" }, ganesh),
-    h("p", { class: "hero-invocation", text: c.amantran?.invocation || c.invocation.line }),
-    frame ? null : h("div", { class: "hero-wreath", "aria-hidden": "true" }, wreathSvg), // the artwork's arch + bells take its place
-    h("h1", { id: "hero-names", class: "sr-only", text: (l) => `${bride.name[l]} ${hero.joiner[l]} ${groom.name[l]}` }),
+  const names = (l) => `${bride.name[l]} ${hero.joiner[l]} ${groom.name[l]}`;
+  const invocation = c.amantran?.invocation || c.invocation.line;
+
+  const framedCard = (id, labelledby, invite, scrollHref, useFrame = true, bg = null) => {
+    const framed = frame && useFrame;
+    const sec = h("section", { id, class: `section hero cover${framed ? " hero--framed" : ""}`, "aria-labelledby": labelledby },
+      bg,
+      ganeshIcon(),
+      h("p", { class: "hero-invocation", text: invocation }),
+      invite,
+      scrollHref ? h("a", { href: scrollHref, class: "scroll-hint" }, h("span", { text: hero.scrollHint }), ctx.icon("chevron-down")) : null);
+    if (framed) sec.style.setProperty("--frame", `url("/img/${frame.key}-${frame.w}.webp")`);
+    return sec;
+  };
+
+  // Page 1 (first view, out of the envelope): invocation + "Shubh Vivah" greeting.
+  const sec = framedCard("hero", "hero-names",
+    h("div", { class: "hero-invite" },
+      svg(divider()),
+      h("p", { class: "card-weddingof", text: hero.title }),
+      h("p", { class: "card-family soft", text: hero.blessing }),
+      h("h1", { id: "hero-names", class: "line--name", text: names }),
+      svg(divider())),
+    "#hero-card");
+  sec.classList.add("hero--intro"); // bigger type, more generous gaps — this card's content is short
+  if (frame) mountFrameAnim(sec);
+  mountGaneshLoop(sec.querySelector(".hero-ganesh"));
+  ctx.main.append(sec);
+
+  // Page 2: the full invitation card, moved here as-is, on its own background — the owner's
+  // gold temple-scenery artwork (assets/img/temple-scenery.png) full-bleed, with the
+  // twin-elephants motif (assets/img/twin-elephants-clean.avif) heading the card.
+  const elephants = art("twin-elephants-clean");
+  const templeScenery = art("temple-scenery");
+  const sec2 = framedCard("hero-card", "hero-card-names",
     a ? h("div", { class: "hero-invite" },
+      h("h2", { id: "hero-card-names", class: "sr-only", text: names }),
+      elephants ? picture(elephants, "", { cls: "hero-card-motif", sizes: "(min-width: 600px) 280px, 62vw" }) : null,
       h("div", { class: "card-rule" }, svg(divider()), h("p", { class: "card-weddingof", text: a.weddingOf })),
       person(bride),
       h("p", { class: "card-joiner", text: a.joiner }),
       person(groom),
       svg(divider())) : null,
-    frame ? null : h("div", { class: "hero-scene", "aria-hidden": "true" }, scene ? picture(scene, "", { sizes: "(min-width: 600px) 560px, 100vw" }) : sceneFallback),
-    h("a", { href: "#countdown", class: "scroll-hint" }, h("span", { text: c.hero.scrollHint }), ctx.icon("chevron-down")));
-  if (frame) {
-    sec.style.setProperty("--frame", `url("/img/${frame.key}-${frame.w}.webp")`);
-    mountFrameAnim(sec);
-  }
-  mountGaneshLoop(sec.querySelector(".hero-ganesh"));
-  ctx.main.append(sec);
+    null, false,
+    templeScenery ? picture(templeScenery, "", { cls: "hero-card-bg", eager: false, sizes: "100vw" }) : null);
+  ctx.main.append(sec2);
   return sec;
 }
 
