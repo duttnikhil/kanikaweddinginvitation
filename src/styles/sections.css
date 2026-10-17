@@ -337,6 +337,26 @@ fieldset { border: 0; padding: 0; min-width: 0; }
 .diya .flame { opacity: 0; transform: scale(0.3); transition: opacity 0.6s ease, transform 0.6s ease; }
 .diya.is-lit .flame { opacity: 1; transform: none; }
 
+/* Blessings: a faint gold mandala (assets/img/mandala-gold.avif) slowly turning behind the text. */
+/* isolation: the section has position:relative but no z-index, so without this the mandala's
+   z-index:-1 escapes to the page's stacking context instead of staying behind this section's own
+   text — isolate pins it locally. */
+#aashirwad { overflow: hidden; isolation: isolate; }
+.aashirwad-mandala {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(72vw, 320px);
+  max-width: none;
+  transform: translate(-50%, -50%);
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: -1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .aashirwad-mandala { animation: mandala-spin 90s linear infinite; }
+}
+@keyframes mandala-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
 .wish-form { display: grid; gap: 14px; margin-bottom: 28px; text-align: left; }
 .wish-form .btn { justify-self: center; }
 .wish-status { min-height: 1.4em; text-align: center; color: var(--peacock); font-weight: 600; }

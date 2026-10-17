@@ -2,12 +2,15 @@
 import { h, append } from "../core/dom.js";
 import { tr } from "../core/i18n.js";
 import { getWishes, sendWish } from "../core/api.js";
+import { art, picture } from "../core/assets.js";
 import { section } from "./common.js";
 
 export function mount(ctx) {
   const w = ctx.content.wishes;
   if (!w) return;
   const sec = section("aashirwad", { title: w.title });
+  const mandalaGold = art("mandala-gold");
+  if (mandalaGold) sec.prepend(picture(mandalaGold, "", { cls: "aashirwad-mandala", sizes: "640px" }));
   const wall = h("ul", { class: "wish-wall", "aria-live": "polite" });
   const empty = h("p", { class: "prose soft wish-empty", text: w.empty });
   const track = h("div", { class: "wish-track" }, wall);
