@@ -112,7 +112,7 @@
   border-image: var(--frame) 46.71% 6.72% 18.84% fill / 82cqw 6.72cqw 33.06cqw stretch;
 }
 .env-card--framed .env-card-in { inset: 0; padding: 58cqw 8cqw 30cqw; border: 0; outline: 0; align-content: center; }
-.env-card-names { font: 400 30px/1.1 "Great Vibes", "Yatra One", cursive; color: #2E3A4F; }
+.env-card-names { font: 400 30px/1.1 var(--f-name); /* same font as the names inside */ color: #2E3A4F; }
 :lang(hi) .env-card-names { font-size: 24px; }
 .env-pocket { inset: 0; z-index: 2; border-radius: 6px; overflow: hidden; }
 .env-pocket-svg { display: block; width: 100%; height: 100%; }

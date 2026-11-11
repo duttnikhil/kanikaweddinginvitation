@@ -286,6 +286,8 @@
 :lang(hi) .closing-line { font-style: normal; }
 .closing-logo { width: min(240px, 62%); margin: 0 auto 10px; }
 .closing-logo svg { width: 100%; height: auto; }
+.closing-logo--art { width: min(300px, 78%); margin-bottom: 18px; }
+.closing-logo--art img { display: block; width: 100%; height: auto; border-radius: 6px; box-shadow: 0 6px 24px rgb(0 0 0 / 0.35); }
 .closing-names { font-family: var(--f-name); font-size: clamp(30px, 4.4vw + 16px, 44px); color: var(--accent); }
 .card-share { position: relative; display: grid; justify-items: center; margin-top: 18px; }
 .darshan { display: grid; gap: 10px; margin-top: 12px; }

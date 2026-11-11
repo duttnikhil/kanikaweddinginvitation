@@ -3,8 +3,17 @@
 import { h, append } from "../core/dom.js";
 import { logoAK } from "../fx/logo.js";
 import { section, shareButton } from "./common.js";
+import { art, picture } from "../core/assets.js";
 import { fireworks } from "../fx/fireworks.js";
 import { lowEndHint } from "../core/device.js";
+
+// Client's अK artwork (assets/img/kanikalogo.jpeg); the drawn SVG stays as fallback.
+function closingLogo() {
+  const img = art("kanikalogo");
+  if (!img) return h("div", { class: "closing-logo", "aria-hidden": "true", "data-reveal": "", html: logoAK() });
+  return h("div", { class: "closing-logo closing-logo--art", "aria-hidden": "true", "data-reveal": "" },
+    picture(img, "", { sizes: "300px" }));
+}
 
 export function mount(ctx) {
   const c = ctx.content.closing;
@@ -12,7 +21,7 @@ export function mount(ctx) {
   const sec = section("closing", { tone: "wine" });
   append(sec,
     h("canvas", { class: "fireworks", "aria-hidden": "true" }),
-    h("div", { class: "closing-logo", "aria-hidden": "true", "data-reveal": "", html: logoAK() }),
+    closingLogo(),
     c.names ? h("p", { class: "closing-names script", text: c.names, "data-reveal": "" }) : null,
     h("p", { class: "closing-line", text: c.line, "data-reveal": "" }),
     c.darshan ? h("div", { class: "darshan", "data-reveal": "" },
